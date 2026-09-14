@@ -1,9 +1,9 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
-import Dados from "./pages/Cadastro/Documentos.jsx"
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
+import AppRoutes from './assets/routes/AppRoutes.jsx';
 
 function App() {
-  return <Dados />;
+  return <AppRoutes />;
 }
 
 export default App;
