@@ -1,4 +1,4 @@
-import '../App.css'
+import './Button.css'
 
 //tipos de botão: botao-com-fundo e botao-sem-fundo
 function Botao({texto, tipo = 'tipo'}) {

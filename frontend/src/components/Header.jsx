@@ -5,7 +5,7 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import Image from "react-bootstrap/Image";
 
 import "../App.css";
-import Button from "./Button.jsx";
+import Button from "./Button/Button.jsx";
 import LogoBranca from "../assets/LogoBranca.png";
 
 function Header({
