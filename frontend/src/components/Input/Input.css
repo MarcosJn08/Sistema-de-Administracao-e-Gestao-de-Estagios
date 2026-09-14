@@ -21,9 +21,15 @@
   box-sizing: border-box;
 }
 
-.input-container input:focus {
+.input-container input:hover {
   border-color: #16A34A;
   color: #16A34A;
+  box-shadow: none;
+}
+
+.input-container input:focus {
+  border-color: #1b5e20;
+  color: #1b5e20;
   box-shadow: none;
 }
 

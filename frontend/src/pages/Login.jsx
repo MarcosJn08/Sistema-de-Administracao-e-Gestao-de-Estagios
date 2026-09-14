@@ -1,5 +1,6 @@
 import Image from "react-bootstrap/Image";
-import "../App.css"
+import "../App.css";
+import Nav from "react-bootstrap/Nav";
 
 import Input from "../components/Input/Input.jsx";
 import GoogleButton from "../components/GoogleButton.jsx";
@@ -32,10 +33,14 @@ function Login() {
           tipo="password"
           texto="Digite sua senha"
         />
+          <p>
+            <Nav.Link href="#mudarSenha">Esqueceu a senha?</Nav.Link>
+          </p>
+          <p></p>
+          <Button texto="Fazer Login" tipo="botao-com-fundo" />
+          <p>Or</p>
+          <GoogleButton />
 
-        <Button texto="Fazer Login" tipo="botao-com-fundo" />
-
-        <GoogleButton />
       </div>
     </div>
   );

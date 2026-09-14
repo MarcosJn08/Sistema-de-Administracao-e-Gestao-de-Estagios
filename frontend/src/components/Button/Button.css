@@ -13,7 +13,6 @@
   cursor: pointer;
 }
 
-
 /* BOTÃO SEM FUNDO VERDE */
 
 .botao-sem-fundo-verde {
@@ -30,8 +29,6 @@
   color: white;
   cursor: pointer;
 }
-
-
 
 .botao-sem-fundo-branco {
   border: #66bb6a 2px solid;

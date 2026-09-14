@@ -1,0 +1,53 @@
+.header-cadastro {
+    display: flex;
+    align-items: center;
+}
+
+.header-cadastro > div {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.header-cadastro > div:last-child {
+    flex: 0;
+}
+
+.header-cadastro p {
+    width: 35px;
+    height: 35px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.header-cadastro hr {
+    flex: 1;
+    border: none;
+    border-top: 2px solid #ccc;
+    margin: 10px solid
+}
+/* Passo concluído */
+
+.Passo-concluido p {
+    background-color: #66bb6a;
+    color: white;
+}
+
+.Passo-concluido hr {
+    border-top-color: #66bb6a;
+}
+
+.proximo-passo p {
+    background-color: #777777;
+    color: white;
+}
+
+.proximo-passo hr {
+    border-top-color: #777777;
+}

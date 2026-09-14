@@ -1,9 +1,9 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import Login from "./pages/Login.jsx";
+import Dados from "./pages/Cadastro/Dados.jsx"
 
 function App() {
-  return <Login />;
+  return <Dados />;
 }
 
 export default App;
