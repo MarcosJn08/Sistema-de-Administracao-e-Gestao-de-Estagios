@@ -15,6 +15,7 @@ function Header({
   pagina06 = '',
   paginaAtiva,
   usuario,
+  customLinks,
 }) {
   const [expanded, setExpanded] = useState(false);
   const closeMenu = () => setExpanded(false);
@@ -36,9 +37,10 @@ function Header({
     ['Dashboard', '/sage/aluno'],
     ['Vagas', '/sage/vagas'],
     ['Documentos', '/sage/documentos'],
+    ['Para empresas', '/sage/cadastro/empresa'],
   ];
 
-  const links = isDashboard ? dashboardLinks : landingLinks;
+  const links = customLinks || (isDashboard ? dashboardLinks : landingLinks);
 
   return (
     <Navbar
@@ -84,13 +86,16 @@ function Header({
             </Nav>
             <div className="botao-login">
               {isDashboard ? (
-                <div className="perfil-usuario-header">
-                  <div className="avatar-usuario-header">
-                    <span>{usuario.nome ? usuario.nome.charAt(0).toUpperCase() : 'A'}</span>
+                <div className="d-flex align-items-center gap-3">
+                  <div className="perfil-usuario-header">
+                    <div className="avatar-usuario-header">
+                      <span>{usuario.nome ? usuario.nome.charAt(0).toUpperCase() : 'A'}</span>
+                    </div>
+                    <span className="nome-usuario-header">
+                      {usuario.nome ? usuario.nome.split(' ')[0] : 'Aluno'}
+                    </span>
                   </div>
-                  <span className="nome-usuario-header">
-                    {usuario.nome ? usuario.nome.split(' ')[0] : 'Aluno'}
-                  </span>
+                  <Button texto="Sair" tipo="botao-texto-branco" href="/sage/login" />
                 </div>
               ) : (
                 <>

@@ -1,4 +1,4 @@
-import { Building2, UserRound, UsersRound } from 'lucide-react';
+import { Building2, UserRound, UsersRound, ArrowRight } from 'lucide-react';
 
 const perfis = [
   {
@@ -7,6 +7,8 @@ const perfis = [
     descricao: 'Encontre vagas, envie documentos e acompanhe suas horas cumpridas.',
     Icone: UserRound,
     cor: 'verde',
+    link: '/sage/aluno',
+    linkTexto: 'Acessar portal',
   },
   {
     id: 'empresas',
@@ -14,6 +16,8 @@ const perfis = [
     descricao: 'Divulgue oportunidades, indique requisitos e acompanhe os processos de estágio.',
     Icone: Building2,
     cor: 'laranja',
+    link: '/sage/cadastro/empresa',
+    linkTexto: 'Cadastrar empresa',
   },
   {
     id: 'orientadores',
@@ -21,6 +25,8 @@ const perfis = [
     descricao: 'Valide documentos, acompanhe estágios e mantenha os processos organizados.',
     Icone: UsersRound,
     cor: 'azul',
+    link: '#como-funciona',
+    linkTexto: 'Ver como funciona',
   },
 ];
 
@@ -36,7 +42,7 @@ export default function PerfisSection() {
           </p>
         </div>
         <div className="row g-4 perfis-grid">
-          {perfis.map(({ id, titulo, descricao, Icone, cor }, index) => (
+          {perfis.map(({ id, titulo, descricao, Icone, cor, link, linkTexto }, index) => (
             <div
               className="col-12 col-lg-4"
               key={id}
@@ -44,12 +50,19 @@ export default function PerfisSection() {
               style={{ '--reveal-delay': `${index * 150}ms` }}
             >
               <article id={id} className="card perfil-card h-100">
-                <div className="card-body">
+                <div className="card-body d-flex flex-column">
                   <span className={`perfil-icon perfil-icon-${cor}`}>
                     <Icone size={30} strokeWidth={1.5} aria-hidden="true" />
                   </span>
                   <h3>{titulo}</h3>
                   <p>{descricao}</p>
+                  <a
+                    href={link}
+                    className="sage-text-link mt-auto d-inline-flex align-items-center gap-1"
+                    style={{ color: 'inherit', fontWeight: 600, textDecoration: 'none' }}
+                  >
+                    {linkTexto} <ArrowRight size={15} aria-hidden="true" />
+                  </a>
                 </div>
               </article>
             </div>

@@ -19,7 +19,7 @@ export default function VagasSection({ vagas = vagasLocais }) {
               Encontre oportunidades para começar sua experiência profissional.
             </p>
           </div>
-          <Button texto="Ver todas as vagas" tipo="botao-sem-fundo-verde" aria-disabled="true" />
+          <Button texto="Ver todas as vagas" tipo="botao-sem-fundo-verde" href="/sage/vagas" />
         </div>
         <div id="lista-vagas" className="row g-4 vagas-grid">
           {destaques.map((vaga, index) => (

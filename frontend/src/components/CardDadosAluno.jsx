@@ -29,7 +29,7 @@ function CardDadosAluno({ nome, curso, email, matricula, aoEditarPerfil, onEditP
             <span className="text-secondary">{email}</span>
           </div>
 
-          <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 pt-2">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div>
               <span className="fw-bold text-dark">Numero de Matrícula: </span>
               <span className="text-secondary">{matricula}</span>

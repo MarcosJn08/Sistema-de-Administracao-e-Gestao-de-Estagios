@@ -30,7 +30,7 @@ export default function LandingPage() {
               lugar.
             </p>
             <div className="d-flex flex-wrap gap-3">
-              <Button texto="Iniciar o cadastro" className="hero-primary" href="/sage/login" />
+              <Button texto="Iniciar o cadastro" className="hero-primary" href="/sage/cadastro/empresa" />
               <Button texto="Ver vagas abertas" tipo="botao-sem-fundo-verde" href="/sage/vagas" />
             </div>
           </div>

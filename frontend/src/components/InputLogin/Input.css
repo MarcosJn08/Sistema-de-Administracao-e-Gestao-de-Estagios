@@ -1,0 +1,40 @@
+.input-container {
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.input-container .form-label,
+.input-container label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  text-align: left;
+}
+
+.input-container .form-control,
+.input-container input {
+  height: 42px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  color: #1e293b;
+  box-shadow: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-container .form-control::placeholder,
+.input-container input::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+.input-container .form-control:focus,
+.input-container input:focus {
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+  outline: none;
+}

@@ -6,18 +6,21 @@ const etapas = [
     descricao: 'Explore oportunidades validadas pelo setor de estágios.',
     acao: 'Explorar vagas',
     Icone: Search,
+    link: '/sage/vagas',
   },
   {
     titulo: 'Cadastre seu estágio',
     descricao: 'Registre o vínculo, as atividades e a jornada.',
-    acao: 'Cadastrar estágio',
+    acao: 'Cadastrar empresa ou estágio',
     Icone: FilePlus2,
+    link: '/sage/cadastro/empresa',
   },
   {
     titulo: 'Envie os documentos',
     descricao: 'Faça o upload dos arquivos e acompanhe as assinaturas.',
-    acao: 'Enviar documentos',
+    acao: 'Central de documentos',
     Icone: FileUp,
+    link: '/sage/documentos',
   },
 ];
 
@@ -40,7 +43,7 @@ export default function ComoFuncionaSection() {
           </p>
         </div>
         <div className="row g-3 fluxo-grid">
-          {etapas.map(({ titulo, descricao, acao, Icone }, index) => (
+          {etapas.map(({ titulo, descricao, acao, Icone, link }, index) => (
             <div
               className="col-12 col-lg-4"
               key={titulo}
@@ -54,9 +57,13 @@ export default function ComoFuncionaSection() {
                   </span>
                   <h3>{titulo}</h3>
                   <p>{descricao}</p>
-                  <button type="button" className="sage-text-link mt-auto" aria-disabled="true">
+                  <a
+                    href={link}
+                    className="sage-text-link mt-auto d-inline-flex align-items-center gap-1 text-decoration-none"
+                    style={{ color: 'inherit', fontWeight: 600 }}
+                  >
                     {acao} <ArrowRight size={15} aria-hidden="true" />
-                  </button>
+                  </a>
                 </div>
               </article>
             </div>

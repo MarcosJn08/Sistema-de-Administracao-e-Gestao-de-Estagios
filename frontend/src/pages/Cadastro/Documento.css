@@ -1,0 +1,273 @@
+.documento-page {
+  min-height: 100vh;
+  background-color: #f8faf8;
+}
+
+.documento-content {
+  width: 86%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 0 56px;
+}
+
+/* ── TÍTULO ─────────────────────────────── */
+
+.titulo-cadastro {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.icone-empresa {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background-color: #e8f7ed;
+  color: #249442;
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.titulo-cadastro h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a3a20;
+}
+
+.titulo-cadastro p {
+  margin: 6px 0 0;
+  font-size: 15px;
+  color: #6b7280;
+}
+
+/* ── CARD DO DOCUMENTO ───────────────────── */
+
+.documento-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background-color: #ffffff;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* ── TOOLBAR ─────────────────────────────── */
+
+.documento-toolbar {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0 8px;
+  margin-bottom: 12px;
+}
+
+.toolbar-esquerda,
+.toolbar-direita {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.documento-toolbar button,
+.botao-ferramenta {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #4b5563;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.documento-toolbar button:hover,
+.botao-ferramenta:hover {
+  background-color: #f0faf2;
+  border-color: #2e7d32;
+  color: #2e7d32;
+}
+
+.toolbar-esquerda span {
+  font-size: 15px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.zoom-text {
+  margin-left: 6px;
+}
+
+/* ── PREVIEW ─────────────────────────────── */
+
+.documento-preview {
+  height: 520px;
+  padding: 12px;
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.documento-folha {
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-mensagem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.preview-icone {
+  width: 68px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background-color: #e8f7ed;
+  color: #2e7d32;
+  font-size: 34px;
+}
+
+.preview-mensagem strong {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.preview-mensagem span {
+  font-size: 15px;
+  color: #9ca3af;
+  max-width: 320px;
+}
+
+/* ── AÇÕES ABAIXO DO PREVIEW ─────────────── */
+
+.documento-acoes {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.botoes-documento {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ── UPLOAD ──────────────────────────────── */
+
+.documento-acoes .mb-3 {
+  margin-bottom: 0 !important;
+}
+
+.documento-acoes .form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.documento-acoes .form-control {
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+/* ── STATUS ──────────────────────────────── */
+
+.documento-status {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.status-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.btn-enviar {
+  min-width: 160px;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 22px;
+  background-color: #2e7d32;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-enviar:hover {
+  background-color: #1b5e20;
+}
+
+.btn-enviar i {
+  margin-right: 8px;
+}
+
+/* ── BOTÃO PRÓXIMO (canto direito) ────────── */
+
+.area-botao-documento {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 28px;
+}
+
+/* ── RESPONSIVO ──────────────────────────── */
+
+@media (max-width: 700px) {
+  .documento-content {
+    width: 92%;
+    padding: 24px 0 40px;
+  }
+
+  .documento-preview {
+    height: 340px;
+  }
+
+  .documento-acoes {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .area-botao-documento {
+    justify-content: stretch;
+  }
+
+  .area-botao-documento .botao {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,70 @@
+/* === BASE DO BOTÃO === */
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+/* === COM FUNDO VERDE === */
+
+.botao-com-fundo {
+  border: 2px solid #2e7d32;
+  background-color: #2e7d32;
+  color: white;
+}
+
+.botao-com-fundo:hover {
+  background-color: #1b5e20;
+  border-color: #1b5e20;
+  color: white;
+}
+
+/* === SEM FUNDO VERDE === */
+
+.botao-sem-fundo-verde {
+  border: 2px solid #2e7d32;
+  background-color: transparent;
+  color: #2e7d32;
+}
+
+.botao-sem-fundo-verde:hover {
+  background-color: #2e7d32;
+  border-color: #2e7d32;
+  color: white;
+}
+
+/* === SEM FUNDO BRANCO === */
+
+.botao-sem-fundo-branco {
+  border: 2px solid #66bb6a;
+  background-color: transparent;
+  color: white;
+}
+
+.botao-sem-fundo-branco:hover {
+  background-color: #66bb6a;
+  border-color: #66bb6a;
+  color: white;
+}
+
+/* === TEXTO BRANCO === */
+
+.botao-texto-branco {
+  border: 2px solid transparent;
+  background-color: transparent;
+  color: white;
+}
+
+.botao-texto-branco:hover {
+  opacity: 0.8;
+}
