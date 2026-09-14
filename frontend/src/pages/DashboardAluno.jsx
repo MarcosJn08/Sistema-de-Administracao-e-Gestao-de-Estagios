@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import Header from '../components/Header.jsx';
-import Rodape from '../components/Rodape.jsx';
+import Footer from '../components/Footer.jsx';
 import CardDadosAluno from '../components/CardDadosAluno.jsx';
 import CardProgresso from '../components/CardProgresso.jsx';
 import CardEstagioAtual from '../components/CardEstagioAtual.jsx';
@@ -62,7 +62,7 @@ function DashboardAluno() {
         </Container>
       </main>
 
-      <Rodape />
+      <Footer />
     </div>
   );
 }
