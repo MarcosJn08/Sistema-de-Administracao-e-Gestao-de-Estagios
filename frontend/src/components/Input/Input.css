@@ -1,38 +1,44 @@
 .input-container {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
+  margin-bottom: 4px;
 }
 
-.input-container label {
+.input-container .form-label {
+  display: block;
+
+  margin-bottom: 3px;
+
+  font-size: 8px;
   color: #000000;
-  font-size: 14px;
-  font-weight: 500;
+
+  text-align: left;
 }
 
-.input-container input {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #ccc;
+.input-container .form-control {
+  height: 30px;
+
+  border: 1px solid #000000;
   border-radius: 6px;
-  font-size: 16px;
-  outline: none;
-  box-sizing: border-box;
-}
 
-.input-container input:hover {
-  border-color: #16A34A;
-  color: #16A34A;
+  padding: 5px 9px;
+
+  font-size: 9px;
+  color: #3f3f46;
+
   box-shadow: none;
 }
 
-.input-container input:focus {
-  border-color: #1b5e20;
-  color: #1b5e20;
-  box-shadow: none;
+.input-container .form-control::placeholder {
+  color: #555;
+  opacity: 1;
 }
 
-.input-container input::placeholder {
-  color: #999;
+.input-container .form-control:focus {
+  border-color: #2db04f;
+
+  box-shadow: 0 0 0 1px rgba(45, 176, 79, 0.1);
+}
+
+/* Quando o campo estiver preenchido/selecionado */
+.input-container .form-control:focus + * {
+  color: #2e9c45;
 }

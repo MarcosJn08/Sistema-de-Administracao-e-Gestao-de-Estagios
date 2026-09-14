@@ -2,7 +2,7 @@ import Image from "react-bootstrap/Image";
 import "../App.css";
 import Nav from "react-bootstrap/Nav";
 
-import Input from "../components/Input/Input.jsx";
+import Input from "../components/InputLogin/Input.jsx";
 import GoogleButton from "../components/GoogleButton.jsx";
 import Button from "../components/Button/Button.jsx";
 

@@ -1,53 +1,95 @@
 .header-cadastro {
-    display: flex;
-    align-items: center;
+  height: 45px;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  border-bottom: 1px solid #eeeeee;
+
+  padding: 3px 20px 0;
+
+  gap: 0;
 }
+
+/* Cada etapa */
 
 .header-cadastro > div {
-    display: flex;
-    align-items: center;
-    flex: 1;
+  width: 130px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.header-cadastro > div:last-child {
-    flex: 0;
+/* Número */
+
+.numero-passo {
+  width: 21px;
+  height: 21px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #f1f3f4;
 }
 
-.header-cadastro p {
-    width: 35px;
-    height: 35px;
+.numero-passo p {
+  margin: 0;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  font-size: 9px;
+  font-weight: 600;
 
-    border-radius: 50%;
-    margin: 0;
-    flex-shrink: 0;
+  color: #aeb2b5;
 }
+
+/* Texto */
+
+.header-cadastro span {
+  margin-top: 2px;
+
+  font-size: 7px;
+
+  color: #a0a0a0;
+}
+
+/* Linha */
 
 .header-cadastro hr {
-    flex: 1;
-    border: none;
-    border-top: 2px solid #ccc;
-    margin: 10px solid
-}
-/* Passo concluído */
+  width: 63px;
 
-.Passo-concluido p {
-    background-color: #66bb6a;
-    color: white;
+  margin: 10px 0 0;
+
+  border: 0;
+  border-top: 1px solid #e4e6e8;
+
+  opacity: 1;
 }
 
-.Passo-concluido hr {
-    border-top-color: #66bb6a;
+/* ETAPA CONCLUÍDA */
+
+.header-cadastro .passo-concluido .numero-passo {
+  background-color: #258b3c;
 }
 
-.proximo-passo p {
-    background-color: #777777;
-    color: white;
+.header-cadastro .passo-concluido .numero-passo p {
+  color: white;
 }
 
-.proximo-passo hr {
-    border-top-color: #777777;
+.header-cadastro .passo-concluido span {
+  color: #258b3c;
+  font-weight: 600;
+}
+
+/* PRÓXIMA ETAPA */
+
+.header-cadastro .proximo-passo .numero-passo {
+  background-color: #f1f3f4;
+}
+
+.header-cadastro .proximo-passo span {
+  color: #9da1a5;
 }

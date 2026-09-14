@@ -1,8 +1,20 @@
 import "./Button.css";
 
-//tipos de botão: botao-com-fundo , botao-sem-fundo-verde e botao-sem-fundo-branco
-function Botao({ texto, tipo = "tipo" }) {
-  return <button className={`botao ${tipo}`}>{texto}</button>;
+// Tipos:
+// botao-com-fundo
+// botao-sem-fundo-verde
+// botao-sem-fundo-branco
+
+function Botao({ texto, tipo = "botao-com-fundo", children, onClick }) {
+  return (
+    <button
+      className={`botao ${tipo}`}
+      onClick={onClick}
+    >
+      {children}
+      {texto}
+    </button>
+  );
 }
 
 export default Botao;

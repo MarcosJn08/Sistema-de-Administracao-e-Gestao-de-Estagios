@@ -14,9 +14,11 @@
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^9.4.0",
     "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
     "lucide-react": "^1.39.0",
     "react": "^19.2.8",
     "react-bootstrap": "^2.10.10",
+    "react-bootstrap-icons": "^1.11.6",
     "react-dom": "^19.2.8",
     "react-google-button": "^0.8.0",
     "react-router-dom": "^7.18.3"

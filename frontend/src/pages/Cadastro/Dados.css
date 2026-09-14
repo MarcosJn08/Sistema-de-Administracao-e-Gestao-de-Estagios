@@ -1,0 +1,178 @@
+.dados-page {
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+.dados-content {
+  width: 94%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 18px 0 30px;
+}
+
+/* TÍTULO */
+
+.titulo-cadastro {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.icone-empresa {
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #e8f7ed;
+  color: #249442;
+
+  font-size: 22px;
+}
+
+.titulo-cadastro h1 {
+  margin: 0;
+
+  font-size: 19px;
+  font-weight: 600;
+
+  color: #258f43;
+}
+
+.titulo-cadastro p {
+  margin: 2px 0 0;
+
+  font-size: 9px;
+  color: #999;
+}
+
+/* CARDS */
+
+.card-cadastro {
+  background-color: #ffffff;
+  border: 1px solid #eeeeee;
+  border-radius: 9px;
+
+  padding: 12px;
+
+  margin-bottom: 11px;
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+}
+
+.card-titulo {
+  margin-bottom: 9px;
+}
+
+.card-titulo h2 {
+  margin: 0;
+
+  color: #258f43;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.card-titulo p {
+  margin: 3px 0 0;
+
+  color: #8f8f8f;
+
+  font-size: 8px;
+}
+
+/* GRID DOS INPUTS */
+
+.form-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  column-gap: 9px;
+  row-gap: 1px;
+}
+
+.campo-full {
+  grid-column: 1 / -1;
+}
+
+/* TELEFONE */
+
+.campo-telefone {
+  grid-column: 1 / 2;
+}
+
+/* BOTÃO */
+
+.area-botao {
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: 20px;
+}
+
+.btn-proximo {
+  background-color: #2e8037 !important;
+  border-color: #2e8037 !important;
+
+  border-radius: 5px !important;
+
+  font-size: 12px !important;
+  font-weight: 500 !important;
+
+  padding: 8px 17px !important;
+}
+
+.btn-proximo:hover {
+  background-color: #25682d !important;
+  border-color: #25682d !important;
+}
+
+/* SELECT */
+
+.input-container .form-select {
+  height: 30px;
+
+  border: 1px solid #e1e3e6;
+  border-radius: 6px;
+
+  font-size: 9px;
+  color: #454545;
+
+  box-shadow: none;
+}
+
+.input-container .form-select:focus {
+  border-color: #2db04f;
+  box-shadow: 0 0 0 1px rgba(45, 176, 79, 0.1);
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 700px) {
+
+  .dados-content {
+    width: 92%;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .campo-full,
+  .campo-telefone {
+    grid-column: 1;
+  }
+
+  .area-botao {
+    justify-content: stretch;
+  }
+
+  .btn-proximo {
+    width: 100%;
+  }
+}
