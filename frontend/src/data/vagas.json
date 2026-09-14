@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "titulo": "Estágio em Informática",
+    "empresa": "Inova Tech",
+    "cidade": "Montes Claros, MG",
+    "modalidade": "Híbrido",
+    "curso": "Técnico em Informática",
+    "carga_horaria": "30h/semana",
+    "valor_bolsa": 900,
+    "beneficios": "Auxílio-transporte",
+    "data_limite": "2026-10-30",
+    "inscricoes_abertas": true,
+    "descricao": "Apoie o desenvolvimento e a manutenção de sistemas, participe de testes e coloque em prática seus conhecimentos de informática."
+  },
+  {
+    "id": 2,
+    "titulo": "Estágio Administrativo",
+    "empresa": "Prefeitura de Almenara",
+    "cidade": "Almenara, MG",
+    "modalidade": "Presencial",
+    "curso": "Administração",
+    "carga_horaria": "20h/semana",
+    "valor_bolsa": 700,
+    "beneficios": "Auxílio-transporte",
+    "data_limite": "2026-11-05",
+    "inscricoes_abertas": true,
+    "descricao": "Participe das rotinas administrativas, da organização de documentos e do atendimento, desenvolvendo suas habilidades profissionais."
+  },
+  {
+    "id": 3,
+    "titulo": "Estágio em Suporte de TI",
+    "empresa": "Norte Minas Soluções",
+    "cidade": "Janaúba, MG",
+    "modalidade": "Presencial",
+    "curso": "Técnico em Informática",
+    "carga_horaria": "30h/semana",
+    "valor_bolsa": 800,
+    "beneficios": "Auxílio-transporte",
+    "data_limite": "2026-11-12",
+    "inscricoes_abertas": true,
+    "descricao": "Auxilie no atendimento aos usuários, na configuração de equipamentos e na manutenção da infraestrutura de tecnologia."
+  }
+]

@@ -1,13 +1,26 @@
-import { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-import Navbar from './components/Header.jsx';
+import { useRef } from 'react'
+import Header from './components/Header.jsx'
+import Footer from './components/Footer.jsx'
+import LandingPage from './pages/LandingPage.jsx'
+import useScrollReveal from './hooks/useScrollReveal.js'
+import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const pageRef = useRef<HTMLDivElement>(null)
+  useScrollReveal(pageRef)
 
   return (
-    <Navbar pagina01="Dashboard" pagina02="Vagas" pagina03="Documentos" pagina04="Documentos" pagina05="Documentos" pagina06="Documentos"/>
+    <div ref={pageRef}>
+      <div className="scroll-progress" aria-hidden="true" />
+      <a className="skip-link" href="#conteudo">
+        Pular para o conteúdo
+      </a>
+      <Header />
+      <main id="conteudo" tabIndex={-1}>
+        <LandingPage />
+      </main>
+      <Footer />
+    </div>
   )
 }
 
