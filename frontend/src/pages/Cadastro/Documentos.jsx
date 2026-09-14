@@ -101,7 +101,7 @@ function Documento() {
 
         {/* Próximo */}
         <div className="area-botao-documento">
-          <Botao texto="Próximo" tipo="botao-com-fundo">
+          <Botao texto="Próximo" tipo="botao-com-fundo" href="/sage/cadastro/confirmacao">
             <i className="bi bi-chevron-right"></i>
           </Botao>
         </div>

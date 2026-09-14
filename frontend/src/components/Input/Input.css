@@ -1,44 +1,53 @@
 .input-container {
-  margin-bottom: 4px;
+  margin-bottom: 20px;
+  width: 100%;
 }
 
 .input-container .form-label {
   display: block;
-
-  margin-bottom: 3px;
-
-  font-size: 8px;
-  color: #000000;
-
+  margin-bottom: 7px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
   text-align: left;
 }
 
 .input-container .form-control {
-  height: 30px;
-
-  border: 1px solid #000000;
-  border-radius: 6px;
-
-  padding: 5px 9px;
-
-  font-size: 9px;
-  color: #3f3f46;
-
+  height: 48px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 15px;
+  color: #111827;
   box-shadow: none;
+  background-color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .input-container .form-control::placeholder {
-  color: #555;
+  color: #9ca3af;
   opacity: 1;
 }
 
 .input-container .form-control:focus {
-  border-color: #2db04f;
-
-  box-shadow: 0 0 0 1px rgba(45, 176, 79, 0.1);
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.14);
+  outline: none;
 }
 
-/* Quando o campo estiver preenchido/selecionado */
-.input-container .form-control:focus + * {
-  color: #2e9c45;
+.input-container .form-select {
+  height: 48px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #111827;
+  padding: 10px 16px;
+  box-shadow: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-container .form-select:focus {
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.14);
+  outline: none;
 }

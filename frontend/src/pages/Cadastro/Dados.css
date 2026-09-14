@@ -1,13 +1,13 @@
 .dados-page {
   min-height: 100vh;
-  background-color: #ffffff;
+  background-color: #f8faf8;
 }
 
 .dados-content {
-  width: 94%;
-  max-width: 1400px;
+  width: 86%;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 18px 0 30px;
+  padding: 40px 0 56px;
 }
 
 /* TÍTULO */
@@ -15,85 +15,71 @@
 .titulo-cadastro {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: 18px;
+  margin-bottom: 32px;
 }
 
 .icone-empresa {
-  width: 38px;
-  height: 38px;
-  border-radius: 9px;
-
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-
   background-color: #e8f7ed;
   color: #249442;
-
-  font-size: 22px;
+  font-size: 32px;
+  flex-shrink: 0;
 }
 
 .titulo-cadastro h1 {
   margin: 0;
-
-  font-size: 19px;
-  font-weight: 600;
-
-  color: #258f43;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a3a20;
 }
 
 .titulo-cadastro p {
-  margin: 2px 0 0;
-
-  font-size: 9px;
-  color: #999;
+  margin: 6px 0 0;
+  font-size: 15px;
+  color: #6b7280;
 }
 
 /* CARDS */
 
 .card-cadastro {
   background-color: #ffffff;
-  border: 1px solid #eeeeee;
-  border-radius: 9px;
-
-  padding: 12px;
-
-  margin-bottom: 11px;
-
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
 .card-titulo {
-  margin-bottom: 9px;
+  margin-bottom: 24px;
 }
 
 .card-titulo h2 {
   margin: 0;
-
-  color: #258f43;
-
-  font-size: 12px;
-  font-weight: 600;
+  color: #1a3a20;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .card-titulo p {
-  margin: 3px 0 0;
-
-  color: #8f8f8f;
-
-  font-size: 8px;
+  margin: 6px 0 0;
+  color: #6b7280;
+  font-size: 15px;
 }
 
 /* GRID DOS INPUTS */
 
 .form-grid {
   display: grid;
-
   grid-template-columns: 1fr 1fr;
-
-  column-gap: 9px;
-  row-gap: 1px;
+  column-gap: 24px;
+  row-gap: 4px;
 }
 
 .campo-full {
@@ -111,50 +97,44 @@
 .area-botao {
   display: flex;
   justify-content: flex-end;
-
-  margin-top: 20px;
+  margin-top: 32px;
 }
 
 .btn-proximo {
-  background-color: #2e8037 !important;
-  border-color: #2e8037 !important;
-
-  border-radius: 5px !important;
-
-  font-size: 12px !important;
-  font-weight: 500 !important;
-
-  padding: 8px 17px !important;
+  background-color: #2e7d32 !important;
+  border-color: #2e7d32 !important;
+  border-radius: 8px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  padding: 11px 30px !important;
+  min-height: 48px !important;
 }
 
 .btn-proximo:hover {
-  background-color: #25682d !important;
-  border-color: #25682d !important;
+  background-color: #1b5e20 !important;
+  border-color: #1b5e20 !important;
 }
 
 /* SELECT */
 
 .input-container .form-select {
-  height: 30px;
-
-  border: 1px solid #e1e3e6;
-  border-radius: 6px;
-
-  font-size: 9px;
-  color: #454545;
-
+  height: 44px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #1e293b;
+  padding: 8px 14px;
   box-shadow: none;
 }
 
 .input-container .form-select:focus {
   border-color: #2db04f;
-  box-shadow: 0 0 0 1px rgba(45, 176, 79, 0.1);
+  box-shadow: 0 0 0 3px rgba(45, 176, 79, 0.12);
 }
 
 /* RESPONSIVO */
 
 @media (max-width: 700px) {
-
   .dados-content {
     width: 92%;
   }

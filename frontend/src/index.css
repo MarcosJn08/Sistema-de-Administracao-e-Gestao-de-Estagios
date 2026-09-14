@@ -70,11 +70,6 @@ article[id],
   scroll-margin-top: 24px;
 }
 
-::selection {
-  background: #dceddc;
-  color: #1b5e20;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

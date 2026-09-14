@@ -3,21 +3,24 @@ import React from "react";
 const GoogleButton = ({ onClick }) => {
   return (
     <button
+      type="button"
       onClick={onClick}
       style={{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        width: "100%",
         padding: "10px 20px",
         backgroundColor: "#ffffff",
         border: "1px solid #dadce0",
-        borderRadius: "4px",
+        borderRadius: "6px",
         cursor: "pointer",
         fontSize: "14px",
         color: "#3c4043",
-        fontFamily: "Roboto, Arial, sans-serif",
-        fontWeight: "500",
-        borderRadius: "8px",
+        fontFamily: "inherit",
+        fontWeight: "600",
+        minHeight: "44px",
+        transition: "background-color 0.2s, box-shadow 0.2s",
       }}
     >
       <img

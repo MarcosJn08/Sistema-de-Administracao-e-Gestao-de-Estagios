@@ -1,76 +1,57 @@
 .header-cadastro {
-  height: 45px;
-
+  height: 70px;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-
   border-bottom: 1px solid #eeeeee;
-
-  padding: 3px 20px 0;
-
+  padding: 10px 20px 0;
   gap: 0;
 }
 
 /* Cada etapa */
-
 .header-cadastro > div {
-  width: 130px;
-
+  width: 160px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 /* Número */
-
 .numero-passo {
-  width: 21px;
-  height: 21px;
-
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   background-color: #f1f3f4;
 }
 
 .numero-passo p {
   margin: 0;
-
-  font-size: 9px;
-  font-weight: 600;
-
+  font-size: 14px;
+  font-weight: 700;
   color: #aeb2b5;
 }
 
 /* Texto */
-
 .header-cadastro span {
-  margin-top: 2px;
-
-  font-size: 7px;
-
+  margin-top: 4px;
+  font-size: 13px;
   color: #a0a0a0;
+  font-weight: 500;
 }
 
 /* Linha */
-
 .header-cadastro hr {
-  width: 63px;
-
-  margin: 10px 0 0;
-
+  width: 80px;
+  margin: 15px 0 0;
   border: 0;
   border-top: 1px solid #e4e6e8;
-
   opacity: 1;
 }
 
 /* ETAPA CONCLUÍDA */
-
 .header-cadastro .passo-concluido .numero-passo {
   background-color: #258b3c;
 }
@@ -81,11 +62,10 @@
 
 .header-cadastro .passo-concluido span {
   color: #258b3c;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* PRÓXIMA ETAPA */
-
 .header-cadastro .proximo-passo .numero-passo {
   background-color: #f1f3f4;
 }

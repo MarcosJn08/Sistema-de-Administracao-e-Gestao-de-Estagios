@@ -1,46 +1,70 @@
-.botao-com-fundo {
-  border: #66bb6a 2px solid;
+/* === BASE DO BOTÃO === */
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
   border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+/* === COM FUNDO VERDE === */
+
+.botao-com-fundo {
+  border: 2px solid #2e7d32;
   background-color: #2e7d32;
   color: white;
-  transition: 0.3s;
 }
 
 .botao-com-fundo:hover {
-  background-color: #66bb6a;
+  background-color: #1b5e20;
   border-color: #1b5e20;
   color: white;
-  cursor: pointer;
 }
 
-/* BOTÃO SEM FUNDO VERDE */
+/* === SEM FUNDO VERDE === */
 
 .botao-sem-fundo-verde {
-  border: #2e7d32 2px solid;
-  border-radius: 8px;
+  border: 2px solid #2e7d32;
   background-color: transparent;
   color: #2e7d32;
-  transition: 0.3s;
 }
 
 .botao-sem-fundo-verde:hover {
   background-color: #2e7d32;
   border-color: #2e7d32;
   color: white;
-  cursor: pointer;
 }
 
+/* === SEM FUNDO BRANCO === */
+
 .botao-sem-fundo-branco {
-  border: #66bb6a 2px solid;
-  border-radius: 8px;
+  border: 2px solid #66bb6a;
   background-color: transparent;
   color: white;
-  transition: 0.3s;
 }
 
 .botao-sem-fundo-branco:hover {
   background-color: #66bb6a;
   border-color: #66bb6a;
   color: white;
-  cursor: pointer;
+}
+
+/* === TEXTO BRANCO === */
+
+.botao-texto-branco {
+  border: 2px solid transparent;
+  background-color: transparent;
+  color: white;
+}
+
+.botao-texto-branco:hover {
+  opacity: 0.8;
 }

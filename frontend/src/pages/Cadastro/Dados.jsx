@@ -201,7 +201,7 @@ function Dados() {
 
         {/* BOTÃO */}
         <div className="area-botao">
-          <Button className="btn-proximo">
+          <Button className="btn-proximo" href="/sage/cadastro/documento">
             Próximo
           </Button>
         </div>
