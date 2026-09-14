@@ -1,75 +1,35 @@
-# React + TypeScript + Vite
+# SAGE — Landing page
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Página de apresentação do portal de estágios do IFNMG — Campus Almenara, desenvolvida com React, Vite, Bootstrap, React Bootstrap e Lucide. Reutiliza o Header, o Button, a logo e as fontes locais do projeto.
 
-Currently, two official plugins are available:
+## Desenvolvimento
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Na pasta `frontend`:
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm ci
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## Verificação
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm run build
+npm run lint
 ```
+
+## Organização
+
+A aplicação exibe somente a landing page, com Hero, perfis, vagas em destaque, etapas, chamada para conhecer o portal e rodapé. A navegação entre as seções usa âncoras na própria página. Ações de funcionalidades futuras, como Entrar, Cadastrar, Ver vaga e envio de documentos, permanecem visíveis como botões sem navegação ou resposta ao clique, identificados com `aria-disabled`.
+
+- `src/pages/LandingPage.jsx`: composição da página.
+- `src/components/landing`: seções reutilizáveis.
+- `src/data/vagas.json`: dados demonstrativos das oportunidades.
+- `src/hooks/useScrollReveal.js`: entrada gradual dos elementos na rolagem e indicador de progresso.
+- `src/App.css` e `src/index.css`: estilos, responsividade e fontes locais.
+
+Perfis e etapas usam o fundo `#f8f9fa` e o grid `col-12 col-lg-4`. A vitrine tem fundo branco e grid `col-12 col-md-6 col-lg-4`.
+
+As animações acontecem uma vez por elemento, com entrada vertical de 64 px, leve escala, desfoque que se dissipa e fade. Os cards entram em sequência com intervalos de 150 ms e transição de até 1,1 s, mantendo a rolagem nativa. A preferência por movimento reduzido desativa os efeitos. O conteúdo permanece acessível por teclado, na impressão e em navegadores sem IntersectionObserver.
+
+Não há telas secundárias, autenticação, formulários ou envio de dados nesta versão.
