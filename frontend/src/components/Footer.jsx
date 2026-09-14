@@ -3,20 +3,29 @@ import LogoBranca from '../assets/LogoBranca.png';
 const grupos = [
   {
     titulo: 'Alunos',
-    links: [['Ver vagas'], ['Meu estágio'], ['Documentos'], ['Como funciona', '#como-funciona']],
+    links: [
+      ['Ver vagas', '/sage/vagas'],
+      ['Meu estágio', '/sage/aluno'],
+      ['Documentos', '/sage/documentos'],
+      ['Como funciona', '#como-funciona'],
+    ],
   },
   {
     titulo: 'Empresas',
     links: [
-      ['Divulgar vagas'],
+      ['Divulgar vagas', '/sage/vagas'],
       ['Como funciona', '#empresas'],
-      ['Como participar'],
+      ['Como participar', '#perfis'],
       ['Orientações', '#como-funciona'],
     ],
   },
   {
     titulo: 'Institucional',
-    links: [['Sobre o SAGE', '#perfis'], ['Núcleo de Estágio'], ['Contato']],
+    links: [
+      ['Sobre o SAGE', '#perfis'],
+      ['Núcleo de Estágio', '#contato'],
+      ['Contato', '#contato'],
+    ],
   },
 ];
 
@@ -26,7 +35,7 @@ export default function Footer() {
       <div className="container sage-container">
         <div className="row g-4">
           <div className="col-12 col-md-3 footer-brand">
-            <a href="#inicio">
+            <a href="/sage">
               <img src={LogoBranca} alt="SAGE — início" className="logo" width="84" height="64" />
             </a>
             <p>Sistema de gestão de estágios do IFNMG, Campus Almenara.</p>

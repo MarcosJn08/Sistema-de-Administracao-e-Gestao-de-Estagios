@@ -13,10 +13,16 @@ function Header({
   pagina04 = 'Para empresas',
   pagina05 = 'Contato',
   pagina06 = '',
+  paginaAtiva,
+  usuario,
 }) {
   const [expanded, setExpanded] = useState(false);
   const closeMenu = () => setExpanded(false);
-  const links = [
+
+  // Se for o dashboard do aluno (passou usuario)
+  const isDashboard = Boolean(usuario);
+
+  const landingLinks = [
     [pagina01, '#inicio'],
     [pagina02, '#perfis'],
     [pagina03, '#vagas'],
@@ -24,6 +30,15 @@ function Header({
     [pagina05, '#contato'],
     ...(pagina06 ? [[pagina06, '#como-funciona']] : []),
   ];
+
+  const dashboardLinks = [
+    ['Início', '/sage'],
+    ['Dashboard', '/sage/aluno'],
+    ['Vagas', '/sage/vagas'],
+    ['Documentos', '/sage/documentos'],
+  ];
+
+  const links = isDashboard ? dashboardLinks : landingLinks;
 
   return (
     <Navbar
@@ -35,7 +50,7 @@ function Header({
       aria-label="Navegação principal"
     >
       <Container fluid className="sage-edge-container">
-        <Navbar.Brand href="#inicio" onClick={closeMenu}>
+        <Navbar.Brand href="/sage" onClick={closeMenu}>
           <img src={LogoBranca} className="logo" alt="SAGE — início" width="76" height="56" />
         </Navbar.Brand>
         <Navbar.Toggle
@@ -57,14 +72,32 @@ function Header({
           <Offcanvas.Body>
             <Nav className="menu-central">
               {links.map(([label, href]) => (
-                <Nav.Link key={href} href={href} onClick={closeMenu}>
+                <Nav.Link
+                  key={href}
+                  href={href}
+                  onClick={closeMenu}
+                  className={paginaAtiva === label ? 'nav-link-active' : ''}
+                >
                   {label}
                 </Nav.Link>
               ))}
             </Nav>
             <div className="botao-login">
-              <Button texto="Entrar" tipo="botao-texto-branco" aria-disabled="true" />
-              <Button texto="Cadastrar" aria-disabled="true" />
+              {isDashboard ? (
+                <div className="perfil-usuario-header">
+                  <div className="avatar-usuario-header">
+                    <span>{usuario.nome ? usuario.nome.charAt(0).toUpperCase() : 'A'}</span>
+                  </div>
+                  <span className="nome-usuario-header">
+                    {usuario.nome ? usuario.nome.split(' ')[0] : 'Aluno'}
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <Button texto="Entrar" tipo="botao-texto-branco" href="/sage/login" />
+                  <Button texto="Portal do Aluno" href="/sage/aluno" />
+                </>
+              )}
             </div>
           </Offcanvas.Body>
         </Navbar.Offcanvas>
