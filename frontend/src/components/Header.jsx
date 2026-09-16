@@ -16,6 +16,7 @@ function Header({
   paginaAtiva,
   usuario,
   customLinks,
+  somenteInicio = false,
 }) {
   const [expanded, setExpanded] = useState(false);
   const closeMenu = () => setExpanded(false);
@@ -38,7 +39,11 @@ function Header({
     ['Documentos', '/sage/documentos'],
   ];
 
-  const links = customLinks || (isDashboard ? dashboardLinks : landingLinks);
+  const cadastroLinks = [
+    ['Início', '/sage'],
+  ];
+
+  const links = customLinks || (somenteInicio ? cadastroLinks : isDashboard ? dashboardLinks : landingLinks);
 
   return (
     <Navbar
@@ -82,26 +87,28 @@ function Header({
                 </Nav.Link>
               ))}
             </Nav>
-            <div className="botao-login">
-              {isDashboard ? (
-                <div className="d-flex align-items-center gap-3">
-                  <div className="perfil-usuario-header">
-                    <div className="avatar-usuario-header">
-                      <span>{usuario.nome ? usuario.nome.charAt(0).toUpperCase() : 'A'}</span>
+            {!somenteInicio && (
+              <div className="botao-login">
+                {isDashboard ? (
+                  <div className="d-flex align-items-center gap-3">
+                    <div className="perfil-usuario-header">
+                      <div className="avatar-usuario-header">
+                        <span>{usuario.nome ? usuario.nome.charAt(0).toUpperCase() : 'A'}</span>
+                      </div>
+                      <span className="nome-usuario-header">
+                        {usuario.nome ? usuario.nome.split(' ')[0] : 'Aluno'}
+                      </span>
                     </div>
-                    <span className="nome-usuario-header">
-                      {usuario.nome ? usuario.nome.split(' ')[0] : 'Aluno'}
-                    </span>
+                    <Button texto="Sair" tipo="botao-texto-branco" href="/sage/login" />
                   </div>
-                  <Button texto="Sair" tipo="botao-texto-branco" href="/sage/login" />
-                </div>
-              ) : (
-                <>
-                  <Button texto="Entrar" tipo="botao-texto-branco" href="/sage/login" />
-                  <Button texto="Portal do Aluno" href="/sage/aluno" />
-                </>
-              )}
-            </div>
+                ) : (
+                  <>
+                    <Button texto="Entrar" tipo="botao-texto-branco" href="/sage/login" />
+                    <Button texto="Portal do Aluno" href="/sage/aluno" />
+                  </>
+                )}
+              </div>
+            )}
           </Offcanvas.Body>
         </Navbar.Offcanvas>
       </Container>

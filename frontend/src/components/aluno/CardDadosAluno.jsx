@@ -16,7 +16,7 @@ function CardDadosAluno({ nome, curso, email, matricula, aoEditarPerfil, onEditP
           </svg>
         </div>
 
-        <div className="d-flex flex-column gap-1 flex-grow-1" style={{ fontSize: '0.875rem' }}>
+        <div className="d-flex flex-column gap-2 flex-grow-1" style={{ fontSize: '0.9375rem' }}>
           <div>
             <span className="fw-bold text-dark">Nome: </span>
             <span className="fw-bold text-dark">{nome}</span>

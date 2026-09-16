@@ -40,7 +40,7 @@ function Login() {
           texto="Digite sua senha"
         />
 
-        <Nav.Link href="#mudarSenha" style={{ fontSize: '13px', color: '#2e7d32', padding: 0, marginBottom: '4px' }}>
+        <Nav.Link href="#mudarSenha" style={{ fontSize: '14px', color: '#2e7d32', padding: 0, marginBottom: '8px' }}>
           Esqueceu a senha?
         </Nav.Link>
 
@@ -48,7 +48,7 @@ function Login() {
 
         <GoogleButton onClick={() => navigate("/sage/aluno")} />
 
-        <p style={{ fontSize: '13px', color: '#647068', textAlign: 'center', marginTop: '12px' }}>
+        <p style={{ fontSize: '14.5px', color: '#647068', textAlign: 'center', marginTop: '14px' }}>
           Não tem uma conta?{' '}
           <Link to="/sage/cadastro/empresa" style={{ color: '#2e7d32', fontWeight: '600', textDecoration: 'none' }}>
             Cadastre-se

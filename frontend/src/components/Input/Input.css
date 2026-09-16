@@ -1,23 +1,23 @@
 .input-container {
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   width: 100%;
 }
 
 .input-container .form-label {
   display: block;
-  margin-bottom: 7px;
-  font-size: 15px;
+  margin-bottom: 8px;
+  font-size: 16px;
   font-weight: 600;
   color: #1f2937;
   text-align: left;
 }
 
 .input-container .form-control {
-  height: 48px;
+  height: 50px;
   border: 1px solid #d1d5db;
   border-radius: 10px;
-  padding: 10px 16px;
-  font-size: 15px;
+  padding: 11px 16px;
+  font-size: 16px;
   color: #111827;
   box-shadow: none;
   background-color: #fff;
@@ -26,6 +26,7 @@
 
 .input-container .form-control::placeholder {
   color: #9ca3af;
+  font-size: 16px;
   opacity: 1;
 }
 
@@ -36,12 +37,12 @@
 }
 
 .input-container .form-select {
-  height: 48px;
+  height: 50px;
   border: 1px solid #d1d5db;
   border-radius: 10px;
-  font-size: 15px;
+  font-size: 16px;
   color: #111827;
-  padding: 10px 16px;
+  padding: 11px 16px;
   box-shadow: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }

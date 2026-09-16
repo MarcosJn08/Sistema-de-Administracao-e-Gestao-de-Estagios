@@ -6,8 +6,8 @@
 .input-container .form-label,
 .input-container label {
   display: block;
-  margin-bottom: 4px;
-  font-size: 13px;
+  margin-bottom: 6px;
+  font-size: 15px;
   font-weight: 600;
   color: #334155;
   text-align: left;
@@ -15,11 +15,11 @@
 
 .input-container .form-control,
 .input-container input {
-  height: 42px;
+  height: 46px;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
-  padding: 8px 14px;
-  font-size: 14px;
+  padding: 10px 14px;
+  font-size: 15px;
   color: #1e293b;
   box-shadow: none;
   width: 100%;

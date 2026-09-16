@@ -10,7 +10,7 @@ import Footer from "../../components/Footer.jsx";
 function Documento() {
   return (
     <div className="documento-page">
-      <Header />
+      <Header somenteInicio />
       <HeaderCadastro
         passo01="passo-concluido"
         passo02="passo-concluido"
