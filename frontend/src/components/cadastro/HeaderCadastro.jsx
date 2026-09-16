@@ -20,14 +20,6 @@ function HeaderCadastro({ passo01, passo02, passo03 }) {
         <span>Documento</span>
       </div>
 
-      <hr />
-
-      <div className={passo03}>
-        <div className="numero-passo">
-          <p>3</p>
-        </div>
-        <span>Confirmação</span>
-      </div>
     </Container>
   );
 }
