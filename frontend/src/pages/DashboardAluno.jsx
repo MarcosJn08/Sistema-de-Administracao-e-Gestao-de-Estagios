@@ -2,11 +2,11 @@ import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
-import CardDadosAluno from '../components/CardDadosAluno.jsx';
-import CardProgresso from '../components/CardProgresso.jsx';
-import CardEstagioAtual from '../components/CardEstagioAtual.jsx';
-import CardDocumentos from '../components/CardDocumentos.jsx';
-import CardMinhasInscricoes from '../components/CardMinhasInscricoes.jsx';
+import CardDadosAluno from '../components/aluno/CardDadosAluno.jsx';
+import CardProgresso from '../components/aluno/CardProgresso.jsx';
+import CardEstagioAtual from '../components/aluno/CardEstagioAtual.jsx';
+import CardDocumentos from '../components/aluno/CardDocumentos.jsx';
+import CardMinhasInscricoes from '../components/aluno/CardMinhasInscricoes.jsx';
 import dados from '../dados.jsx';
 import '../App.css';
 

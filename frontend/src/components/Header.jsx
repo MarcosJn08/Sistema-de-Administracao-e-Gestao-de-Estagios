@@ -20,7 +20,6 @@ function Header({
   const [expanded, setExpanded] = useState(false);
   const closeMenu = () => setExpanded(false);
 
-  // Se for o dashboard do aluno (passou usuario)
   const isDashboard = Boolean(usuario);
 
   const landingLinks = [
@@ -37,7 +36,6 @@ function Header({
     ['Dashboard', '/sage/aluno'],
     ['Vagas', '/sage/vagas'],
     ['Documentos', '/sage/documentos'],
-    ['Para empresas', '/sage/cadastro/empresa'],
   ];
 
   const links = customLinks || (isDashboard ? dashboardLinks : landingLinks);
