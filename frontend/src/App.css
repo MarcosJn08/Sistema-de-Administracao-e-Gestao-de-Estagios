@@ -86,7 +86,7 @@
   position: relative;
   z-index: 10;
   min-height: 64px;
-  padding-block: 4px;
+  padding-block: 2px;
   box-shadow:
     0 4px 12px rgb(0 0 0 / 22%),
     0 1px 3px rgb(0 0 0 / 12%);
@@ -95,6 +95,8 @@
   padding: 0;
   margin-right: 32px;
   line-height: 0;
+  display: flex;
+  align-items: center;
 }
 /*Configurações Logo*/
 
@@ -104,8 +106,8 @@
   object-fit: contain;
 }
 .header .logo {
-  width: 76px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
 }
 /* Menu*/
 
@@ -560,8 +562,8 @@ main:focus {
     min-height: 60px;
   }
   .header .logo {
-    width: 72px;
-    height: 52px;
+    width: 54px;
+    height: 54px;
   }
   .sage-menu .offcanvas-body {
     display: flex;

@@ -56,7 +56,7 @@ function Header({
     >
       <Container fluid className="sage-edge-container">
         <Navbar.Brand href="/sage" onClick={closeMenu}>
-          <img src={LogoBranca} className="logo" alt="SAGE — início" width="76" height="56" />
+          <img src={LogoBranca} className="logo" alt="SAGE — início" width="60" height="60" />
         </Navbar.Brand>
         <Navbar.Toggle
           aria-controls="offcanvasNavbar"
