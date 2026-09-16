@@ -16,13 +16,11 @@ function AppRoutes() {
         <Route path="/" element={<Navigate to="/sage" replace />} />
         <Route path="/sage" element={<LandingPage />} />
         
-        {/* Rotas com /sage */}
         <Route path="/sage/aluno" element={<DashboardAluno />} />
         <Route path="/sage/vagas" element={<VitrineVagas />} />
         <Route path="/sage/documentos" element={<CentralDocumentos />} />
         <Route path="/sage/login" element={<Login />} />
 
-        {/* Fluxo de cadastro de empresa */}
         <Route path="/sage/cadastro/empresa" element={<DadosEmpresa />} />
         <Route path="/sage/cadastro/documento" element={<DocumentosEmpresa />} />
         <Route path="/sage/cadastro/confirmacao" element={<ConfirmacaoEmpresa />} />

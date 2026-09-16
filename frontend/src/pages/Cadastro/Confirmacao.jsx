@@ -1,6 +1,7 @@
 import "./Confirmacao.css";
-import HeaderCadastro from "../../components/HeaderCadastro/HeaderCadastro.jsx";
-import Botao from "../../components/Button/Button.jsx";
+import HeaderCadastro from "../../components/cadastro/HeaderCadastro.jsx";
+import Botao from "../../components/Button.jsx";
+import InfoLinha from "../../components/cadastro/InfoLinha.jsx";
 
 function Confirmacao() {
   return (
@@ -12,7 +13,6 @@ function Confirmacao() {
       />
 
       <main className="confirmacao-content">
-        {/* Card */}
         <section className="sucesso-card">
           <h2>Enviado com Sucesso!</h2>
 
@@ -23,23 +23,10 @@ function Confirmacao() {
 
           <div className="linha"></div>
 
-          {/* Informações */}
-          <div className="informacao">
-            <span>Número do pedido</span>
-            <strong>#123456789</strong>
-          </div>
+          <InfoLinha rotulo="Número do pedido" valor="#123456789" />
+          <InfoLinha rotulo="Data de envio" valor="01/01/2026" />
+          <InfoLinha rotulo="Status" valor="Em análise" />
 
-          <div className="informacao">
-            <span>Data de envio</span>
-            <strong>01/01/2026</strong>
-          </div>
-
-          <div className="informacao">
-            <span>Status</span>
-            <strong>Em análise</strong>
-          </div>
-
-          {/* Aviso */}
           <div className="aviso">
             <i className="bi bi-info-circle-fill"></i>
             <span>
@@ -49,7 +36,6 @@ function Confirmacao() {
           </div>
         </section>
 
-        {/* Botão login — canto direito */}
         <div className="area-login">
           <Botao texto="Fazer Login" tipo="botao-com-fundo" href="/sage/login">
             <i className="bi bi-chevron-right"></i>

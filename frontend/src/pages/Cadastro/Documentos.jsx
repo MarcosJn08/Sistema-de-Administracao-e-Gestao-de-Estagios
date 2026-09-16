@@ -1,7 +1,8 @@
 import "./Documento.css";
-
-import HeaderCadastro from "../../components/HeaderCadastro/HeaderCadastro.jsx";
-import Botao from "../../components/Button/Button.jsx";
+import HeaderCadastro from "../../components/cadastro/HeaderCadastro.jsx";
+import TituloCadastro from "../../components/cadastro/TituloCadastro.jsx";
+import DocumentoToolbar from "../../components/cadastro/DocumentoToolbar.jsx";
+import Botao from "../../components/Button.jsx";
 import Form from "react-bootstrap/Form";
 
 function Documento() {
@@ -14,58 +15,16 @@ function Documento() {
       />
 
       <main className="documento-content">
-        {/* Título */}
-        <div className="titulo-cadastro">
-          <div className="icone-empresa">
-            <i className="bi bi-buildings-fill"></i>
-          </div>
+        <TituloCadastro
+          icone="bi bi-buildings-fill"
+          titulo="Cadastro de Empresa"
+          subtitulo="etapa 2 de 2 - enviar documento"
+          subtituloStyle={{ alignItems: "center" }}
+        />
 
-          <div>
-            <h1>Cadastro de Empresa</h1>
-            <p style={{ alignItems: "center" }}>
-              etapa 2 de 2 - enviar documento
-            </p>
-          </div>
-        </div>
-
-        {/* Área do documento */}
         <section className="documento-card">
-          {/* Barra superior */}
-          <div className="documento-toolbar">
-            <div className="toolbar-esquerda">
-              <button className="botao-ferramenta">
-                <i className="bi bi-chevron-left"></i>
-              </button>
+          <DocumentoToolbar />
 
-              <span>1 / 1</span>
-
-              <button className="botao-ferramenta">
-                <i className="bi bi-chevron-right"></i>
-              </button>
-
-              <span className="zoom-text">100%</span>
-
-              <button className="botao-ferramenta">
-                <i className="bi bi-dash"></i>
-              </button>
-
-              <button className="botao-ferramenta">
-                <i className="bi bi-plus"></i>
-              </button>
-            </div>
-
-            <div className="toolbar-direita">
-              <button className="botao-ferramenta">
-                <i className="bi bi-download"></i>
-              </button>
-
-              <button className="botao-ferramenta">
-                <i className="bi bi-printer"></i>
-              </button>
-            </div>
-          </div>
-
-          {/* Visualização */}
           <div className="documento-preview">
             <div className="documento-folha">
               <div className="preview-mensagem">
@@ -80,7 +39,6 @@ function Documento() {
             </div>
           </div>
 
-          {/* Ações */}
           <div className="documento-acoes">
             <div className="botoes-documento">
               <Botao texto="Baixar PDF" tipo="botao-sem-fundo-verde">
@@ -99,7 +57,6 @@ function Documento() {
           </div>
         </section>
 
-        {/* Próximo */}
         <div className="area-botao-documento">
           <Botao texto="Próximo" tipo="botao-com-fundo" href="/sage/cadastro/confirmacao">
             <i className="bi bi-chevron-right"></i>

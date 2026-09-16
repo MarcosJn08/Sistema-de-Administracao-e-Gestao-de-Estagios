@@ -1,6 +1,6 @@
 import React from 'react';
-import '../App.css';
-import StatusBadge from './StatusBadge.jsx';
+import '../../App.css';
+import StatusBadge from '../StatusBadge.jsx';
 import BotaoAcao from './BotaoAcao.jsx';
 
 function CardMinhasInscricoes({

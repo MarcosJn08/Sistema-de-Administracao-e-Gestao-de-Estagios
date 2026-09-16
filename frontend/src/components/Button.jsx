@@ -1,12 +1,8 @@
 import React from 'react';
 
-// Tipos de botão suportados:
-// - botao-com-fundo
-// - botao-sem-fundo-verde
-// - botao-sem-fundo-branco
-// - botao-texto-branco
 function Botao({ texto, tipo = 'botao-com-fundo', children, className = '', href, onClick, ...props }) {
-  const classes = `botao ${tipo} ${className}`.trim();
+  const baseClass = tipo === 'botao-sage-verde' ? 'botao-sage-verde' : `botao ${tipo}`;
+  const classes = `${baseClass} ${className}`.trim();
   const content = children ?? texto;
 
   if (href) {

@@ -1,7 +1,12 @@
 import React from 'react';
 import '../App.css';
 
-function StatusBadge({ status, variante, variant }) {
+function StatusBadge({ status, aberto, variante, variant, children }) {
+  if (aberto !== undefined) {
+    if (!aberto) return null;
+    return <span className="sage-status">{children ?? 'Inscrições abertas'}</span>;
+  }
+
   const obterClasseBadge = (textoStatus, varianteDefinida) => {
     const varEscolhida = varianteDefinida || variant;
     if (varEscolhida) {
@@ -11,7 +16,7 @@ function StatusBadge({ status, variante, variant }) {
     const textoNormalizado = (textoStatus || '').toLowerCase().trim();
 
     if (
-      textoNormalizado.includes('deferido') && !textoNormalizado.includes('indeferido') ||
+      (textoNormalizado.includes('deferido') && !textoNormalizado.includes('indeferido')) ||
       textoNormalizado.includes('aprovado') ||
       textoNormalizado.includes('andamento') ||
       textoNormalizado === 'concluído'
@@ -38,11 +43,12 @@ function StatusBadge({ status, variante, variant }) {
     return 'badge-status-cinza';
   };
 
-  const classeBadge = obterClasseBadge(status, variante);
+  const textoFinal = children ?? status;
+  const classeBadge = obterClasseBadge(typeof textoFinal === 'string' ? textoFinal : status, variante);
 
   return (
     <span className={`badge-status ${classeBadge}`}>
-      {status}
+      {textoFinal}
     </span>
   );
 }

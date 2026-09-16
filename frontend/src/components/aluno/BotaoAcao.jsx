@@ -1,5 +1,5 @@
 import React from 'react';
-import '../App.css';
+import '../../App.css';
 
 function BotaoAcao({ tipo = 'Visualizar', aoClicar, onClick, texto, rotulo }) {
   const textoBotao = texto || rotulo || tipo;

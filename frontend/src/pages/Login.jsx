@@ -1,12 +1,21 @@
+import React from "react";
 import Image from "react-bootstrap/Image";
 import "../App.css";
 import Nav from "react-bootstrap/Nav";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../components/InputLogin/Input.jsx";
 import GoogleButton from "../components/GoogleButton.jsx";
-import Button from "../components/Button/Button.jsx";
+import Button from "../components/Button.jsx";
 import ImgLogin from "../assets/Login.png";
 
 function Login() {
+  const navigate = useNavigate();
+
+  const lidarComLogin = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    navigate("/sage/aluno");
+  };
+
   return (
     <div className="login-container">
       <div className="login-image">
@@ -35,9 +44,16 @@ function Login() {
           Esqueceu a senha?
         </Nav.Link>
 
-        <Button texto="Fazer Login" tipo="botao-com-fundo" />
+        <Button texto="Fazer Login" tipo="botao-com-fundo" href="/sage/aluno" onClick={lidarComLogin} />
 
-        <GoogleButton />
+        <GoogleButton onClick={() => navigate("/sage/aluno")} />
+
+        <p style={{ fontSize: '13px', color: '#647068', textAlign: 'center', marginTop: '12px' }}>
+          Não tem uma conta?{' '}
+          <Link to="/sage/cadastro/empresa" style={{ color: '#2e7d32', fontWeight: '600', textDecoration: 'none' }}>
+            Cadastre-se
+          </Link>
+        </p>
       </div>
     </div>
   );
