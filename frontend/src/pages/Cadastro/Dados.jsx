@@ -5,14 +5,16 @@ import CardCadastro from "../../components/cadastro/CardCadastro.jsx";
 import Input from "../../components/Input.jsx";
 import Select from "../../components/Select.jsx";
 import Botao from "../../components/Button.jsx";
+import Header from "../../components/Header.jsx";
+import Footer from "../../components/Footer.jsx";
 
 function Dados() {
   return (
     <div className="dados-page">
+      <Header />
       <HeaderCadastro
         passo01="passo-concluido"
         passo02="proximo-passo"
-        passo03="proximo-passo"
       />
 
       <main className="dados-content">
@@ -171,6 +173,7 @@ function Dados() {
           <Botao className="btn-proximo" href="/sage/cadastro/documento" texto="Próximo" />
         </div>
       </main>
+    <Footer />
     </div>
   );
 }

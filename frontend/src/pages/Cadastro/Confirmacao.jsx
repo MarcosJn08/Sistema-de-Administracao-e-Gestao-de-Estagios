@@ -2,15 +2,13 @@ import "./Confirmacao.css";
 import HeaderCadastro from "../../components/cadastro/HeaderCadastro.jsx";
 import Botao from "../../components/Button.jsx";
 import InfoLinha from "../../components/cadastro/InfoLinha.jsx";
+import Header from "../../components/Header.jsx";
+import Footer from "../../components/Footer.jsx";
 
 function Confirmacao() {
   return (
     <div className="confirmacao-page">
-      <HeaderCadastro
-        passo01="passo-concluido"
-        passo02="passo-concluido"
-        passo03="passo-concluido"
-      />
+      <Header />
 
       <main className="confirmacao-content">
         <section className="sucesso-card">
@@ -42,6 +40,7 @@ function Confirmacao() {
           </Botao>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
