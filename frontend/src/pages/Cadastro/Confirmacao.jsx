@@ -1,5 +1,4 @@
 import "./Confirmacao.css";
-import HeaderCadastro from "../../components/cadastro/HeaderCadastro.jsx";
 import Botao from "../../components/Button.jsx";
 import InfoLinha from "../../components/cadastro/InfoLinha.jsx";
 import Header from "../../components/Header.jsx";
@@ -8,7 +7,7 @@ import Footer from "../../components/Footer.jsx";
 function Confirmacao() {
   return (
     <div className="confirmacao-page">
-      <Header />
+      <Header somenteInicio />
 
       <main className="confirmacao-content">
         <section className="sucesso-card">

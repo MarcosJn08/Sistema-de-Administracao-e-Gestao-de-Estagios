@@ -1,16 +1,16 @@
 .header-cadastro {
-  height: 70px;
+  height: 78px;
   display: flex;
   align-items: flex-start;
   justify-content: center;
   border-bottom: 1px solid #eeeeee;
-  padding: 10px 20px 0;
+  padding: 12px 20px 0;
   gap: 0;
 }
 
 /* Cada etapa */
 .header-cadastro > div {
-  width: 160px;
+  width: 180px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,8 +18,8 @@
 
 /* Número */
 .numero-passo {
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -29,17 +29,17 @@
 
 .numero-passo p {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: #aeb2b5;
 }
 
 /* Texto */
 .header-cadastro span {
-  margin-top: 4px;
-  font-size: 13px;
+  margin-top: 6px;
+  font-size: 16px;
   color: #a0a0a0;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* Linha */

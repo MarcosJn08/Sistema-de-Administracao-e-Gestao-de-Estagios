@@ -30,17 +30,35 @@
   --sage-text: #29363d;
   --sage-muted: #647068;
   --bs-body-font-family: 'Manrope', sans-serif;
+  --bs-body-font-size: 1rem;
+  --bs-body-line-height: 1.6;
   --bs-body-color: #29363d;
   --bs-body-bg: #fff;
+
+  /* Escala Tipográfica SAGE */
+  --sage-font-xs: 0.8125rem;   /* 13px - micro badges, tags menores, legendas mínimas */
+  --sage-font-sm: 0.875rem;    /* 14px - textos secundários, metadados, links de apoio */
+  --sage-font-base: 1rem;      /* 16px - corpo padrão, formulários, botões */
+  --sage-font-md: 1.0625rem;   /* 17px - corpo principal e links de menu */
+  --sage-font-lg: 1.125rem;    /* 18px - destaques e subtítulos */
+  --sage-font-xl: 1.25rem;     /* 20px - títulos de cards e blocos */
+  --sage-font-2xl: 1.5rem;     /* 24px - títulos de seções */
+  --sage-font-3xl: 1.75rem;    /* 28px - títulos de telas e cabeçalhos */
+  --sage-font-4xl: 2.25rem;    /* 36px - grandes chamadas */
+  --sage-font-hero: clamp(2.25rem, 4vw, 3.25rem); /* título principal da hero */
 }
 
 html {
   scroll-behavior: smooth;
+  font-size: 16px;
 }
 
 body {
   margin: 0;
   min-width: 320px;
+  font-size: var(--sage-font-base);
+  line-height: 1.6;
+  color: var(--sage-text);
 }
 
 #root {
@@ -52,6 +70,11 @@ h2,
 h3,
 p {
   margin-top: 0;
+}
+
+small,
+.small {
+  font-size: var(--sage-font-sm, 0.875rem);
 }
 
 a {

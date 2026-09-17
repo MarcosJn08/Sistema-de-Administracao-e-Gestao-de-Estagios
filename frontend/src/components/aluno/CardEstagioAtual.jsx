@@ -24,7 +24,7 @@ function CardEstagioAtual({
           {status && <StatusBadge status={status} />}
         </div>
 
-        <div className="d-flex flex-column gap-2" style={{ fontSize: '0.8125rem' }}>
+        <div className="d-flex flex-column gap-2" style={{ fontSize: '0.9375rem' }}>
           <div className="d-flex justify-content-between align-items-center">
             <span className="fw-bold text-dark">Empresa:</span>
             <span className="text-secondary">{empresa}</span>

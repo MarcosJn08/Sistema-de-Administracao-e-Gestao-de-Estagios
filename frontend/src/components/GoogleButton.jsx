@@ -15,11 +15,11 @@ const GoogleButton = ({ onClick }) => {
         border: "1px solid #dadce0",
         borderRadius: "6px",
         cursor: "pointer",
-        fontSize: "14px",
+        fontSize: "15px",
         color: "#3c4043",
         fontFamily: "inherit",
         fontWeight: "600",
-        minHeight: "44px",
+        minHeight: "46px",
         transition: "background-color 0.2s, box-shadow 0.2s",
       }}
     >

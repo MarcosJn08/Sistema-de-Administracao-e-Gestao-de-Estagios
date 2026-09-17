@@ -1,7 +1,7 @@
 import "./HeaderCadastro.css";
 import { Container } from "react-bootstrap";
 
-function HeaderCadastro({ passo01, passo02, passo03 }) {
+function HeaderCadastro({ passo01, passo02 }) {
   return (
     <Container fluid className="header-cadastro">
       <div className={passo01}>

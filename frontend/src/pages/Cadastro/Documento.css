@@ -20,29 +20,30 @@
 }
 
 .icone-empresa {
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 14px;
+  border-radius: 16px;
   background-color: #e8f7ed;
   color: #249442;
-  font-size: 32px;
+  font-size: 34px;
   flex-shrink: 0;
 }
 
 .titulo-cadastro h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 700;
   color: #1a3a20;
 }
 
 .titulo-cadastro p {
   margin: 6px 0 0;
-  font-size: 15px;
-  color: #6b7280;
+  font-size: 16px;
+  color: #4b5563;
+  font-weight: 500;
 }
 
 /* ── CARD DO DOCUMENTO ───────────────────── */
@@ -58,7 +59,7 @@
 /* ── TOOLBAR ─────────────────────────────── */
 
 .documento-toolbar {
-  height: 52px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -76,8 +77,8 @@
 
 .documento-toolbar button,
 .botao-ferramenta {
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,7 +86,7 @@
   border-radius: 8px;
   background-color: #ffffff;
   color: #4b5563;
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
   transition: background-color 0.15s;
 }
@@ -98,7 +99,7 @@
 }
 
 .toolbar-esquerda span {
-  font-size: 15px;
+  font-size: 16px;
   color: #374151;
   font-weight: 500;
 }
@@ -152,15 +153,15 @@
 }
 
 .preview-mensagem strong {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   color: #374151;
 }
 
 .preview-mensagem span {
-  font-size: 15px;
-  color: #9ca3af;
-  max-width: 320px;
+  font-size: 16px;
+  color: #6b7280;
+  max-width: 380px;
 }
 
 /* ── AÇÕES ABAIXO DO PREVIEW ─────────────── */
@@ -187,15 +188,15 @@
 }
 
 .documento-acoes .form-label {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: #374151;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .documento-acoes .form-control {
-  font-size: 14px;
-  padding: 8px 12px;
+  font-size: 16px;
+  padding: 11px 16px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
 }
@@ -211,19 +212,19 @@
 }
 
 .status-label {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   color: #2e7d32;
 }
 
 .btn-enviar {
-  min-width: 160px;
+  min-width: 170px;
   border: none;
   border-radius: 8px;
-  padding: 11px 22px;
+  padding: 12px 24px;
   background-color: #2e7d32;
   color: #ffffff;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
