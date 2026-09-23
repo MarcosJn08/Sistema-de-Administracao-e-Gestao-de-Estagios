@@ -2,12 +2,24 @@ import { ArrowRight } from 'lucide-react';
 import StatusBadge from './StatusBadge.jsx';
 import { formatarBolsa, formatarData } from '../utils/formatters.js';
 
-function VagaCard({ vaga }) {
+function VagaCard({ vaga, onVerDetalhes }) {
+  const textoBeneficios = Array.isArray(vaga.beneficios)
+    ? vaga.beneficios.join(', ')
+    : vaga.beneficios;
+
+  const lidarComClique = () => {
+    if (onVerDetalhes) {
+      onVerDetalhes(vaga);
+    }
+  };
+
   return (
     <article
       id={`oportunidade-${vaga.id}`}
       className="card vaga-card h-100"
       aria-labelledby={`vaga-${vaga.id}`}
+      onClick={lidarComClique}
+      style={{ cursor: onVerDetalhes ? 'pointer' : 'default' }}
     >
       <div className="card-body d-flex flex-column">
         <div className="vaga-status">
@@ -22,7 +34,7 @@ function VagaCard({ vaga }) {
           <p>
             {vaga.curso} • {vaga.carga_horaria}
           </p>
-          <p>Bolsa: {formatarBolsa(vaga.valor_bolsa, vaga.beneficios)}</p>
+          <p>Bolsa: {formatarBolsa(vaga.valor_bolsa, textoBeneficios)}</p>
         </div>
         <p className="vaga-prazo">
           Inscrições até <time dateTime={vaga.data_limite}>{formatarData(vaga.data_limite)}</time>
@@ -30,8 +42,11 @@ function VagaCard({ vaga }) {
         <button
           type="button"
           className="sage-text-link mt-auto"
-          aria-disabled="true"
           aria-label={`Ver vaga: ${vaga.titulo}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            lidarComClique();
+          }}
         >
           Ver vaga <ArrowRight size={14} aria-hidden="true" />
         </button>

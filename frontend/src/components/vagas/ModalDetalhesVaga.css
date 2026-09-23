@@ -1,0 +1,281 @@
+.modal-detalhes-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 20px 16px;
+  overflow-y: auto;
+}
+
+.modal-detalhes-container {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 780px;
+  border-radius: 20px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: modalDetalhesIn 0.25s ease-out;
+}
+
+@keyframes modalDetalhesIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-detalhes-header {
+  padding: 24px 28px 16px 28px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.modal-detalhes-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.modal-detalhes-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.badge-ativa-detalhes {
+  background-color: #d1f4e0;
+  color: #0f7b44;
+  padding: 3px 12px;
+  border-radius: 50rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.modal-detalhes-empresa {
+  color: #2e7d32;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  margin: 4px 0 0 0;
+}
+
+.modal-detalhes-close {
+  background: #f1f5f9;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-detalhes-close:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.modal-detalhes-body {
+  padding: 24px 28px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.detalhes-grid-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f8fafc;
+}
+
+@media (max-width: 640px) {
+  .detalhes-grid-info {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.detalhes-info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.875rem;
+}
+
+.detalhes-info-icone {
+  color: #2e7d32;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.detalhes-info-label {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.detalhes-info-valor {
+  color: #64748b;
+  margin-left: 4px;
+}
+
+.secao-titulo-detalhes {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 22px;
+  margin-bottom: 10px;
+}
+
+.detalhes-descricao-texto {
+  color: #475569;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.chips-competencias-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip-competencia-item {
+  background-color: #f8fafc;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.beneficios-detalhes-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  align-items: center;
+}
+
+.beneficio-badge-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.beneficio-icone-quadrado {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background-color: #d1f4e0;
+  color: #0f7b44;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.modal-detalhes-footer {
+  padding: 16px 28px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background-color: #ffffff;
+}
+
+.btn-compartilhar-vaga {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-compartilhar-vaga:hover {
+  color: #0f172a;
+  background-color: #f1f5f9;
+}
+
+.modal-detalhes-acoes-direita {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-salvar-vaga {
+  background-color: #ffffff;
+  color: #2e7d32;
+  border: 1.5px solid #2e7d32;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 8px 22px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-salvar-vaga:hover {
+  background-color: #f0fdf4;
+}
+
+.btn-salvar-vaga.salvo {
+  background-color: #eaf5ea;
+  border-color: #2e7d32;
+}
+
+.btn-candidatar-vaga {
+  background-color: #2e7d32;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 9.5px 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-candidatar-vaga:hover {
+  background-color: #1b5e20;
+}
+
+.btn-candidatar-vaga:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
