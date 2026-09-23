@@ -75,7 +75,64 @@ const dados = {
       status: "Aprovado",
       acoes: ["Visualizar"]
     }
-  ]
+  ],
+  empresa: {
+    nome: "Shelby LTDA",
+    cnpj: "12.345.678/0001-90",
+    metricas: {
+      vagasAtivas: 8,
+      candidatosTotais: 47,
+      emTriagem: 12,
+      contratados: 5
+    },
+    vagas: [
+      {
+        id: 1,
+        titulo: "Desenvolvedor Backend",
+        area: "Tecnologia",
+        inscritos: 18,
+        status: "Ativa",
+        dataPublicacao: "15/02/2026",
+        ativa: true
+      },
+      {
+        id: 2,
+        titulo: "Analista de Marketing",
+        area: "Comunicação",
+        inscritos: 12,
+        status: "Ativa",
+        dataPublicacao: "10/02/2026",
+        ativa: true
+      },
+      {
+        id: 3,
+        titulo: "Designer UX/UI",
+        area: "Design & UX",
+        inscritos: 9,
+        status: "Rascunho",
+        dataPublicacao: "08/02/2026",
+        ativa: false
+      },
+      {
+        id: 4,
+        titulo: "Assistente Administrativo",
+        area: "Administração",
+        inscritos: 5,
+        status: "Encerrada",
+        dataPublicacao: "20/01/2026",
+        ativa: false
+      },
+      {
+        id: 5,
+        titulo: "Estagiário de Dados",
+        area: "Tecnologia",
+        inscritos: 3,
+        status: "Ativa",
+        dataPublicacao: "01/02/2026",
+        ativa: true
+      }
+    ]
+  }
 };
 
 export default dados;

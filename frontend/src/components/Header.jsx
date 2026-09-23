@@ -6,6 +6,8 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import Button from './Button.jsx';
 import LogoBranca from '../assets/LogoBranca.png';
 
+import { Code } from 'lucide-react';
+
 function Header({
   pagina01 = 'Início',
   pagina02 = 'Minhas funcionalidades',
@@ -17,11 +19,14 @@ function Header({
   usuario,
   customLinks,
   somenteInicio = false,
+  mostrarBotaoSair,
 }) {
   const [expanded, setExpanded] = useState(false);
   const closeMenu = () => setExpanded(false);
 
   const isDashboard = Boolean(usuario);
+  const isEmpresa = usuario?.tipo === 'empresa';
+  const exibirBotaoSair = mostrarBotaoSair !== undefined ? mostrarBotaoSair : !isEmpresa;
 
   const landingLinks = [
     [pagina01, '#inicio'],
@@ -92,14 +97,23 @@ function Header({
                 {isDashboard ? (
                   <div className="d-flex align-items-center gap-3">
                     <div className="perfil-usuario-header">
-                      <div className="avatar-usuario-header">
-                        <span>{usuario.nome ? usuario.nome.charAt(0).toUpperCase() : 'A'}</span>
+                      <div
+                        className="avatar-usuario-header"
+                        style={isEmpresa ? { backgroundColor: '#0f172a', borderColor: '#38bdf8' } : {}}
+                      >
+                        {isEmpresa ? (
+                          <Code size={18} color="#38bdf8" />
+                        ) : (
+                          <span>{usuario.nome ? usuario.nome.charAt(0).toUpperCase() : 'A'}</span>
+                        )}
                       </div>
                       <span className="nome-usuario-header">
-                        {usuario.nome ? usuario.nome.split(' ')[0] : 'Aluno'}
+                        {isEmpresa ? usuario.nome : (usuario.nome ? usuario.nome.split(' ')[0] : 'Aluno')}
                       </span>
                     </div>
-                    <Button texto="Sair" tipo="botao-texto-branco" href="/sage/login" />
+                    {exibirBotaoSair && (
+                      <Button texto="Sair" tipo="botao-texto-branco" href="/sage/login" />
+                    )}
                   </div>
                 ) : (
                   <>
