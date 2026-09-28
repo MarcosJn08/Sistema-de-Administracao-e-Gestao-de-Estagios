@@ -1,16 +1,27 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
+import { ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import CardDadosAluno from '../components/aluno/CardDadosAluno.jsx';
 import CardProgresso from '../components/aluno/CardProgresso.jsx';
 import CardEstagioAtual from '../components/aluno/CardEstagioAtual.jsx';
-import CardDocumentos from '../components/aluno/CardDocumentos.jsx';
 import CardMinhasInscricoes from '../components/aluno/CardMinhasInscricoes.jsx';
+import CardEstagio from '../components/Estagio/cardEstagios/CardEstagio.jsx';
 import dados from '../dadosAluno.jsx';
 import '../App.css';
+import '../components/Estagio/cardEstagios/CardEstagio.css';
 
 function DashboardAluno() {
+  const navigate = useNavigate();
+
+  const estagios = dados.meusEstagios || [];
+
+  const abrirEstagio = (estagio) => {
+    navigate('/sage/estagio', { state: { estagio } });
+  };
+
   return (
     <div className="d-flex flex-column min-vh-100" style={{ backgroundColor: '#f4f6f8' }}>
       <Header
@@ -33,12 +44,13 @@ function DashboardAluno() {
           <Row className="g-4 mb-4">
             <Col xs={12} lg={6}>
               <CardProgresso
-                horasConcluidas={dados.progresso.horasConcluidas}
-                metaHoras={dados.progresso.metaHoras}
-                horasEstagio={dados.progresso.horasEstagio}
-                horasProjeto={dados.progresso.horasProjeto}
+                horasConcluidas={dados.progressoTotal.horasConcluidas}
+                metaHoras={dados.progressoTotal.metaHoras}
+                horasEstagio={dados.progressoTotal.horasEstagio}
+                horasProjeto={dados.progressoTotal.horasProjeto}
               />
             </Col>
+
             <Col xs={12} lg={6}>
               <CardEstagioAtual
                 status={dados.estagioAtual.status}
@@ -52,11 +64,34 @@ function DashboardAluno() {
             </Col>
           </Row>
 
-          <div >
-            <CardDocumentos documentos={dados.documentos} />
-          </div>
+          <section className="dashboard-estagios mb-4" aria-labelledby="titulo-meus-estagios">
+            <div className="dashboard-estagios-cabecalho">
+              <h2 id="titulo-meus-estagios">Meus Estágios</h2>
 
-          
+              <button
+                type="button"
+                className="dashboard-estagios-ver-todos"
+                onClick={() => navigate('/sage/estagio')}
+              >
+                Ver todos
+                <ArrowRight size={16} aria-hidden="true" />
+              </button>
+            </div>
+
+            <div className="dashboard-estagios-grid">
+              {estagios.map((estagio) => (
+                <CardEstagio
+                  key={estagio.id}
+                  estagio={estagio}
+                  aoVerEstagio={abrirEstagio}
+                />
+              ))}
+            </div>
+          </section>
+
+          <div className="mb-4">
+            <CardMinhasInscricoes inscricoes={dados.minhasInscricoes} />
+          </div>
         </Container>
       </main>
 
