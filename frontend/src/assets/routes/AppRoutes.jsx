@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from '../../pages/LandingPage.jsx';
 import DashboardAluno from '../../pages/DashboardAluno.jsx';
-import DashboardProfessor from '../../pages/DashboardProfessor.jsx'
+import DashboardProfessor from '../../pages/DashboardProfessor.jsx';
 import VitrineVagas from '../../pages/VitrineVagas.jsx';
 import CentralDocumentos from '../../pages/CentralDocumentos.jsx';
 import Login from '../../pages/Login.jsx';

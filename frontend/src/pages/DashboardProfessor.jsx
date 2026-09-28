@@ -30,7 +30,7 @@ function DashboardProfessor(){
                     <p className="text-muted small">Monitore a situação dos alunos do campus de forma centralizada</p>
                 </div>
             <Row className="g-3 mb-4">
-          <Col md={3}>
+          <Col md={4}>
             <Card className="border-0 shadow-sm p-3">
             <div className="d-flex justify-content-between align-items-center">
             <div>
@@ -43,7 +43,7 @@ function DashboardProfessor(){
             </Card>
           </Col>
 
-          <Col md={3}>
+          <Col md={4}>
             <Card className="border-0 shadow-sm p-3">
               <div className="d-flex justify-content-between align-items-center">
               <div>
@@ -56,7 +56,7 @@ function DashboardProfessor(){
             </Card>
           </Col>
 
-          <Col md={3}>
+          <Col md={4}>
             <Card className="border-0 shadow-sm p-3">
               <div className="d-flex justify-content-between align-items-center">
             <div>
@@ -69,7 +69,7 @@ function DashboardProfessor(){
             </Card>
           </Col>
 
-          <Col md={3}>
+          <Col md={4}>
             <Card className="border-0 shadow-sm p-3">
             <div className="d-flex justify-content-between align-items-center">
             <div>
@@ -116,8 +116,37 @@ function DashboardProfessor(){
               </Select>
             </Col>
             </Row>
+            <Table hover responsive className="align-middle">
+            <thead>
+              <tr>
+                <th>Aluno / Matrícula</th>
+                <th>Curso</th>
+                <th>Situação</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div className="fw-bold">João Silva</div>
+                  <small className="text-muted">202310450</small>
+                </td>
+                <td>Tecnologia em ADS</td>
+                <td>
+                  <StatusBadge status="Ativo" />
+                </td>
+                <td>
+                  <Button variant="outline-primary" size="sm">
+                    Detalhes
+                  </Button>
+                </td>
+              </tr>
+            </tbody>
+          </Table>
         </Card>
             </Container>
+            <Footer></Footer>
         </div>
-    )
+    );
 }
+export default DashboardProfessor;
