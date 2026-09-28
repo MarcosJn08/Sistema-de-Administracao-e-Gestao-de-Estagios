@@ -36,7 +36,6 @@ function Header({
     ['Início', '/sage'],
     ['Dashboard', '/sage/aluno'],
     ['Vagas', '/sage/vagas'],
-    ['Documentos', '/sage/documentos'],
   ];
 
   const cadastroLinks = [
