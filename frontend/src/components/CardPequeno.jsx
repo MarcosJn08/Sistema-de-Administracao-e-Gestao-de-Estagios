@@ -1,13 +1,22 @@
 import Card from "react-bootstrap/Card";
 
-function CardPequeno({ titulo, valor, icone, texto, cor }) {
+/**
+ * Card de indicador (número + legenda).
+ *
+ * - Sem `corFundo`: comportamento antigo (quadrado sólido com `cor` e ícone branco).
+ * - Com `corFundo`: quadrado suave com `corFundo` e ícone colorido com `cor`.
+ */
+function CardPequeno({ titulo, valor, icone, texto, cor, corFundo }) {
+  const suave = Boolean(corFundo);
+
   return (
     <Card
       className="h-100"
       style={{
         width: "100%",
-        borderRadius: "20px",
-        border: "1px solid #dee2e6",
+        borderRadius: "18px",
+        border: "1px solid rgba(0, 0, 0, 0.05)",
+        boxShadow: "0 1px 4px rgba(0, 0, 0, 0.03)",
       }}
     >
       <Card.Body>
@@ -16,7 +25,7 @@ function CardPequeno({ titulo, valor, icone, texto, cor }) {
             <Card.Title
               style={{
                 color: "#687386",
-                fontSize: "18px",
+                fontSize: "15px",
                 fontWeight: "500",
               }}
             >
@@ -26,8 +35,9 @@ function CardPequeno({ titulo, valor, icone, texto, cor }) {
             <Card.Text
               style={{
                 color: "#182033",
-                fontSize: "42px",
+                fontSize: "38px",
                 fontWeight: "700",
+                lineHeight: 1.1,
                 margin: 0,
               }}
             >
@@ -39,27 +49,34 @@ function CardPequeno({ titulo, valor, icone, texto, cor }) {
             style={{
               width: "45px",
               height: "45px",
-              borderRadius: "8px",
+              borderRadius: "10px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: cor,
+              backgroundColor: suave ? corFundo : cor,
               flexShrink: 0,
             }}
           >
-            <i className={icone}></i>
+            <i
+              className={icone}
+              style={suave ? { color: cor } : undefined}
+              aria-hidden="true"
+            ></i>
           </div>
         </div>
 
-        <Card.Text
-          style={{
-            color: "#687386",
-            fontSize: "16px",
-            marginTop: "25px",
-          }}
-        >
-          {texto}
-        </Card.Text>
+        {texto && (
+          <Card.Text
+            style={{
+              color: "#687386",
+              fontSize: "14px",
+              marginTop: "16px",
+              marginBottom: 0,
+            }}
+          >
+            {texto}
+          </Card.Text>
+        )}
       </Card.Body>
     </Card>
   );

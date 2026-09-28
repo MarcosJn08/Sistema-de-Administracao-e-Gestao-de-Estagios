@@ -1,11 +1,15 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
-import Header from "../components/Header.jsx";
+import Header from "../components/diretor/Header.jsx";
 import Footer from "../components/Footer.jsx";
 
-import CardDocumentos from "../components/diretor/CardDocumentos.jsx";
 import CardPequeno from "../components/CardPequeno.jsx";
+import CardDocumentos from "../components/diretor/CardDocumentos.jsx";
+import CardEstagiosPorStatus from "../components/diretor/CardEstagiosPorStatus.jsx";
+import CardAtividadeRecente from "../components/diretor/CardAtividadeRecente.jsx";
+import CardAcoesRapidas from "../components/diretor/CardAcoesRapidas.jsx";
+import CardProximosVencimentos from "../components/diretor/CardProximosVencimentos.jsx";
 
 import dados from "../dadosDiretor.jsx";
 
@@ -21,59 +25,51 @@ function DashboardDiretor() {
         pagina01="Dashboard"
         pagina02="Alunos"
         pagina03="Orientadores"
-        pagina04="Estágios"
-        pagina05="Documentos"
-        usuario={dados.aluno}
+        pagina04="Empresas"
+        pagina05="Estágios"
+        pagina06="Documentos"
+        paginaAtiva="Dashboard"
+        usuario={dados.diretor}
+        notificacoes={dados.notificacoes}
       />
 
       <main className="flex-grow-1 py-4">
-        <Container
-          style={{ maxWidth: "1200px" }}
-          className="px-3"
-        >
-          <Row className="g-5 mb-3">
-            <Col xs={12} md={3}>
-              <CardPequeno
-                titulo="Estágios Ativos"
-                valor="48"
-                icone="bi bi-suitcase-lg-fill fs-2 text-white"
-                cor="#2E7D32"
-              />
-            </Col>
-
-            <Col xs={12} md={3}>
-              <CardPequeno
-                titulo="Documentos Pendentes"
-                valor="12"
-                icone="bi bi-file-earmark-text-fill fs-2 text-white"
-                cor="#F57F17"
-              />
-            </Col>
-
-            <Col xs={12} md={3}>
-              <CardPequeno
-                titulo="Vagas Abertas"
-                valor="9"
-                icone="bi bi-building fs-2 text-white"
-                cor="#1565C0"
-              />
-            </Col>
-
-            <Col xs={12} md={3}>
-              <CardPequeno
-                titulo="Prazo Próximo"
-                valor="5"
-                icone="bi bi-exclamation-circle fs-2 text-white"
-                cor="#ff0026"
-              />
-            </Col>
+        <Container style={{ maxWidth: "1200px" }} className="px-3">
+          <Row className="g-4 mb-4">
+            {dados.indicadores.map((indicador) => (
+              <Col key={indicador.id} xs={12} sm={6} lg={3}>
+                <CardPequeno
+                  titulo={indicador.titulo}
+                  valor={indicador.valor}
+                  texto={indicador.texto}
+                  icone={indicador.icone}
+                  cor={indicador.cor}
+                  corFundo={indicador.corFundo}
+                />
+              </Col>
+            ))}
           </Row>
 
-          <div className="mb-4">
-            <CardDocumentos
-              documentos={dados.pendencias}
-            />
-          </div>
+          <Row className="g-4">
+            <Col xs={12} lg={8}>
+              <CardDocumentos
+                titulo="Pendências para análise"
+                documentos={dados.pendencias}
+                textoVerTodos="Ver todas as pendências"
+              />
+
+              <CardEstagiosPorStatus
+                itens={dados.estagiosPorStatus.itens}
+                total={dados.estagiosPorStatus.total}
+              />
+            </Col>
+
+            <Col xs={12} lg={4}>
+              <CardAtividadeRecente atividades={dados.atividadesRecentes} />
+              <CardAcoesRapidas acoes={dados.acoesRapidas} />
+              <CardProximosVencimentos itens={dados.proximosVencimentos} />
+            </Col>
+          </Row>
         </Container>
       </main>
 
