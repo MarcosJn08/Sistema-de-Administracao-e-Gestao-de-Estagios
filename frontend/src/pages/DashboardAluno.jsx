@@ -7,7 +7,7 @@ import CardProgresso from '../components/aluno/CardProgresso.jsx';
 import CardEstagioAtual from '../components/aluno/CardEstagioAtual.jsx';
 import CardDocumentos from '../components/aluno/CardDocumentos.jsx';
 import CardMinhasInscricoes from '../components/aluno/CardMinhasInscricoes.jsx';
-import dados from '../dados.jsx';
+import dados from '../dadosAluno.jsx';
 import '../App.css';
 
 function DashboardAluno() {
@@ -52,13 +52,11 @@ function DashboardAluno() {
             </Col>
           </Row>
 
-          <div className="mb-4">
+          <div >
             <CardDocumentos documentos={dados.documentos} />
           </div>
 
-          <div className="mb-4">
-            <CardMinhasInscricoes inscricoes={dados.minhasInscricoes} />
-          </div>
+          
         </Container>
       </main>
 
