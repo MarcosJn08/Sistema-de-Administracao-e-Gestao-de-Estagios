@@ -118,9 +118,9 @@ const dados = {
   ],
 
   acoesRapidas: [
-    { id: 1, rotulo: "Cadastrar aluno", icone: "bi bi-person-plus", href: "/sage/alunos/cadastro" },
-    { id: 2, rotulo: "Cadastrar professor", icone: "bi bi-person-workspace", href: "/sage/orientadores/cadastro" },
-    { id: 3, rotulo: "Gerenciar empresas", icone: "bi bi-building", href: "/sage/empresas" }
+    { id: 1, rotulo: "Cadastrar aluno", icone: "bi bi-person-plus", href: "/sage/aluno" },
+    { id: 2, rotulo: "Cadastrar professor", icone: "bi bi-person-workspace", href: "/sage/diretor" },
+    { id: 3, rotulo: "Gerenciar empresas", icone: "bi bi-building", href: "/sage/vagas" }
   ],
 
   proximosVencimentos: [
