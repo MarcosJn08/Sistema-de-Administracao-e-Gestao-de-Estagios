@@ -38,10 +38,10 @@ function Header({
 
   const dashboardLinks = [
     [pagina01, '/sage/diretor'],
-    [pagina02, '/sage/alunos'],
-    [pagina03, '/sage/orientadores'],
-    [pagina04, '/sage/empresas'],
-    [pagina05, '/sage/estagios'],
+    [pagina02, '/sage/aluno'],
+    [pagina03, '/sage/diretor'],
+    [pagina04, '/sage/vagas'],
+    [pagina05, '/sage/vagas'],
     ...(pagina06 ? [[pagina06, '/sage/documentos']] : []),
   ];
 
