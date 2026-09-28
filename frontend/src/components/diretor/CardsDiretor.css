@@ -1,0 +1,98 @@
+/* Estilos dos cards do painel do diretor */
+
+/* ---------- Atividade recente ---------- */
+.lista-atividades {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lista-atividades li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.atividade-ponto {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 7px;
+  flex-shrink: 0;
+}
+
+.atividade-titulo {
+  color: #1e293b;
+  font-size: var(--sage-font-sm, 14px);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.atividade-tempo {
+  color: #94a3b8;
+  font-size: var(--sage-font-xs, 13px);
+}
+
+/* ---------- Ações rápidas ---------- */
+.acoes-rapidas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.acoes-rapidas .botao {
+  width: 100%;
+  min-height: 44px;
+  justify-content: flex-start;
+  font-size: var(--sage-font-sm, 14px);
+}
+
+/* ---------- Estágios por status ---------- */
+.estagios-status-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.estagios-status-linha {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  color: #334155;
+  font-size: var(--sage-font-sm, 14px);
+  font-weight: 600;
+}
+
+.estagios-status-lista .barra-progresso-trilha {
+  height: 7px;
+}
+
+/* ---------- Próximos vencimentos ---------- */
+.lista-vencimentos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lista-vencimentos li {
+  padding-left: 12px;
+  border-left: 3px solid var(--cor-vencimento, #f59e0b);
+}
+
+.vencimento-titulo {
+  color: #1e293b;
+  font-size: var(--sage-font-sm, 14px);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.vencimento-prazo {
+  color: #94a3b8;
+  font-size: var(--sage-font-xs, 13px);
+}

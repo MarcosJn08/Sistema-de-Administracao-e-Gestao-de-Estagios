@@ -9,7 +9,7 @@ import CardProgresso from '../components/aluno/CardProgresso.jsx';
 import CardEstagioAtual from '../components/aluno/CardEstagioAtual.jsx';
 import CardMinhasInscricoes from '../components/aluno/CardMinhasInscricoes.jsx';
 import CardEstagio from '../components/Estagio/cardEstagios/CardEstagio.jsx';
-import dados from '../dados.jsx';
+import dados from '../dadosAluno.jsx';
 import '../App.css';
 import '../components/Estagio/cardEstagios/CardEstagio.css';
 

@@ -27,15 +27,21 @@ function StatusBadge({ status, aberto, variante, variant, children }) {
     if (
       textoNormalizado.includes('analise') ||
       textoNormalizado.includes('análise') ||
-      textoNormalizado.includes('pendente de aprovação')
+      textoNormalizado.includes('pendente de aprovação') ||
+      textoNormalizado === 'pendente'
     ) {
       return 'badge-status-ambar';
+    }
+
+    if (textoNormalizado.includes('revisão') || textoNormalizado.includes('revisao')) {
+      return 'badge-status-azul';
     }
 
     if (
       textoNormalizado.includes('indeferido') ||
       textoNormalizado.includes('reprovado') ||
-      textoNormalizado.includes('cancelado')
+      textoNormalizado.includes('cancelado') ||
+      textoNormalizado.includes('requer ajuste')
     ) {
       return 'badge-status-vermelho';
     }
