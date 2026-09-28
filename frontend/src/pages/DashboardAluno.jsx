@@ -27,7 +27,6 @@ function DashboardAluno() {
       <Header
         pagina01="Dashboard"
         pagina02="Vagas"
-        pagina03="Documentos"
         paginaAtiva="Dashboard"
         usuario={dados.aluno}
       />
@@ -89,9 +88,6 @@ function DashboardAluno() {
             </div>
           </section>
 
-          <div className="mb-4">
-            <CardMinhasInscricoes inscricoes={dados.minhasInscricoes} />
-          </div>
         </Container>
       </main>
 
