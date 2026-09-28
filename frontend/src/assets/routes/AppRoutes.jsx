@@ -8,6 +8,7 @@ import Login from '../../pages/Login.jsx';
 import DadosEmpresa from '../../pages/Cadastro/Dados.jsx';
 import DocumentosEmpresa from '../../pages/Cadastro/Documentos.jsx';
 import ConfirmacaoEmpresa from '../../pages/Cadastro/Confirmacao.jsx';
+import TelaEstagio from '../../pages/TelaEstagio.jsx';
 
 function AppRoutes() {
   return (
@@ -24,7 +25,7 @@ function AppRoutes() {
         <Route path="/sage/cadastro/empresa" element={<DadosEmpresa />} />
         <Route path="/sage/cadastro/documento" element={<DocumentosEmpresa />} />
         <Route path="/sage/cadastro/confirmacao" element={<ConfirmacaoEmpresa />} />
-
+        <Route path="/sage/estagio" element={<TelaEstagio />} />
         <Route path="*" element={<Navigate to="/sage" replace />} />
       </Routes>
     </BrowserRouter>

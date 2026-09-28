@@ -5,11 +5,15 @@ const dados = {
     email: "mjrs@aluno.ifnmg.edu.br",
     matricula: "12345678"
   },
-  progresso: {
+  progressoTotal: {
     horasConcluidas: 100,
     metaHoras: 200,
     horasEstagio: 100,
     horasProjeto: 0
+  },
+  progressoEspecifico: {
+    horasConcluidas: 15,
+    metaHoras: 30
   },
   estagioAtual: {
     status: "Em Andamento",
