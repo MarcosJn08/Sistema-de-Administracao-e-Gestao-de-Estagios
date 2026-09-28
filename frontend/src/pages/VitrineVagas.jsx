@@ -6,7 +6,7 @@ import VagaCard from '../components/VagaCard.jsx';
 import ModalDetalhesVaga from '../components/vagas/ModalDetalhesVaga.jsx';
 import LogoBranca from '../assets/LogoBranca.png';
 import vagasIniciais from '../data/vagas.json';
-import dados from '../dados.jsx';
+import dados from '../dadosAluno.jsx';
 import './VitrineVagas.css';
 
 function VitrineVagas() {
