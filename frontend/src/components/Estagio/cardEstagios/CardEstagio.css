@@ -1,0 +1,229 @@
+.card-estagio {
+  --verde: #16a34a;
+  --verde-sage: #2e7d32;
+  --verde-claro: #dff7e8;
+  --azul-claro: #e8f1ff;
+  --azul: #2563eb;
+  --texto: #18212b;
+  --texto-suave: #69727c;
+  --borda: #e4e9ee;
+  --trilho: #e2e7eb;
+
+  min-width: 0;
+  height: 100%;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgb(20 35 25 / 4%);
+  color: var(--texto);
+  font-family: 'Manrope', sans-serif;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card-estagio:hover {
+  border-color: #cfd8d3;
+  box-shadow: 0 5px 14px rgb(20 35 25 / 7%);
+  transform: translateY(-1px);
+}
+
+.card-estagio-atual {
+  border-color: #58c77b;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fffa 100%);
+}
+
+.card-estagio-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.card-estagio-rotulo {
+  color: #68727c;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.card-estagio-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.status-andamento {
+  background: #d7f7e5;
+  color: #0f8b46;
+}
+
+.status-concluido {
+  background: #d7f7e5;
+  color: #118b48;
+}
+
+.card-estagio-empresa {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.card-estagio-icone {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #f0f2f4;
+  color: #64707a;
+}
+
+.card-estagio-identificacao {
+  min-width: 0;
+}
+
+.card-estagio-nome {
+  margin: 0;
+  color: #17212b;
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-estagio-cargo {
+  margin: 2px 0 0;
+  color: #727b84;
+  font-size: 13px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-estagio-info {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.card-estagio-info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #606a73;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.card-estagio-info-item svg {
+  flex: 0 0 auto;
+  color: #606a73;
+}
+
+.card-estagio-info-item strong {
+  margin: 0 3px;
+  font-weight: 700;
+}
+
+.card-estagio-progresso {
+  margin-top: auto;
+}
+
+.card-estagio-progresso-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  color: #606a73;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.card-estagio-progresso-topo strong {
+  color: var(--verde-sage);
+  font-weight: 800;
+}
+
+.card-estagio-barra {
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--trilho);
+}
+
+.card-estagio-barra-preenchida {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--verde);
+  transition: width 0.35s ease;
+}
+
+.card-estagio-botao {
+  width: 100%;
+  min-height: 38px;
+  margin-top: 16px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.card-estagio-botao-atual {
+  border: 1px solid var(--verde);
+  background: var(--verde);
+  color: #fff;
+}
+
+.card-estagio-botao-atual:hover {
+  background: #15803d;
+  border-color: #15803d;
+}
+
+.card-estagio-botao-outline {
+  border: 1px solid var(--verde);
+  background: #fff;
+  color: var(--verde);
+}
+
+.card-estagio-botao-outline:hover {
+  background: #f0fff4;
+}
+
+.card-estagio-botao:focus-visible {
+  outline: 2px solid #86efac;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-estagio,
+  .card-estagio-barra-preenchida,
+  .card-estagio-botao {
+    transition: none;
+  }
+}

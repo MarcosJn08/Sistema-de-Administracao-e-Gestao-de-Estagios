@@ -9,6 +9,8 @@ import Login from '../../pages/Login.jsx';
 import DadosEmpresa from '../../pages/Cadastro/Dados.jsx';
 import DocumentosEmpresa from '../../pages/Cadastro/Documentos.jsx';
 import ConfirmacaoEmpresa from '../../pages/Cadastro/Confirmacao.jsx';
+import TelaEstagio from '../../pages/TelaEstagio.jsx';
+import DashboardDiretor from '../../pages/DashboardDiretor.jsx';
 
 function AppRoutes() {
   return (
@@ -18,6 +20,7 @@ function AppRoutes() {
         <Route path="/sage" element={<LandingPage />} />
         <Route path="/sage/aluno" element={<DashboardAluno />} />
         <Route path="/sage/professor" element={<DashboardProfessor />} />
+        <Route path="/sage/diretor" element={<DashboardDiretor />} />
         <Route path="/sage/vagas" element={<VitrineVagas />} />
         <Route path="/sage/documentos" element={<CentralDocumentos />} />
         <Route path="/sage/login" element={<Login />} />
@@ -25,7 +28,7 @@ function AppRoutes() {
         <Route path="/sage/cadastro/empresa" element={<DadosEmpresa />} />
         <Route path="/sage/cadastro/documento" element={<DocumentosEmpresa />} />
         <Route path="/sage/cadastro/confirmacao" element={<ConfirmacaoEmpresa />} />
-
+        <Route path="/sage/estagio" element={<TelaEstagio />} />
         <Route path="*" element={<Navigate to="/sage" replace />} />
       </Routes>
     </BrowserRouter>
