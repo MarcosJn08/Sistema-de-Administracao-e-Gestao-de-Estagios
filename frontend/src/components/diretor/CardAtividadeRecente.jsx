@@ -4,7 +4,7 @@ import './CardsDiretor.css';
 
 function CardAtividadeRecente({ titulo = 'Atividade recente', atividades = [] }) {
   return (
-    <div className="cartao-sage">
+    <div className="cartao-sage h-100 mb-0">
       <h2 className="cartao-sage-titulo">{titulo}</h2>
 
       <ul className="lista-atividades">

@@ -4,7 +4,7 @@ import './CardsDiretor.css';
 
 function CardProximosVencimentos({ titulo = 'Próximos vencimentos', itens = [] }) {
   return (
-    <div className="cartao-sage">
+    <div className="cartao-sage h-100 mb-0">
       <h2 className="cartao-sage-titulo">{titulo}</h2>
 
       <ul className="lista-vencimentos">
