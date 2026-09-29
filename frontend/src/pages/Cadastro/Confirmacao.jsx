@@ -1,14 +1,11 @@
 import "./Confirmacao.css";
 import Botao from "../../components/Button.jsx";
 import InfoLinha from "../../components/cadastro/InfoLinha.jsx";
-import Header from "../../components/Header.jsx";
 import Footer from "../../components/Footer.jsx";
 
 function Confirmacao() {
   return (
     <div className="confirmacao-page">
-      <Header somenteInicio />
-
       <main className="confirmacao-content">
         <section className="sucesso-card">
           <h2>Enviado com Sucesso!</h2>

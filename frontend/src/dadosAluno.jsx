@@ -1,15 +1,19 @@
-const dados = {
+const dadosAluno = {
   aluno: {
     nome: "Marcos Junio Rodrigues Sena",
     curso: "Tecnologia em Analise e Desenvolvimento de Sistemas",
     email: "mjrs@aluno.ifnmg.edu.br",
     matricula: "12345678"
   },
-  progresso: {
+  progressoTotal: {
     horasConcluidas: 100,
     metaHoras: 200,
     horasEstagio: 100,
     horasProjeto: 0
+  },
+  progressoEspecifico: {
+    horasConcluidas: 15,
+    metaHoras: 30
   },
   estagioAtual: {
     status: "Em Andamento",
@@ -20,6 +24,41 @@ const dados = {
     dataFim: "01/12/2026",
     cargaHorariaSemanal: "30h"
   },
+  meusEstagios: [
+    {
+      id: 1,
+      atual: true,
+      status: "Em andamento",
+      empresa: "Empresa ABC",
+      cargo: "Desenvolvedor Back-end",
+      dataInicio: "01/08/2026",
+      dataFim: "30/12/2026",
+      cargaHoraria: "20h/semana",
+      progresso: 75
+    },
+    {
+      id: 2,
+      atual: false,
+      status: "Concluído",
+      empresa: "Empresa XYZ",
+      cargo: "Suporte de TI",
+      dataInicio: "01/02/2026",
+      dataFim: "30/06/2026",
+      cargaHoraria: "20h/semana",
+      progresso: 100
+    },
+    {
+      id: 3,
+      atual: false,
+      status: "Concluído",
+      empresa: "Empresa DEF",
+      cargo: "Desenvolvedor Front-end",
+      dataInicio: "01/08/2025",
+      dataFim: "31/12/2025",
+      cargaHoraria: "20h/semana",
+      progresso: 100
+    }
+  ],
   documentos: [
     {
       id: 1,
@@ -135,4 +174,6 @@ const dados = {
   }
 };
 
-export default dados;
+dadosAluno.progresso = dadosAluno.progressoTotal;
+
+export default dadosAluno;
