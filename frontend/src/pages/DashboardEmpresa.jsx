@@ -6,7 +6,7 @@ import Footer from '../components/Footer.jsx';
 import CardMetricaEmpresa from '../components/empresa/CardMetricaEmpresa.jsx';
 import TabelaVagasEmpresa from '../components/empresa/TabelaVagasEmpresa.jsx';
 import ModalNovaVaga from '../components/empresa/ModalNovaVaga.jsx';
-import dados from '../dados.jsx';
+import dados from '../dadosEmpresa.jsx';
 import './DashboardEmpresa.css';
 
 function DashboardEmpresa() {

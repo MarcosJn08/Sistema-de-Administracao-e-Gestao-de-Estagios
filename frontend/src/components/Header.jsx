@@ -130,12 +130,10 @@ function Header({
                       >
                         {isEmpresa ? (
                           <Code size={18} color="#38bdf8" />
-                        ) : (
-                        {usuario?.foto ? (
+                        ) : usuario?.foto ? (
                           <img src={usuario.foto} alt={usuario.nome} />
                         ) : (
-                            <span>{letraAvatar}</span>
-                        )}
+                          <span>{letraAvatar}</span>
                         )}
                       </div>
                       <span className="nome-usuario-header">
