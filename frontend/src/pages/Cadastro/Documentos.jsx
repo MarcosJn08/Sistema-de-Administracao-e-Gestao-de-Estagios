@@ -4,13 +4,11 @@ import TituloCadastro from "../../components/cadastro/TituloCadastro.jsx";
 import DocumentoToolbar from "../../components/cadastro/DocumentoToolbar.jsx";
 import Botao from "../../components/Button.jsx";
 import Form from "react-bootstrap/Form";
-import Header from "../../components/Header.jsx";
 import Footer from "../../components/Footer.jsx";
 
 function Documento() {
   return (
     <div className="documento-page">
-      <Header somenteInicio />
       <HeaderCadastro
         passo01="passo-concluido"
         passo02="passo-concluido"

@@ -8,7 +8,7 @@ import './CardsDiretor.css';
  */
 function CardEstagiosPorStatus({ titulo = 'Estágios por status', itens = [], total = 100 }) {
   return (
-    <div className="cartao-sage">
+    <div className="cartao-sage h-100 mb-0">
       <h2 className="cartao-sage-titulo">{titulo}</h2>
 
       <div className="estagios-status-lista">

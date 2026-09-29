@@ -32,17 +32,40 @@ function Header({
     ...(pagina06 ? [[pagina06, '#como-funciona']] : []),
   ];
 
-  const dashboardLinks = [
+  const isDiretor = pagina01 === 'Dashboard' && pagina02 === 'Alunos';
+
+  const diretorLinks = [
+    [pagina01, '/sage/diretor'],
+    [pagina02, '#'],
+    [pagina03, '#'],
+    [pagina04, '#'],
+    [pagina05, '#'],
+    ...(pagina06 ? [[pagina06, '#']] : []),
+  ];
+
+  const dashboardAlunoLinks = [
     ['Início', '/sage'],
     ['Dashboard', '/sage/aluno'],
     ['Vagas', '/sage/vagas'],
+    ...(pagina03 === 'Documentos' ? [['Documentos', '/sage/documentos']] : []),
   ];
 
   const cadastroLinks = [
     ['Início', '/sage'],
   ];
 
-  const links = customLinks || (somenteInicio ? cadastroLinks : isDashboard ? dashboardLinks : landingLinks);
+  const links =
+    customLinks ||
+    (somenteInicio
+      ? cadastroLinks
+      : isDiretor
+      ? diretorLinks
+      : isDashboard
+      ? dashboardAlunoLinks
+      : landingLinks);
+
+  const nomeExibicao = usuario?.nome ? usuario.nome.split(' ')[0] : 'Usuário';
+  const letraAvatar = usuario?.nome ? usuario.nome.charAt(0).toUpperCase() : 'U';
 
   return (
     <Navbar
@@ -77,9 +100,14 @@ function Header({
             <Nav className="menu-central">
               {links.map(([label, href]) => (
                 <Nav.Link
-                  key={href}
+                  key={label}
                   href={href}
-                  onClick={closeMenu}
+                  onClick={(e) => {
+                    closeMenu();
+                    if (href === '#' || !href) {
+                      e.preventDefault();
+                    }
+                  }}
                   className={paginaAtiva === label ? 'nav-link-active' : ''}
                 >
                   {label}
@@ -92,10 +120,14 @@ function Header({
                   <div className="d-flex align-items-center gap-3">
                     <div className="perfil-usuario-header">
                       <div className="avatar-usuario-header">
-                        <span>{usuario.nome ? usuario.nome.charAt(0).toUpperCase() : 'A'}</span>
+                        {usuario?.foto ? (
+                          <img src={usuario.foto} alt={usuario.nome} />
+                        ) : (
+                          <span>{letraAvatar}</span>
+                        )}
                       </div>
                       <span className="nome-usuario-header">
-                        {usuario.nome ? usuario.nome.split(' ')[0] : 'Aluno'}
+                        {nomeExibicao}
                       </span>
                     </div>
                     <Button texto="Sair" tipo="botao-texto-branco" href="/sage/login" />
@@ -116,3 +148,4 @@ function Header({
 }
 
 export default Header;
+
