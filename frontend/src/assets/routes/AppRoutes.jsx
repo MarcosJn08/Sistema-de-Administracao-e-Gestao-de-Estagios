@@ -10,6 +10,7 @@ import DocumentosEmpresa from '../../pages/Cadastro/Documentos.jsx';
 import ConfirmacaoEmpresa from '../../pages/Cadastro/Confirmacao.jsx';
 import TelaEstagio from '../../pages/TelaEstagio.jsx';
 import DashboardDiretor from '../../pages/DashboardDiretor.jsx';
+import DashboardProfessor from '../../pages/DashboardProfessor.jsx';
 
 function AppRoutes() {
   return (
@@ -19,6 +20,7 @@ function AppRoutes() {
         <Route path="/sage" element={<LandingPage />} />
         
         <Route path="/sage/aluno" element={<DashboardAluno />} />
+        <Route path="/sage/professor" element={<DashboardProfessor />} />
         <Route path="/sage/diretor" element={<DashboardDiretor />} />
         <Route path="/sage/vagas" element={<VitrineVagas />} />
         <Route path="/sage/documentos" element={<CentralDocumentos />} />
