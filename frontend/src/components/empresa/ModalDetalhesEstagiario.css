@@ -1,0 +1,482 @@
+.modal-estagiario-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 20px 16px;
+  overflow-y: auto;
+}
+
+.modal-estagiario-container {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 980px;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  animation: modalEstagiarioFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalEstagiarioFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-estagiario-header {
+  padding: 20px 28px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid #f1f5f9;
+  background-color: #ffffff;
+}
+
+.modal-estagiario-breadcrumb {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.modal-estagiario-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.btn-fechar-modal-estagiario {
+  background: none;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-fechar-modal-estagiario:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.modal-estagiario-alerta-sucesso {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border-bottom: 1px solid #a7f3d0;
+  padding: 10px 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.modal-estagiario-body {
+  padding: 24px 28px;
+  overflow-y: auto;
+  flex: 1;
+  background-color: #f8fafc;
+}
+
+.modal-estagiario-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 820px) {
+  .modal-estagiario-grid {
+    grid-template-columns: 1fr 1.25fr;
+  }
+}
+
+.modal-estagiario-card {
+  background-color: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  padding: 22px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.modal-card-titulo {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 14px 0;
+}
+
+.modal-card-divisor {
+  border-top: 1px solid #f1f5f9;
+  margin: 14px 0 16px 0;
+}
+
+.modal-estagiario-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.modal-estagiario-avatar-circulo {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #f1f5f9;
+  border: 2px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.modal-estagiario-avatar-circulo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-estagiario-avatar-fallback {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+.modal-estagiario-nome {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+
+.modal-estagiario-cargo {
+  font-size: 0.875rem;
+  color: #16a34a;
+  font-weight: 600;
+  margin: 0;
+}
+
+.modal-info-linha {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 7px 0;
+  font-size: 0.875rem;
+}
+
+.modal-info-rotulo {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.modal-info-valor {
+  color: #0f172a;
+  font-weight: 600;
+  text-align: right;
+}
+
+.text-verde-destaque {
+  color: #16a34a !important;
+  font-weight: 700 !important;
+}
+
+.text-vermelho-destaque {
+  color: #dc2626 !important;
+  font-weight: 700 !important;
+}
+
+.barra-progresso-container {
+  width: 100%;
+  height: 10px;
+  background-color: #e2e8f0;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.barra-progresso-preenchimento {
+  height: 100%;
+  background-color: #16a34a;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.progresso-texto-rotulo {
+  font-size: 0.8125rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.progresso-texto-percentual {
+  font-size: 0.8125rem;
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.item-documento-box {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: background-color 0.15s ease;
+}
+
+.item-documento-box:hover {
+  background-color: #f1f5f9;
+}
+
+.item-documento-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.icone-documento {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.nome-documento {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-visualizar-doc {
+  background: none;
+  border: none;
+  color: #16a34a;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+}
+
+.btn-visualizar-doc:hover {
+  background-color: #dcfce7;
+  text-decoration: underline;
+}
+
+.btn-nova-avaliacao {
+  background-color: #1e6b2c;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 7px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btn-nova-avaliacao:hover {
+  background-color: #165322;
+}
+
+.form-nova-avaliacao {
+  background-color: #f1f5f9;
+  border-radius: 10px;
+  padding: 14px;
+  border: 1px solid #cbd5e1;
+}
+
+.form-label-pequeno {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.form-control-pequeno {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  background-color: #ffffff;
+}
+
+.form-control-pequeno:focus {
+  outline: none;
+  border-color: #16a34a;
+}
+
+.btn-cancelar-avaliacao {
+  background: none;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.btn-salvar-avaliacao {
+  background-color: #16a34a;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ffffff;
+  padding: 5px 12px;
+  cursor: pointer;
+}
+
+.card-avaliacao-box {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+.rotulo-avaliacao {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.data-avaliacao {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 2px 0 0 0;
+}
+
+.nota-avaliacao {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #16a34a;
+  margin: 2px 0 0 0;
+}
+
+.nota-maxima {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.texto-observacoes {
+  font-size: 0.875rem;
+  color: #334155;
+  margin: 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.modal-estagiario-voltar-card {
+  background-color: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  padding: 12px 18px;
+}
+
+.btn-voltar-listagem {
+  background: none;
+  border: none;
+  color: #475569;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.btn-voltar-listagem:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.badge-estagiario-ativo {
+  background-color: #dcfce7;
+  color: #15803d;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.badge-estagiario-experiencia {
+  background-color: #fef3c7;
+  color: #b45309;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.badge-estagiario-encerrado {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.badge-doc-aprovado {
+  background-color: #dcfce7;
+  color: #15803d;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.badge-doc-pendente-envio {
+  background-color: #fef3c7;
+  color: #b45309;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.badge-doc-pendente {
+  background-color: #fff7ed;
+  color: #c2410c;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+}

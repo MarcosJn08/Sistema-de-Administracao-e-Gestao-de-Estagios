@@ -1,0 +1,27 @@
+
+.card-estagio-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.status-andamento {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.status-pendente {
+  background: #f0f2f4;
+  color: #64707a;
+}
+.status-aprovado {
+  background: #d7f7e5;
+  color: #118b48;
+}
