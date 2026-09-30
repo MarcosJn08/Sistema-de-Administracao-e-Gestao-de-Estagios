@@ -16,6 +16,7 @@ import GestaoCandidatos from '../../pages/GestaoCandidatos.jsx';
 import PerfilCandidato from '../../pages/PerfilCandidato.jsx';
 import PainelOrientadoresDiretor from '../../pages/PainelOrientadoresDiretor.jsx';
 import MeusEstagiarios from '../../pages/MeusEstagiarios.jsx';
+import EnviarDocumento from "../../pages/EnviarDocumento.jsx";
 
 function AppRoutes() {
   return (
@@ -46,6 +47,7 @@ function AppRoutes() {
         <Route path="/sage/cadastro/confirmacao" element={<ConfirmacaoEmpresa />} />
         <Route path="/sage/estagio" element={<TelaEstagio />} />
         <Route path="*" element={<Navigate to="/sage" replace />} />
+        <Route path="/sage/enviar-documento" element={<EnviarDocumento />} />
       </Routes>
     </BrowserRouter>
   );
