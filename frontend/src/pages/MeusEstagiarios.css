@@ -1,0 +1,274 @@
+.meus-estagiarios-wrapper {
+  background-color: #f8fafc;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.meus-estagiarios-container {
+  max-width: 1260px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 36px 20px 60px 20px;
+}
+
+.alerta-toast-sucesso {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+  border-radius: 10px;
+  padding: 12px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.meus-estagiarios-header {
+  margin-bottom: 28px;
+}
+
+.meus-estagiarios-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.02em;
+}
+
+.meus-estagiarios-subtitle {
+  font-size: 0.9375rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.card-tabela-estagiarios {
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.filtro-estagiarios-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 768px) {
+  .filtro-estagiarios-container {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.campo-busca-estagiario {
+  position: relative;
+  flex-grow: 1;
+}
+
+.campo-busca-estagiario input {
+  width: 100%;
+  padding: 10px 14px 10px 42px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.875rem;
+  color: #1e293b;
+  outline: none;
+  background-color: #ffffff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.campo-busca-estagiario input:focus {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+.icone-busca-estagiario {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.select-status-wrapper {
+  position: relative;
+  min-width: 180px;
+}
+
+.select-status-estagiario {
+  width: 100%;
+  padding: 10px 38px 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.875rem;
+  color: #1e293b;
+  appearance: none;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.select-status-estagiario:focus {
+  outline: none;
+  border-color: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+.icone-select-estagiario {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  pointer-events: none;
+}
+
+.tabela-estagiarios-responsiva {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.tabela-estagiarios {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+}
+
+.tabela-estagiarios thead th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  padding: 14px 16px;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.tabela-estagiarios thead th:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.tabela-estagiarios thead th:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.tabela-estagiarios tbody td {
+  padding: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  color: #334155;
+  transition: background-color 0.15s ease;
+}
+
+.tabela-estagiarios tbody tr:hover td {
+  background-color: #f8fafc;
+}
+
+.celula-nome-estagiario {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.celula-cargo-estagiario {
+  color: #334155;
+  font-weight: 500;
+}
+
+.celula-curso-estagiario {
+  color: #64748b;
+}
+
+.celula-data-estagiario {
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.badge-tabela-ativo {
+  background-color: #dcfce7;
+  color: #15803d;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.badge-tabela-experiencia {
+  background-color: #fef3c7;
+  color: #b45309;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.badge-tabela-encerrado {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.btn-acao-tabela-detalhes,
+.btn-acao-tabela-docs {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-acao-tabela-detalhes:hover,
+.btn-acao-tabela-docs:hover {
+  background-color: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.btn-acao-tabela-avaliar {
+  background-color: #1e6b2c;
+  border: none;
+  color: #ffffff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-acao-tabela-avaliar:hover {
+  background-color: #165322;
+}
+
+.tabela-estagiarios-vazia {
+  text-align: center;
+  padding: 36px 16px;
+  color: #64748b;
+  font-size: 0.9375rem;
+}

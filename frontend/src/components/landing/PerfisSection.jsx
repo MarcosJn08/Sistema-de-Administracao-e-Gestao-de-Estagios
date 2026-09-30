@@ -58,8 +58,7 @@ export default function PerfisSection() {
                   <p>{descricao}</p>
                   <a
                     href={link}
-                    className="sage-text-link mt-auto d-inline-flex align-items-center gap-1"
-                    style={{ color: 'inherit', fontWeight: 600, textDecoration: 'none' }}
+                    className="sage-text-link mt-auto"
                   >
                     {linkTexto} <ArrowRight size={15} aria-hidden="true" />
                   </a>

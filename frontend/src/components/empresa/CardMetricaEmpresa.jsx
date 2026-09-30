@@ -1,6 +1,12 @@
 import React from 'react';
 
-function CardMetricaEmpresa({ titulo, valor, icone: Icone }) {
+function CardMetricaEmpresa({
+  titulo,
+  valor,
+  icone: Icone,
+  corIcone = '#2e7d32',
+  corFundoIcone = '#eaf5ea',
+}) {
   return (
     <div
       className="card-metrica-empresa bg-white"
@@ -44,8 +50,8 @@ function CardMetricaEmpresa({ titulo, valor, icone: Icone }) {
           width: '46px',
           height: '46px',
           borderRadius: '12px',
-          backgroundColor: '#eaf5ea',
-          color: '#2e7d32',
+          backgroundColor: corFundoIcone,
+          color: corIcone,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

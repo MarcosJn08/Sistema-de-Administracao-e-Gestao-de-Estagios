@@ -1,8 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { Search, ChevronDown, Pencil, Eye, EyeOff } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Search, ChevronDown, Pencil, Eye, EyeOff, Users } from 'lucide-react';
 import StatusBadge from '../StatusBadge.jsx';
+import Paginacao from '../Paginacao.jsx';
 
 function TabelaVagasEmpresa({ vagas, onAlternarStatus, onEditarVaga }) {
+  const navigate = useNavigate();
   const [busca, setBusca] = useState('');
   const [filtroStatus, setFiltroStatus] = useState('Todos');
   const [filtroArea, setFiltroArea] = useState('Todas');
@@ -13,7 +16,7 @@ function TabelaVagasEmpresa({ vagas, onAlternarStatus, onEditarVaga }) {
     return vagas.filter((vaga) => {
       const matchBusca = vaga.titulo.toLowerCase().includes(busca.toLowerCase());
       const matchStatus = filtroStatus === 'Todos' || vaga.status === filtroStatus;
-      const matchArea = filtroArea === 'Todas' || vaga.area.toLowerCase() === filtroArea.toLowerCase();
+      const matchArea = filtroArea === 'Todas' || (vaga.area && vaga.area.toLowerCase() === filtroArea.toLowerCase());
       return matchBusca && matchStatus && matchArea;
     });
   }, [vagas, busca, filtroStatus, filtroArea]);
@@ -260,7 +263,15 @@ function TabelaVagasEmpresa({ vagas, onAlternarStatus, onEditarVaga }) {
                       border: 'none',
                     }}
                   >
-                    {vaga.titulo}
+                    <span
+                      onClick={() => navigate(`/sage/empresa/vagas/${vaga.id}/candidatos`)}
+                      style={{ cursor: 'pointer', transition: 'color 0.15s ease' }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = '#2e7d32')}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = '#0f172a')}
+                      title="Ver candidatos desta vaga"
+                    >
+                      {vaga.titulo}
+                    </span>
                   </td>
 
                   <td
@@ -276,6 +287,7 @@ function TabelaVagasEmpresa({ vagas, onAlternarStatus, onEditarVaga }) {
 
                   <td style={{ padding: '14px 16px', border: 'none' }}>
                     <span
+                      onClick={() => navigate(`/sage/empresa/vagas/${vaga.id}/candidatos`)}
                       style={{
                         backgroundColor: '#d1f4e0',
                         color: '#0f7b44',
@@ -284,9 +296,14 @@ function TabelaVagasEmpresa({ vagas, onAlternarStatus, onEditarVaga }) {
                         fontSize: '0.8125rem',
                         fontWeight: 600,
                         display: 'inline-block',
+                        cursor: 'pointer',
+                        transition: 'opacity 0.15s ease',
                       }}
+                      onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
+                      onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+                      title="Ver candidatos desta vaga"
                     >
-                      {vaga.inscritos} candidatos
+                      {vaga.inscritos || vaga.candidatos || 0} candidatos
                     </span>
                   </td>
 
@@ -314,6 +331,26 @@ function TabelaVagasEmpresa({ vagas, onAlternarStatus, onEditarVaga }) {
                     }}
                   >
                     <div className="d-inline-flex align-items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/sage/empresa/vagas/${vaga.id}/candidatos`)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          padding: '4px',
+                          color: '#64748b',
+                          cursor: 'pointer',
+                          borderRadius: '4px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transition: 'color 0.15s ease',
+                        }}
+                        title="Gerenciar Candidatos"
+                      >
+                        <Users size={17} />
+                      </button>
+
                       <button
                         type="button"
                         onClick={() => onEditarVaga && onEditarVaga(vaga)}
@@ -368,76 +405,8 @@ function TabelaVagasEmpresa({ vagas, onAlternarStatus, onEditarVaga }) {
         </table>
       </div>
 
-      <div
-        className="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 pt-3 mt-2"
-        style={{ borderTop: '1px solid #f1f5f9' }}
-      >
-        <span style={{ fontSize: '0.875rem', color: '#64748b' }}>
-          Mostrando {vagasFiltradas.length} de {vagas.length} vagas publicadas
-        </span>
-
-        <div className="d-flex align-items-center gap-2">
-          <button
-            type="button"
-            disabled={paginaAtual === 1}
-            onClick={() => setPaginaAtual((prev) => Math.max(1, prev - 1))}
-            style={{
-              padding: '6px 14px',
-              borderRadius: '8px',
-              border: '1px solid #e2e8f0',
-              backgroundColor: '#ffffff',
-              color: paginaAtual === 1 ? '#94a3b8' : '#334151',
-              fontSize: '0.875rem',
-              fontWeight: 500,
-              cursor: paginaAtual === 1 ? 'not-allowed' : 'pointer',
-            }}
-          >
-            Anterior
-          </button>
-
-          {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((num) => (
-            <button
-              key={num}
-              type="button"
-              onClick={() => setPaginaAtual(num)}
-              style={{
-                width: '34px',
-                height: '34px',
-                borderRadius: '8px',
-                border: num === paginaAtual ? 'none' : '1px solid #e2e8f0',
-                backgroundColor: num === paginaAtual ? '#2e7d32' : '#ffffff',
-                color: num === paginaAtual ? '#ffffff' : '#334151',
-                fontSize: '0.875rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              {num}
-            </button>
-          ))}
-
-          <button
-            type="button"
-            disabled={paginaAtual >= totalPaginas}
-            onClick={() => setPaginaAtual((prev) => Math.min(totalPaginas, prev + 1))}
-            style={{
-              padding: '6px 14px',
-              borderRadius: '8px',
-              border: '1px solid #e2e8f0',
-              backgroundColor: '#ffffff',
-              color: paginaAtual >= totalPaginas ? '#94a3b8' : '#334151',
-              fontSize: '0.875rem',
-              fontWeight: 500,
-              cursor: paginaAtual >= totalPaginas ? 'not-allowed' : 'pointer',
-            }}
-          >
-            Próxima
-          </button>
-        </div>
-      </div>
+      <Paginacao paginaAtual={paginaAtual} totalPaginas={totalPaginas} aoMudarPagina={setPaginaAtual}
+        textoResumo={`Mostrando ${vagasFiltradas.length} de ${vagas.length} vagas publicadas`} />
     </div>
   );
 }

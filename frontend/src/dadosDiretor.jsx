@@ -7,6 +7,7 @@ const dados = {
   },
 
   diretor: {
+    role: 'diretor',
     nome: "Carlos Almeida",
     foto: null
   },

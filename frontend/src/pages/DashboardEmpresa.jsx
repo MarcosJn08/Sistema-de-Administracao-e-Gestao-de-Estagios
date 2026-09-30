@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
-import { Plus, FileText, Users, XCircle, Handshake } from 'lucide-react';
+import { Plus, Briefcase, Users, Filter, Handshake } from 'lucide-react';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import CardMetricaEmpresa from '../components/empresa/CardMetricaEmpresa.jsx';
@@ -52,7 +52,7 @@ function DashboardEmpresa() {
 
   const linksNavegacaoEmpresa = [
     ['Dashboard', '/sage/empresa'],
-    ['Estagiários', '#estagiarios'],
+    ['Estagiários', '/sage/empresa/estagiarios'],
   ];
 
   return (
@@ -93,7 +93,7 @@ function DashboardEmpresa() {
               <CardMetricaEmpresa
                 titulo="Vagas Ativas"
                 valor={metricas.vagasAtivas}
-                icone={FileText}
+                icone={Briefcase}
               />
             </Col>
             <Col xs={12} sm={6} lg={3}>
@@ -107,7 +107,7 @@ function DashboardEmpresa() {
               <CardMetricaEmpresa
                 titulo="Em Triagem"
                 valor={metricas.emTriagem}
-                icone={XCircle}
+                icone={Filter}
               />
             </Col>
             <Col xs={12} sm={6} lg={3}>

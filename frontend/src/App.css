@@ -124,11 +124,13 @@
   font-size: 15px;
   font-weight: 500;
   white-space: nowrap;
+  text-decoration: none !important;
 }
 .menu-central .nav-link:hover,
-.menu-central .nav-link:focus {
+.menu-central .nav-link:focus,
+.menu-central .nav-link:active {
   color: #fff;
-  text-decoration: underline;
+  text-decoration: none !important;
 }
 .botao-login {
   display: flex;
@@ -775,6 +777,20 @@ button.sage-text-link,
   background-color: #13461c;
   font-weight: 600;
   border-radius: 20px;
+  text-decoration: none !important;
+}
+.menu-central .nav-link.nav-link-active:hover,
+.menu-central .nav-link.nav-link-active:focus {
+  color: #4ade80 !important;
+  text-decoration: none !important;
+}
+
+.header .nav-link,
+.header .nav-link:hover,
+.header .nav-link:focus,
+.header .nav-link:active,
+.header .nav-link.nav-link-active {
+  text-decoration: none !important;
 }
 
 .perfil-usuario-header,
