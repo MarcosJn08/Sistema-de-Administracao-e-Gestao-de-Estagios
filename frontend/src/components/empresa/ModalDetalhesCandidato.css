@@ -35,7 +35,6 @@
   }
 }
 
-/* Header do Modal */
 .modal-candidato-header {
   padding: 20px 24px;
   display: flex;
@@ -79,7 +78,6 @@
   color: #0f172a;
 }
 
-/* Corpo do Modal */
 .modal-candidato-body {
   padding: 24px;
   overflow-y: auto;
@@ -119,7 +117,6 @@
   margin: 12px 0 16px 0;
 }
 
-/* Identificação */
 .modal-aluno-avatar-row {
   display: flex;
   align-items: center;
@@ -164,7 +161,6 @@
   margin: 0;
 }
 
-/* Linhas de Chave-Valor */
 .modal-info-linha {
   display: flex;
   justify-content: space-between;
@@ -189,7 +185,6 @@
   text-align: right;
 }
 
-/* Habilidades */
 .modal-tags-habilidades {
   display: flex;
   flex-wrap: wrap;
@@ -207,7 +202,6 @@
   font-weight: 600;
 }
 
-/* Informações da Candidatura */
 .modal-candidatura-meta {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -247,7 +241,6 @@
   border: 1px solid #f1f5f9;
 }
 
-/* Footer do Modal */
 .modal-candidato-footer {
   padding: 16px 24px;
   display: flex;

@@ -26,7 +26,6 @@ function GestaoCandidatos() {
   const { vagaId } = useParams();
   const navigate = useNavigate();
 
-  // Encontra a vaga correspondente ou usa a primeira (Desenvolvedor Backend) como padrão
   const idNumerico = vagaId ? parseInt(vagaId, 10) : 1;
   const vagaAtual =
     dadosEmpresa.empresa?.vagas?.find((v) => v.id === idNumerico) ||
@@ -36,7 +35,6 @@ function GestaoCandidatos() {
       area: 'Tecnologia'
     };
 
-  // Carrega candidatos iniciais da vaga
   const [candidatos, setCandidatos] = useState(
     vagaAtual.candidatosLista && vagaAtual.candidatosLista.length > 0
       ? vagaAtual.candidatosLista
@@ -52,7 +50,6 @@ function GestaoCandidatos() {
   const [modalAberto, setModalAberto] = useState(false);
   const itensPorPagina = 10;
 
-  // Fecha o menu de três pontos ao clicar fora
   useEffect(() => {
     const lidarComCliqueFora = (e) => {
       if (!e.target.closest('.dropdown-acoes-candidato')) {
@@ -63,7 +60,6 @@ function GestaoCandidatos() {
     return () => document.removeEventListener('click', lidarComCliqueFora);
   }, []);
 
-  // Métricas calculadas dinamicamente
   const metricas = useMemo(() => {
     const total = candidatos.length;
     const emAnalise = candidatos.filter((c) => c.status === 'Em Análise').length;
@@ -73,7 +69,6 @@ function GestaoCandidatos() {
     return { total, emAnalise, aprovados, reprovados };
   }, [candidatos]);
 
-  // Filtragem
   const candidatosFiltrados = useMemo(() => {
     return candidatos.filter((candidato) => {
       const matchBusca = candidato.nome.toLowerCase().includes(busca.toLowerCase());
@@ -82,7 +77,6 @@ function GestaoCandidatos() {
     });
   }, [candidatos, busca, filtroStatus]);
 
-  // Paginação
   const totalPaginas = Math.max(1, Math.ceil(candidatosFiltrados.length / itensPorPagina));
   const candidatosPaginados = useMemo(() => {
     const inicio = (paginaAtual - 1) * itensPorPagina;
@@ -144,7 +138,6 @@ function GestaoCandidatos() {
 
       <main className="flex-grow-1">
         <div className="gestao-candidatos-container">
-          {/* Cabeçalho da Página */}
           <div className="gestao-candidatos-header">
             <h1 className="gestao-candidatos-title">
               Candidatos - {vagaAtual.titulo}
@@ -154,7 +147,6 @@ function GestaoCandidatos() {
             </p>
           </div>
 
-          {/* Cards de Métricas */}
           <Row className="g-4 mb-4">
             <Col xs={12} sm={6} lg={3}>
               <CardMetricaEmpresa
@@ -194,9 +186,7 @@ function GestaoCandidatos() {
             </Col>
           </Row>
 
-          {/* Card da Tabela de Candidatos */}
           <div className="card-tabela-candidatos">
-            {/* Barra de Filtros */}
             <div className="filtro-candidatos-container">
               <div className="campo-busca-candidato">
                 <Search size={18} className="icone-busca-candidato" />
@@ -231,7 +221,6 @@ function GestaoCandidatos() {
               </div>
             </div>
 
-            {/* Tabela de Candidatos */}
             <div className="table-responsive">
               <table
                 className="table align-middle"
@@ -463,7 +452,6 @@ function GestaoCandidatos() {
         </div>
       </main>
 
-      {/* Toast Feedback */}
       {mensagemFeedback && (
         <div
           className="toast-feedback-candidato"
@@ -474,7 +462,6 @@ function GestaoCandidatos() {
         </div>
       )}
 
-      {/* Modal Dialog de Detalhes do Candidato */}
       <ModalDetalhesCandidato
         aberto={modalAberto}
         candidato={candidatoModal}

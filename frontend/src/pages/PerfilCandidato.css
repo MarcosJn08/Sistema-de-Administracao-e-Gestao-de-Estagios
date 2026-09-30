@@ -12,7 +12,6 @@
   padding: 36px 20px 60px 20px;
 }
 
-/* Breadcrumbs */
 .perfil-candidato-breadcrumbs {
   display: flex;
   align-items: center;
@@ -42,7 +41,6 @@
   font-weight: 600;
 }
 
-/* Header & Title */
 .perfil-candidato-header {
   display: flex;
   align-items: center;
@@ -59,7 +57,6 @@
   letter-spacing: -0.02em;
 }
 
-/* Cards Base */
 .card-detalhe-candidato {
   background-color: #ffffff;
   border-radius: 16px;
@@ -80,7 +77,6 @@
   margin: 16px 0 20px 0;
 }
 
-/* Perfil Básico (Avatar e Nome) */
 .aluno-header-info {
   display: flex;
   align-items: center;
@@ -125,7 +121,6 @@
   margin: 0;
 }
 
-/* Lista Chave-Valor */
 .info-row-item {
   display: flex;
   justify-content: space-between;
@@ -145,7 +140,6 @@
   text-align: right;
 }
 
-/* Tags de Habilidades */
 .tags-habilidades-wrapper {
   display: flex;
   flex-wrap: wrap;
@@ -163,7 +157,6 @@
   font-weight: 600;
 }
 
-/* Informações da Candidatura */
 .candidatura-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -204,7 +197,6 @@
   margin: 0;
 }
 
-/* Barra de Ações Inferior */
 .barra-acoes-perfil {
   background-color: #ffffff;
   border-radius: 16px;

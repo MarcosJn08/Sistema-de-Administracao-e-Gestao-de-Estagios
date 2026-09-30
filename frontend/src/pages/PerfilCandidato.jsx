@@ -11,7 +11,6 @@ function PerfilCandidato() {
   const { vagaId, candidatoId } = useParams();
   const navigate = useNavigate();
 
-  // Busca vaga
   const idVagaNumerico = vagaId ? parseInt(vagaId, 10) : 1;
   const vagaAtual =
     dadosEmpresa.empresa?.vagas?.find((v) => v.id === idVagaNumerico) ||
@@ -20,7 +19,6 @@ function PerfilCandidato() {
       titulo: 'Desenvolvedor Backend',
     };
 
-  // Encontra o candidato ou usa Marcos Junio (id 6) como padrão para bater com o protótipo
   const idCandidato = candidatoId ? parseInt(candidatoId, 10) : 6;
   const candidatoInicial =
     candidatosDesenvolvedorBackend.find((c) => c.id === idCandidato) ||
@@ -79,7 +77,6 @@ function PerfilCandidato() {
 
       <main className="flex-grow-1">
         <div className="perfil-candidato-container">
-          {/* Breadcrumb Navigation */}
           <nav className="perfil-candidato-breadcrumbs" aria-label="Navegação estrutural">
             <Link to="/sage/empresa" className="breadcrumb-link">
               Vagas
@@ -95,18 +92,14 @@ function PerfilCandidato() {
             <span className="breadcrumb-active">Perfil do Candidato</span>
           </nav>
 
-          {/* Cabeçalho da Página */}
           <div className="perfil-candidato-header">
             <h1 className="perfil-candidato-title">Perfil do Candidato</h1>
             {renderBadgeStatus(candidato.status)}
           </div>
 
-          {/* Layout Principal em 2 Colunas */}
           <Row className="g-4 mb-4">
-            {/* Coluna Esquerda: Identificação e Formação */}
             <Col xs={12} lg={5}>
               <div className="d-flex flex-column gap-4">
-                {/* Card 1: Identificação Básica */}
                 <div className="card-detalhe-candidato">
                   <div className="aluno-header-info">
                     <div className="aluno-avatar-circulo">
@@ -144,7 +137,6 @@ function PerfilCandidato() {
                   </div>
                 </div>
 
-                {/* Card 2: Formação e Habilidades */}
                 <div className="card-detalhe-candidato">
                   <h3 className="card-detalhe-title">Formação e Habilidades</h3>
 
@@ -190,10 +182,8 @@ function PerfilCandidato() {
               </div>
             </Col>
 
-            {/* Coluna Direita: Informações da Candidatura e Barra de Ações */}
             <Col xs={12} lg={7}>
               <div className="d-flex flex-column gap-4">
-                {/* Card 3: Informações da Candidatura */}
                 <div className="card-detalhe-candidato">
                   <h3 className="card-detalhe-title">Informações da Candidatura</h3>
 
@@ -222,7 +212,6 @@ function PerfilCandidato() {
                   </div>
                 </div>
 
-                {/* Card 4: Barra de Ações */}
                 <div className="barra-acoes-perfil">
                   <button
                     type="button"
@@ -258,7 +247,6 @@ function PerfilCandidato() {
         </div>
       </main>
 
-      {/* Toast Feedback */}
       {mensagemFeedback && (
         <div
           className="toast-feedback-candidato"

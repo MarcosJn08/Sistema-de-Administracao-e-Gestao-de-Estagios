@@ -46,7 +46,6 @@ function ModalDetalhesCandidato({
       aria-labelledby="modal-candidato-titulo"
     >
       <div className="modal-candidato-container">
-        {/* Cabeçalho do Modal */}
         <div className="modal-candidato-header">
           <div className="modal-candidato-title-group">
             <h2 id="modal-candidato-titulo" className="modal-candidato-title">
@@ -65,12 +64,9 @@ function ModalDetalhesCandidato({
           </button>
         </div>
 
-        {/* Corpo do Modal */}
         <div className="modal-candidato-body">
           <div className="modal-candidato-grid">
-            {/* Coluna Esquerda: Dados do Aluno e Formação */}
             <div className="d-flex flex-column gap-3">
-              {/* Card Identificação */}
               <div className="modal-candidato-card">
                 <div className="modal-aluno-avatar-row">
                   <div className="modal-avatar-circulo">
@@ -108,7 +104,6 @@ function ModalDetalhesCandidato({
                 </div>
               </div>
 
-              {/* Card Formação e Habilidades */}
               <div className="modal-candidato-card">
                 <h4 className="modal-card-titulo">Formação e Habilidades</h4>
                 <div className="modal-card-divisor" />
@@ -153,7 +148,6 @@ function ModalDetalhesCandidato({
               </div>
             </div>
 
-            {/* Coluna Direita: Informações da Candidatura */}
             <div className="d-flex flex-column gap-3">
               <div className="modal-candidato-card" style={{ height: '100%' }}>
                 <h4 className="modal-card-titulo">Informações da Candidatura</h4>
@@ -185,7 +179,6 @@ function ModalDetalhesCandidato({
           </div>
         </div>
 
-        {/* Rodapé do Modal com Ações */}
         <div className="modal-candidato-footer">
           <button
             type="button"

@@ -116,7 +116,6 @@
   pointer-events: none;
 }
 
-/* Badges de Status */
 .badge-candidato-analise {
   background-color: #fef3c7;
   color: #b45309;
@@ -150,7 +149,6 @@
   white-space: nowrap;
 }
 
-/* Botões de Ação */
 .btn-ver-perfil {
   background-color: #ffffff;
   color: #2e7d32;
@@ -205,7 +203,6 @@
   background-color: #b91c1c;
 }
 
-/* Menu de Ações (Três Pontos) */
 .dropdown-acoes-candidato {
   position: relative;
   display: inline-flex;
