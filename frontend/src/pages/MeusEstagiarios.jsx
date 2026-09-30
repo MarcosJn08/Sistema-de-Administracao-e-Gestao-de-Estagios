@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import {
-  Users,
   FileText,
   AlertCircle,
   Briefcase,
@@ -14,7 +13,7 @@ import Footer from '../components/Footer.jsx';
 import CardMetricaEmpresa from '../components/empresa/CardMetricaEmpresa.jsx';
 import ModalDetalhesEstagiario from '../components/empresa/ModalDetalhesEstagiario.jsx';
 import Paginacao from '../components/Paginacao.jsx';
-import dadosEmpresa, { estagiariosEmpresa } from '../dadosEmpresa.jsx';
+import dadosEmpresa, { estagiariosEmpresa } from '../data/empresa.js';
 import './MeusEstagiarios.css';
 
 function MeusEstagiarios() {

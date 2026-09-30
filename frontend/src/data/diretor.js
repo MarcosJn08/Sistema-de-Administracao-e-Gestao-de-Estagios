@@ -1,4 +1,4 @@
-const dados = {
+const diretor = {
   progresso: {
     horasConcluidas: 100,
     metaHoras: 200,
@@ -161,4 +161,4 @@ const dados = {
   ]
 };
 
-export default dados;
+export default diretor;

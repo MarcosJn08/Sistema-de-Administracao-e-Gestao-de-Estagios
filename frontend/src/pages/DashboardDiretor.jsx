@@ -11,7 +11,7 @@ import CardAtividadeRecente from "../components/diretor/CardAtividadeRecente.jsx
 import CardAcoesRapidas from "../components/diretor/CardAcoesRapidas.jsx";
 import CardProximosVencimentos from "../components/diretor/CardProximosVencimentos.jsx";
 
-import dados from "../dadosDiretor.jsx";
+import dados from '../data/diretor.js';
 
 import "../App.css";
 

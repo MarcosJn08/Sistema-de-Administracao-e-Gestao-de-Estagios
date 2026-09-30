@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 import {
   Users,
@@ -8,7 +8,6 @@ import {
   AlertCircle,
   Search,
   ChevronDown,
-  ArrowLeft,
   CheckCircle2,
   MoreVertical,
   Check,
@@ -19,13 +18,11 @@ import Footer from '../components/Footer.jsx';
 import CardMetricaEmpresa from '../components/empresa/CardMetricaEmpresa.jsx';
 import ModalDetalhesCandidato from '../components/empresa/ModalDetalhesCandidato.jsx';
 import Paginacao from '../components/Paginacao.jsx';
-import dadosEmpresa, { candidatosDesenvolvedorBackend } from '../dadosEmpresa.jsx';
+import dadosEmpresa, { candidatosDesenvolvedorBackend } from '../data/empresa.js';
 import './GestaoCandidatos.css';
 
 function GestaoCandidatos() {
   const { vagaId } = useParams();
-  const navigate = useNavigate();
-
   const idNumerico = vagaId ? parseInt(vagaId, 10) : 1;
   const vagaAtual =
     dadosEmpresa.empresa?.vagas?.find((v) => v.id === idNumerico) ||

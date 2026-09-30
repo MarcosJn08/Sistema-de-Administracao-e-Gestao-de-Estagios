@@ -12,16 +12,13 @@ function BotaoAcao({
   nomeBotao,
   variante,
 }) {
-  // Define qual texto será mostrado no botão
   const textoBotao = texto || rotulo || nomeBotao || tipo;
 
-  // Normaliza o texto para definir a cor do botão
   const textoNormalizado = textoBotao.toLowerCase().trim();
 
   let classeVariante = 'botao-acao-azul';
 
   if (variante && VARIANTES.includes(variante)) {
-    // Variante escolhida explicitamente tem prioridade sobre o texto
     classeVariante = `botao-acao-${variante}`;
   } else if (textoNormalizado === 'analisar') {
     classeVariante = 'botao-acao-primario';

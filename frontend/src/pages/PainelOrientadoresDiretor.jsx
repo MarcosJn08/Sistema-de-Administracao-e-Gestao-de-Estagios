@@ -10,7 +10,7 @@ import Botao from '../components/Button.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
 import Paginacao from '../components/Paginacao.jsx';
 import ModalProfessor from '../components/orientador/ModalProfessor.jsx';
-import dadosDiretor from '../dadosDiretor.jsx';
+import dadosDiretor from '../data/diretor.js';
 import orientadoresIniciais, { departamentos, statusOrientador } from '../data/orientadores.js';
 import '../App.css';
 import './PainelOrientadoresDiretor.css';

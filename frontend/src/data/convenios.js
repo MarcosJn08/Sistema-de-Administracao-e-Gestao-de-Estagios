@@ -1,0 +1,26 @@
+export const statusConvenio = ['Ativo', 'Pendente de análise', 'Ajustes solicitados', 'Expirado', 'Rejeitado'];
+export const tiposConvenio = ['Pessoa jurídica', 'Pessoa física'];
+
+const documentosPadrao = [
+  { id: 1, nome: 'Contrato social atualizado', detalhe: 'PDF · 2,3 MB', status: 'Recebido' },
+  { id: 2, nome: 'Certidão de regularidade fiscal', detalhe: 'PDF · 1,1 MB', status: 'Recebido' },
+  { id: 3, nome: 'Comprovante de endereço', detalhe: 'PDF · 890 KB', status: 'Recebido' },
+  { id: 4, nome: 'Termo de compromisso assinado', detalhe: 'PDF · 3,2 MB', status: 'Recebido' },
+];
+
+const convenios = [
+  { id: 1, documento: '12.345.678/0001-90', razaoSocial: 'Tech Solutions Ltda.', tipo: 'Pessoa jurídica', inicio: '15/03/2024', vencimento: '15/03/2029', status: 'Ativo', representante: 'Fernanda Costa', email: 'contato@techsolutions.com.br', telefone: '(33) 3456-7890', endereco: 'Av. Principal, 150 — Almenara/MG', area: 'Tecnologia da informação', documentos: documentosPadrao },
+  { id: 2, documento: '98.765.432/0001-10', razaoSocial: 'Construtora Horizonte S.A.', tipo: 'Pessoa jurídica', inicio: '01/06/2023', vencimento: '01/06/2025', status: 'Expirado', representante: 'Paulo Andrade', email: 'contato@horizonte.com.br', telefone: '(33) 3333-2100', endereco: 'Rua das Obras, 40 — Almenara/MG', area: 'Engenharia civil', documentos: documentosPadrao },
+  { id: 3, documento: '123.456.789-00', razaoSocial: 'Dra. Maria Fernanda Costa', tipo: 'Pessoa física', inicio: '10/01/2024', vencimento: '10/01/2026', status: 'Ativo', representante: 'Maria Fernanda Costa', email: 'maria.costa@example.com', telefone: '(33) 98888-1200', endereco: 'Rua Central, 25 — Almenara/MG', area: 'Saúde', documentos: documentosPadrao },
+  { id: 4, documento: '45.678.901/0001-23', razaoSocial: 'Inovação Digital Eireli', tipo: 'Pessoa jurídica', inicio: '20/08/2024', vencimento: '20/08/2029', status: 'Pendente de análise', representante: 'Carlos Eduardo Silva', email: 'contato@inovacaodigital.com.br', telefone: '(11) 3456-7890', endereco: 'Av. Paulista, 1578 — São Paulo/SP', area: 'Tecnologia da informação', submetidoEm: '20/08/2024', documentos: documentosPadrao },
+  { id: 5, documento: '56.789.012/0001-34', razaoSocial: 'Farmácia Saúde & Vida', tipo: 'Pessoa jurídica', inicio: '05/11/2023', vencimento: '05/11/2028', status: 'Ajustes solicitados', representante: 'Luciana Alves', email: 'juridico@saudevida.com.br', telefone: '(33) 3444-7788', endereco: 'Praça da Saúde, 8 — Almenara/MG', area: 'Farmácia', documentos: documentosPadrao },
+  { id: 6, documento: '987.654.321-00', razaoSocial: 'Prof. João Almeida Santos', tipo: 'Pessoa física', inicio: '12/04/2024', vencimento: '12/04/2026', status: 'Ativo', representante: 'João Almeida Santos', email: 'joao.santos@example.com', telefone: '(33) 97777-3300', endereco: 'Rua do Campus, 90 — Almenara/MG', area: 'Educação', documentos: documentosPadrao },
+  { id: 7, documento: '67.890.123/0001-45', razaoSocial: 'Agro Vale Ltda.', tipo: 'Pessoa jurídica', inicio: '18/02/2025', vencimento: '18/02/2030', status: 'Ativo', representante: 'Roberto Alves', email: 'contato@agrovale.com.br', telefone: '(33) 3222-1456', endereco: 'Rodovia MG-406, km 12 — Almenara/MG', area: 'Agropecuária', documentos: documentosPadrao },
+  { id: 8, documento: '78.901.234/0001-56', razaoSocial: 'Clínica Bem Estar', tipo: 'Pessoa jurídica', inicio: '03/09/2024', vencimento: '03/09/2029', status: 'Ativo', representante: 'Mariana Dias', email: 'contato@bemestar.com.br', telefone: '(33) 3555-9090', endereco: 'Rua da Clínica, 75 — Almenara/MG', area: 'Enfermagem', documentos: documentosPadrao },
+  { id: 9, documento: '89.012.345/0001-67', razaoSocial: 'Contábil Minas', tipo: 'Pessoa jurídica', inicio: '22/05/2022', vencimento: '22/05/2025', status: 'Expirado', representante: 'Renato Lima', email: 'contato@contabilminas.com.br', telefone: '(33) 3666-1000', endereco: 'Av. Minas Gerais, 410 — Almenara/MG', area: 'Administração', documentos: documentosPadrao },
+  { id: 10, documento: '90.123.456/0001-78', razaoSocial: 'DataBrasil Sistemas', tipo: 'Pessoa jurídica', inicio: '11/07/2025', vencimento: '11/07/2030', status: 'Pendente de análise', representante: 'Patrícia Moura', email: 'convenios@databrasil.com.br', telefone: '(31) 3444-2020', endereco: 'Av. Afonso Pena, 900 — Belo Horizonte/MG', area: 'Tecnologia da informação', submetidoEm: '11/07/2025', documentos: documentosPadrao },
+  { id: 11, documento: '10.234.567/0001-89', razaoSocial: 'Cooperativa Novo Campo', tipo: 'Pessoa jurídica', inicio: '09/04/2024', vencimento: '09/04/2029', status: 'Ativo', representante: 'Sérgio Campos', email: 'contato@novocampo.com.br', telefone: '(33) 3777-8120', endereco: 'Fazenda Novo Campo — Almenara/MG', area: 'Agropecuária', documentos: documentosPadrao },
+  { id: 12, documento: '21.345.678/0001-90', razaoSocial: 'Laboratório Análises MG', tipo: 'Pessoa jurídica', inicio: '30/01/2024', vencimento: '30/01/2029', status: 'Ativo', representante: 'Camila Rocha', email: 'contato@analisesmg.com.br', telefone: '(33) 3888-6500', endereco: 'Rua dos Laboratórios, 32 — Almenara/MG', area: 'Ciências biológicas', documentos: documentosPadrao },
+];
+
+export default convenios;

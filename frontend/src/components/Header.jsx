@@ -44,7 +44,7 @@ function Header({
     ['Dashboard', '/sage/diretor'],
     ['Alunos', '/sage/diretor/alunos'],
     ['Orientadores', '/sage/diretor/orientadores'],
-    ['Empresas', '#'],
+    ['Empresas', '/sage/diretor/convenios'],
     ['Documentos', '#'],
     ['Relatórios', '#'],
   ];
