@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, ChevronDown, Pencil, Eye, EyeOff, Users } from 'lucide-react';
 import StatusBadge from '../StatusBadge.jsx';
+import Paginacao from '../Paginacao.jsx';
 
 function TabelaVagasEmpresa({ vagas, onAlternarStatus, onEditarVaga }) {
   const navigate = useNavigate();
@@ -404,76 +405,8 @@ function TabelaVagasEmpresa({ vagas, onAlternarStatus, onEditarVaga }) {
         </table>
       </div>
 
-      <div
-        className="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 pt-3 mt-2"
-        style={{ borderTop: '1px solid #f1f5f9' }}
-      >
-        <span style={{ fontSize: '0.875rem', color: '#64748b' }}>
-          Mostrando {vagasFiltradas.length} de {vagas.length} vagas publicadas
-        </span>
-
-        <div className="d-flex align-items-center gap-2">
-          <button
-            type="button"
-            disabled={paginaAtual === 1}
-            onClick={() => setPaginaAtual((prev) => Math.max(1, prev - 1))}
-            style={{
-              padding: '6px 14px',
-              borderRadius: '8px',
-              border: '1px solid #e2e8f0',
-              backgroundColor: '#ffffff',
-              color: paginaAtual === 1 ? '#94a3b8' : '#334151',
-              fontSize: '0.875rem',
-              fontWeight: 500,
-              cursor: paginaAtual === 1 ? 'not-allowed' : 'pointer',
-            }}
-          >
-            Anterior
-          </button>
-
-          {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((num) => (
-            <button
-              key={num}
-              type="button"
-              onClick={() => setPaginaAtual(num)}
-              style={{
-                width: '34px',
-                height: '34px',
-                borderRadius: '8px',
-                border: num === paginaAtual ? 'none' : '1px solid #e2e8f0',
-                backgroundColor: num === paginaAtual ? '#2e7d32' : '#ffffff',
-                color: num === paginaAtual ? '#ffffff' : '#334151',
-                fontSize: '0.875rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              {num}
-            </button>
-          ))}
-
-          <button
-            type="button"
-            disabled={paginaAtual >= totalPaginas}
-            onClick={() => setPaginaAtual((prev) => Math.min(totalPaginas, prev + 1))}
-            style={{
-              padding: '6px 14px',
-              borderRadius: '8px',
-              border: '1px solid #e2e8f0',
-              backgroundColor: '#ffffff',
-              color: paginaAtual >= totalPaginas ? '#94a3b8' : '#334151',
-              fontSize: '0.875rem',
-              fontWeight: 500,
-              cursor: paginaAtual >= totalPaginas ? 'not-allowed' : 'pointer',
-            }}
-          >
-            Próxima
-          </button>
-        </div>
-      </div>
+      <Paginacao paginaAtual={paginaAtual} totalPaginas={totalPaginas} aoMudarPagina={setPaginaAtual}
+        textoResumo={`Mostrando ${vagasFiltradas.length} de ${vagas.length} vagas publicadas`} />
     </div>
   );
 }

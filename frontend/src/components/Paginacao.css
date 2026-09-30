@@ -1,0 +1,49 @@
+.paginacao-sage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 8px;
+  padding-top: 18px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.paginacao-sage-resumo {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.paginacao-sage-controles {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.paginacao-sage-botao,
+.paginacao-sage-numero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #334151;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.paginacao-sage-botao { padding: 6px 14px; }
+.paginacao-sage-numero { width: 34px; padding: 0; font-weight: 600; }
+.paginacao-sage-botao:hover:not(:disabled),
+.paginacao-sage-numero:hover:not(.paginacao-sage-numero-ativo) { background: #f1f5f9; }
+.paginacao-sage-numero-ativo { border-color: #2e7d32; background: #2e7d32; color: #fff; }
+.paginacao-sage-botao:disabled { color: #94a3b8; cursor: not-allowed; }
+.paginacao-sage-intervalo { min-width: 18px; color: #64748b; text-align: center; }
+
+@media (max-width: 575.98px) {
+  .paginacao-sage { flex-direction: column; align-items: stretch; }
+  .paginacao-sage-resumo { text-align: center; }
+  .paginacao-sage-controles { justify-content: center; flex-wrap: wrap; }
+}

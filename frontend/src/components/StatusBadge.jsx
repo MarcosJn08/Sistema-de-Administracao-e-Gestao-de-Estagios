@@ -19,6 +19,7 @@ function StatusBadge({ status, aberto, variante, variant, children }) {
       (textoNormalizado.includes('deferido') && !textoNormalizado.includes('indeferido')) ||
       textoNormalizado.includes('aprovado') ||
       textoNormalizado.includes('andamento') ||
+      textoNormalizado === 'em estágio ativo' ||
       textoNormalizado === 'concluído'
     ) {
       return 'badge-status-verde';
@@ -27,6 +28,7 @@ function StatusBadge({ status, aberto, variante, variant, children }) {
     if (
       textoNormalizado.includes('analise') ||
       textoNormalizado.includes('análise') ||
+      textoNormalizado === 'aguardando homologação' ||
       textoNormalizado.includes('pendente de aprovação') ||
       textoNormalizado === 'pendente'
     ) {

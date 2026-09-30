@@ -26,8 +26,8 @@ function DashboardDiretor() {
         pagina02="Alunos"
         pagina03="Orientadores"
         pagina04="Empresas"
-        pagina05="Estágios"
-        pagina06="Documentos"
+        pagina05="Documentos"
+        pagina06="Relatórios"
         paginaAtiva="Dashboard"
         usuario={dados.diretor}
       />

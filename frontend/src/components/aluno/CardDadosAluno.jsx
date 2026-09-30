@@ -2,7 +2,7 @@ import React from 'react';
 import '../../App.css';
 import Botao from '../Button.jsx';
 
-function CardDadosAluno({ nome, curso, email, matricula, aoEditarPerfil, onEditProfile }) {
+function CardDadosAluno({ nome, curso, email, matricula, aoEditarPerfil, onEditProfile, somenteLeitura = false, children }) {
   const lidarComEdicao = aoEditarPerfil || onEditProfile;
 
   return (
@@ -35,10 +35,11 @@ function CardDadosAluno({ nome, curso, email, matricula, aoEditarPerfil, onEditP
               <span className="fw-bold text-dark">Numero de Matrícula: </span>
               <span className="text-secondary">{matricula}</span>
             </div>
-            <Botao tipo="botao-sage-verde" onClick={lidarComEdicao}>
+            {!somenteLeitura && <Botao tipo="botao-sage-verde" onClick={lidarComEdicao}>
               Editar Perfil
-            </Botao>
+            </Botao>}
           </div>
+          {children}
         </div>
       </div>
     </div>
