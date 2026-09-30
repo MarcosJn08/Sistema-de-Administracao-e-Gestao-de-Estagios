@@ -37,16 +37,18 @@ function Header({
     ...(pagina06 ? [[pagina06, '#como-funciona']] : []),
   ];
 
-  const isDiretor = pagina01 === 'Dashboard' && pagina02 === 'Alunos';
+  const isDiretor = usuario?.role === 'diretor';
+  const isProfessor = usuario?.role === 'professor';
 
   const diretorLinks = [
-    [pagina01, '/sage/diretor'],
-    [pagina02, '#'],
-    [pagina03, '#'],
-    [pagina04, '#'],
-    [pagina05, '#'],
-    ...(pagina06 ? [[pagina06, '#']] : []),
+    ['Dashboard', '/sage/diretor'],
+    ['Alunos', '/sage/diretor/alunos'],
+    ['Orientadores', '#'],
+    ['Empresas', '#'],
+    ['Documentos', '#'],
+    ['Relatórios', '#'],
   ];
+  const professorLinks = [['Dashboard', '#'], ['Alunos', '#'], ['Estágios', '#']];
 
   const dashboardAlunoLinks = [
     ['Início', '/sage'],
@@ -65,6 +67,8 @@ function Header({
       ? cadastroLinks
       : isDiretor
       ? diretorLinks
+      : isProfessor
+      ? professorLinks
       : isDashboard
       ? dashboardAlunoLinks
       : landingLinks);

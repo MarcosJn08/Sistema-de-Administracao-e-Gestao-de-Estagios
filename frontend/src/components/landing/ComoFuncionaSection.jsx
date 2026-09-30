@@ -59,8 +59,7 @@ export default function ComoFuncionaSection() {
                   <p>{descricao}</p>
                   <a
                     href={link}
-                    className="sage-text-link mt-auto d-inline-flex align-items-center gap-1 text-decoration-none"
-                    style={{ color: 'inherit', fontWeight: 600 }}
+                    className="sage-text-link mt-auto"
                   >
                     {acao} <ArrowRight size={15} aria-hidden="true" />
                   </a>
