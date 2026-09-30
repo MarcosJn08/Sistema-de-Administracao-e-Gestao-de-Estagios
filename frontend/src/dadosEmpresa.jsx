@@ -401,8 +401,202 @@ const dadosEmpresa = {
         }
       }
     ],
+    estagiarios: [
+      {
+        id: 1,
+        nome: "Tulio",
+        nomeCompleto: "Marcos Junio",
+        cargo: "Desenvolvedora Backend",
+        curso: "ADS",
+        cursoCompleto: "Analise e Desenvolvimento de Sistemas",
+        email: "mjrs@aluno.ifnmg.edu.br",
+        telefone: "(33)98750-0486",
+        inicio: "01/03/2026",
+        termino: "01/09/2026",
+        status: "Ativo",
+        empresaConcedente: "Shelby LTDA",
+        supervisor: "Thomas Shelby",
+        orientador: "Marcos Vinicius Montanari",
+        cargaHoraria: "20h/semana",
+        horasObrigatorias: 200,
+        horasConcluidas: 100,
+        aproveitamentoProjetos: "0h",
+        saldoRestante: "100h",
+        percentualConcluido: 50,
+        foto: "/images/marcos_junio.jpg",
+        documentos: [
+          { id: 1, nome: "TCE - Termo de Compromisso", status: "Aprovado", arquivoUrl: "#" },
+          { id: 2, nome: "Plano de Estágio", status: "Aprovado", arquivoUrl: "#" },
+          { id: 3, nome: "Frequências", status: "Pendente de Envio", arquivoUrl: null },
+          { id: 4, nome: "Relatório Final de Estágio", status: "Pendente", arquivoUrl: null }
+        ],
+        avaliacoes: [
+          {
+            id: 1,
+            data: "15/05/2026",
+            nota: 8.5,
+            notaMax: 10,
+            observacoes: "Excelente desempenho nas atividades atribuídas. Demostra proatividade e boa comunicação com os membros do time."
+          }
+        ]
+      },
+      {
+        id: 2,
+        nome: "Kaio",
+        nomeCompleto: "Kaio Ferreira",
+        cargo: "Analista de Marketing",
+        curso: "PG",
+        cursoCompleto: "Processos Gerenciais",
+        email: "kaio.ferreira@aluno.ifnmg.edu.br",
+        telefone: "(33)98822-4411",
+        inicio: "15/02/2026",
+        termino: "15/08/2026",
+        status: "Ativo",
+        empresaConcedente: "Shelby LTDA",
+        supervisor: "Thomas Shelby",
+        orientador: "Luciana Meira",
+        cargaHoraria: "20h/semana",
+        horasObrigatorias: 200,
+        horasConcluidas: 130,
+        aproveitamentoProjetos: "0h",
+        saldoRestante: "70h",
+        percentualConcluido: 65,
+        foto: null,
+        documentos: [
+          { id: 1, nome: "TCE - Termo de Compromisso", status: "Aprovado", arquivoUrl: "#" },
+          { id: 2, nome: "Plano de Estágio", status: "Aprovado", arquivoUrl: "#" },
+          { id: 3, nome: "Frequências", status: "Aprovado", arquivoUrl: "#" },
+          { id: 4, nome: "Relatório Final de Estágio", status: "Pendente", arquivoUrl: null }
+        ],
+        avaliacoes: [
+          {
+            id: 1,
+            data: "10/05/2026",
+            nota: 9.0,
+            notaMax: 10,
+            observacoes: "Grande contribuição nas métricas de engajamento e ótimo relacionamento com os orientadores."
+          }
+        ]
+      },
+      {
+        id: 3,
+        nome: "Luis",
+        nomeCompleto: "Luis Fernando Gomes",
+        cargo: "Designer UX/UI",
+        curso: "ADS",
+        cursoCompleto: "Analise e Desenvolvimento de Sistemas",
+        email: "luis.gomes@aluno.ifnmg.edu.br",
+        telefone: "(33)99155-8822",
+        inicio: "01/02/2026",
+        termino: "01/08/2026",
+        status: "Em Experiência",
+        empresaConcedente: "Shelby LTDA",
+        supervisor: "Thomas Shelby",
+        orientador: "Carlos Alberto",
+        cargaHoraria: "20h/semana",
+        horasObrigatorias: 200,
+        horasConcluidas: 70,
+        aproveitamentoProjetos: "0h",
+        saldoRestante: "130h",
+        percentualConcluido: 35,
+        foto: null,
+        documentos: [
+          { id: 1, nome: "TCE - Termo de Compromisso", status: "Aprovado", arquivoUrl: "#" },
+          { id: 2, nome: "Plano de Estágio", status: "Pendente", arquivoUrl: null },
+          { id: 3, nome: "Frequências", status: "Pendente de Envio", arquivoUrl: null },
+          { id: 4, nome: "Relatório Final de Estágio", status: "Pendente", arquivoUrl: null }
+        ],
+        avaliacoes: [
+          {
+            id: 1,
+            data: "20/04/2026",
+            nota: 8.0,
+            notaMax: 10,
+            observacoes: "Dedicação notável e adaptação rápida ao design system da empresa."
+          }
+        ]
+      },
+      {
+        id: 4,
+        nome: "Pedro",
+        nomeCompleto: "Pedro Henrique Ramos",
+        cargo: "Assistente Administrativo",
+        curso: "T. Administração",
+        cursoCompleto: "Técnico em Administração",
+        email: "pedro.ramos@aluno.ifnmg.edu.br",
+        telefone: "(33)98411-9900",
+        inicio: "01/01/2026",
+        termino: "01/07/2026",
+        status: "Encerrado",
+        empresaConcedente: "Shelby LTDA",
+        supervisor: "Thomas Shelby",
+        orientador: "Marcos Vinicius Montanari",
+        cargaHoraria: "20h/semana",
+        horasObrigatorias: 200,
+        horasConcluidas: 200,
+        aproveitamentoProjetos: "0h",
+        saldoRestante: "0h",
+        percentualConcluido: 100,
+        foto: null,
+        documentos: [
+          { id: 1, nome: "TCE - Termo de Compromisso", status: "Aprovado", arquivoUrl: "#" },
+          { id: 2, nome: "Plano de Estágio", status: "Aprovado", arquivoUrl: "#" },
+          { id: 3, nome: "Frequências", status: "Aprovado", arquivoUrl: "#" },
+          { id: 4, nome: "Relatório Final de Estágio", status: "Aprovado", arquivoUrl: "#" }
+        ],
+        avaliacoes: [
+          {
+            id: 1,
+            data: "30/06/2026",
+            nota: 9.5,
+            notaMax: 10,
+            observacoes: "Estágio concluído com louvor, assiduidade e entregas organizadas."
+          }
+        ]
+      },
+      {
+        id: 5,
+        nome: "Luiz",
+        nomeCompleto: "Luiz Carlos Silveira",
+        cargo: "Estagiário de Dados",
+        curso: "ADS",
+        cursoCompleto: "Analise e Desenvolvimento de Sistemas",
+        email: "luiz.silveira@aluno.ifnmg.edu.br",
+        telefone: "(33)99933-7711",
+        inicio: "10/02/2026",
+        termino: "10/08/2026",
+        status: "Ativo",
+        empresaConcedente: "Shelby LTDA",
+        supervisor: "Thomas Shelby",
+        orientador: "Marcos Vinicius Montanari",
+        cargaHoraria: "20h/semana",
+        horasObrigatorias: 200,
+        horasConcluidas: 90,
+        aproveitamentoProjetos: "0h",
+        saldoRestante: "110h",
+        percentualConcluido: 45,
+        foto: null,
+        documentos: [
+          { id: 1, nome: "TCE - Termo de Compromisso", status: "Aprovado", arquivoUrl: "#" },
+          { id: 2, nome: "Plano de Estágio", status: "Aprovado", arquivoUrl: "#" },
+          { id: 3, nome: "Frequências", status: "Pendente de Envio", arquivoUrl: null },
+          { id: 4, nome: "Relatório Final de Estágio", status: "Pendente", arquivoUrl: null }
+        ],
+        avaliacoes: [
+          {
+            id: 1,
+            data: "10/05/2026",
+            nota: 8.8,
+            notaMax: 10,
+            observacoes: "Excelente curva de aprendizado em modelagem de dados e pipelines de automação."
+          }
+        ]
+      }
+    ]
   },
 };
 
-export { candidatosDesenvolvedorBackend };
+const estagiariosEmpresa = dadosEmpresa.empresa.estagiarios;
+
+export { candidatosDesenvolvedorBackend, estagiariosEmpresa };
 export default dadosEmpresa;

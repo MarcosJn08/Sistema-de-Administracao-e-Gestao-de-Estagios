@@ -15,6 +15,7 @@ import PainelAlunosDiretor from '../../pages/PainelAlunosDiretor.jsx';
 import GestaoCandidatos from '../../pages/GestaoCandidatos.jsx';
 import PerfilCandidato from '../../pages/PerfilCandidato.jsx';
 import PainelOrientadoresDiretor from '../../pages/PainelOrientadoresDiretor.jsx';
+import MeusEstagiarios from '../../pages/MeusEstagiarios.jsx';
 
 function AppRoutes() {
   return (
@@ -31,6 +32,8 @@ function AppRoutes() {
         <Route path="/sage/empresa/candidatos/:candidatoId" element={<PerfilCandidato />} />
         <Route path="/sage/empresa/vagas/:vagaId/candidatos/:candidatoId" element={<PerfilCandidato />} />
         <Route path="/sage/empresa/candidato/perfil" element={<PerfilCandidato />} />
+        <Route path="/sage/empresa/estagiarios" element={<MeusEstagiarios />} />
+        <Route path="/sage/empresa/estagiarios/:id" element={<MeusEstagiarios />} />
 
         <Route path="/sage/diretor/alunos" element={<PainelAlunosDiretor />} />
         <Route path="/sage/diretor/orientadores" element={<PainelOrientadoresDiretor />} />
