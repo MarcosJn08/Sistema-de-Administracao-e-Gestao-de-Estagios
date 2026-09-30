@@ -94,6 +94,7 @@ function DashboardEmpresa() {
                 titulo="Vagas Ativas"
                 valor={metricas.vagasAtivas}
                 icone={Briefcase}
+                variante="verde"
               />
             </Col>
             <Col xs={12} sm={6} lg={3}>
@@ -101,6 +102,7 @@ function DashboardEmpresa() {
                 titulo="Candidatos Totais"
                 valor={metricas.candidatosTotais}
                 icone={Users}
+                variante="azul"
               />
             </Col>
             <Col xs={12} sm={6} lg={3}>
@@ -108,6 +110,7 @@ function DashboardEmpresa() {
                 titulo="Em Triagem"
                 valor={metricas.emTriagem}
                 icone={Filter}
+                variante="ambar"
               />
             </Col>
             <Col xs={12} sm={6} lg={3}>
@@ -115,6 +118,7 @@ function DashboardEmpresa() {
                 titulo="Contratados"
                 valor={metricas.contratados}
                 icone={Handshake}
+                variante="verde"
               />
             </Col>
           </Row>

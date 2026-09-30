@@ -51,10 +51,10 @@ function PainelAlunosDiretor() {
   const ultimoExibido = Math.min(indiceInicial + ITENS_POR_PAGINA, filtrados.length);
   const contar = (status) => alunos.filter((aluno) => aluno.situacao === status).length;
   const indicadores = [
-    { titulo: 'Total de alunos cadastrados', valor: alunos.length, texto: 'Alunos matriculados no campus', icone: <Users size={23} /> },
-    { titulo: 'Estudantes em estágio ativo', valor: contar('Em estágio ativo'), texto: 'Com vínculo vigente', icone: <BriefcaseBusiness size={23} /> },
-    { titulo: 'Estágios concluídos', valor: contar('Concluído'), texto: 'Carga horária homologada', icone: <GraduationCap size={23} /> },
-    { titulo: 'Sem vínculo / em busca de vaga', valor: contar('Sem estágio'), texto: 'Disponíveis para novas vagas', icone: <UserSearch size={23} /> },
+    { titulo: 'Total de alunos cadastrados', valor: alunos.length, texto: 'Alunos matriculados no campus', icone: <Users size={23} />, variante: 'azul' },
+    { titulo: 'Estudantes em estágio ativo', valor: contar('Em estágio ativo'), texto: 'Com vínculo vigente', icone: <BriefcaseBusiness size={23} />, variante: 'verde' },
+    { titulo: 'Estágios concluídos', valor: contar('Concluído'), texto: 'Carga horária homologada', icone: <GraduationCap size={23} />, variante: 'verde' },
+    { titulo: 'Sem vínculo / em busca de vaga', valor: contar('Sem estágio'), texto: 'Disponíveis para novas vagas', icone: <UserSearch size={23} />, variante: 'cinza' },
   ];
   const limparFiltros = () => { setBusca(''); setCurso(''); setSituacao(''); setPaginaAtual(1); };
   const cadastrarAluno = (dados) => {
@@ -109,7 +109,7 @@ function PainelAlunosDiretor() {
           <Row className="g-4 mb-4">
             {indicadores.map((indicador) => (
               <Col xs={12} sm={6} lg={3} key={indicador.titulo}>
-                <CardPequeno {...indicador} cor="#2e7d32" corFundo="#e8f5e9" />
+                <CardPequeno {...indicador} />
               </Col>
             ))}
           </Row>

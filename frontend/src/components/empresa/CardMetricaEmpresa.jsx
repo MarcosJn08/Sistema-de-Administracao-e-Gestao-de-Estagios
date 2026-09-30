@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../App.css';
 
 function CardMetricaEmpresa({
   titulo,
@@ -6,6 +7,7 @@ function CardMetricaEmpresa({
   icone: Icone,
   corIcone = '#2e7d32',
   corFundoIcone = '#eaf5ea',
+  variante,
 }) {
   return (
     <div
@@ -46,12 +48,13 @@ function CardMetricaEmpresa({
       </div>
 
       <div
+        className={variante ? `badge-status-${variante}` : undefined}
         style={{
           width: '46px',
           height: '46px',
           borderRadius: '12px',
-          backgroundColor: corFundoIcone,
-          color: corIcone,
+          backgroundColor: variante ? undefined : corFundoIcone,
+          color: variante ? undefined : corIcone,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

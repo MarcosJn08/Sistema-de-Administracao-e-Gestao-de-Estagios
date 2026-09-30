@@ -3,39 +3,18 @@ import { Modal } from 'react-bootstrap';
 import { Building2, CalendarDays, Check, CheckCircle2, FileText, Info, Mail, RotateCcw, ShieldAlert, SquarePen, X, XCircle } from 'lucide-react';
 import StatusBadge from '../StatusBadge.jsx';
 import Botao from '../Button.jsx';
+import DevolucaoParaAjustes from '../DevolucaoParaAjustes.jsx';
+import { pendenciasConvenio } from '../../utils/devolucao.js';
 import { calcularVigenciaCincoAnos } from '../../utils/convenio.js';
 import './ModalAnaliseConvenio.css';
 
-const itensCorrecao = [
-  'Dados cadastrais incompletos',
-  'CNPJ inválido ou divergente',
-  'CPF do representante legal ausente',
-  'Erro nos cursos autorizados',
-  'Documentação insuficiente ou ilegível',
-  'Endereço incompleto',
-  'Outro ajuste necessário',
-];
-
 function ModalAnaliseConvenio({ aberto, convenio, aoDecidir, aoFechar }) {
   const [decisao, setDecisao] = useState(null);
-  const [itens, setItens] = useState([]);
   const [observacoes, setObservacoes] = useState('');
   const [documentoAberto, setDocumentoAberto] = useState(null);
   const [erro, setErro] = useState('');
   if (!convenio) return null;
   const vigenciaAutomatica = calcularVigenciaCincoAnos();
-
-  const alternarItem = (item) => setItens((atuais) => atuais.includes(item)
-    ? atuais.filter((valor) => valor !== item) : [...atuais, item]);
-
-  const confirmarDevolucao = () => {
-    if (itens.length === 0 || !observacoes.trim()) {
-      setErro('Selecione ao menos um ajuste e descreva as correções necessárias.');
-      return;
-    }
-    aoDecidir('devolver', { itens, observacoes: observacoes.trim() });
-    aoFechar();
-  };
 
   const confirmarReprovacao = () => {
     if (!observacoes.trim()) { setErro('Informe o motivo da reprovação.'); return; }
@@ -133,33 +112,12 @@ function ModalAnaliseConvenio({ aberto, convenio, aoDecidir, aoFechar }) {
           </div>
         </section>}
 
-        {decisao === 'devolver' && <div className="analise-convenio-devolucao-grid">
-          <section className="analise-convenio-cartao analise-convenio-form-decisao">
-            <h3>Instruções de correção para a concedente</h3>
-            <p>Selecione os itens que apresentam inconformidade e detalhe as correções exigidas.</p>
-            {erro && <p className="analise-convenio-erro" role="alert">{erro}</p>}
-            <fieldset><legend>Itens com erro ou pendência</legend>
-              <div className="analise-convenio-checklist">{itensCorrecao.map((item) => <label key={item}>
-                <input type="checkbox" checked={itens.includes(item)} onChange={() => alternarItem(item)} /> {item}
-              </label>)}</div>
-            </fieldset>
-            <label>Observações detalhadas<textarea rows={5} value={observacoes}
-              onChange={(evento) => setObservacoes(evento.target.value)} placeholder="Descreva os ajustes necessários." /></label>
-          </section>
-          <section className="analise-convenio-cartao analise-convenio-notificacao">
-            <h3>Prévia da notificação por e-mail</h3>
-            <p><strong>Para:</strong> {convenio.email}</p>
-            <p><strong>Assunto:</strong> SAGE — Sua proposta de convênio necessita de correções</p>
-            <div><p>Olá, {convenio.representante}.</p><p>Sua proposta foi analisada e precisa das seguintes correções:</p>
-              {itens.length > 0 ? <ul>{itens.map((item) => <li key={item}>{item}</li>)}</ul> : <p>Nenhum item selecionado.</p>}
-              {observacoes && <p>{observacoes}</p>}
-            </div>
-            <div className="analise-convenio-acoes">
-              <button type="button" className="analise-botao-primario" onClick={confirmarDevolucao}>Confirmar devolução</button>
-              <button type="button" className="analise-botao-neutro" onClick={() => setDecisao(null)}>Cancelar</button>
-            </div>
-          </section>
-        </div>}
+        {decisao === 'devolver' && <div className="mt-4"><DevolucaoParaAjustes
+          resumo={[[ 'Razão social', convenio.razaoSocial ], [ 'CNPJ/CPF', convenio.documento ], [ 'Representante legal', convenio.representante ], [ 'Submetido em', convenio.submetidoEm || convenio.inicio ]]}
+          status={convenio.status} opcoes={pendenciasConvenio} email={convenio.email} responsavel={convenio.representante}
+          referencia="Proposta de convênio" aoCancelar={() => setDecisao(null)}
+          aoConfirmar={(dados) => { aoDecidir('devolver', dados); aoFechar(); }}
+        /></div>}
       </Modal.Body>
       <Modal.Footer><Botao tipo="botao-acao-contorno" onClick={aoFechar}>Fechar</Botao></Modal.Footer>
     </Modal>

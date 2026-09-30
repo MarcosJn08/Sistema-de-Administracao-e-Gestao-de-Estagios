@@ -45,7 +45,7 @@ function Header({
     ['Alunos', '/sage/diretor/alunos'],
     ['Orientadores', '/sage/diretor/orientadores'],
     ['Empresas', '/sage/diretor/convenios'],
-    ['Documentos', '#'],
+    ['Documentos', '/sage/diretor/documentos'],
     ['Relatórios', '#'],
   ];
   const professorLinks = [['Dashboard', '#'], ['Alunos', '#'], ['Estágios', '#']];

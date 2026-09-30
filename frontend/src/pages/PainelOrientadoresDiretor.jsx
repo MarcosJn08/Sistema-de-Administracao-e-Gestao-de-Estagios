@@ -43,10 +43,10 @@ function PainelOrientadoresDiretor() {
   const ultimoExibido = Math.min(indiceInicial + ITENS_POR_PAGINA, filtrados.length);
 
   const indicadores = [
-    { titulo: 'Total de professores', valor: orientadores.length, texto: 'Professores cadastrados no campus', icone: <UsersRound size={23} /> },
-    { titulo: 'Orientadores ativos', valor: orientadores.filter((item) => item.status === 'Ativo').length, texto: 'Disponíveis no semestre atual', icone: <BookOpenCheck size={23} /> },
-    { titulo: 'Sem vínculo', valor: orientadores.filter((item) => item.alunosOrientados === 0).length, texto: 'Disponíveis para novos projetos', icone: <UserMinus size={23} /> },
-    { titulo: 'Novos neste semestre', valor: orientadores.filter((item) => item.novoNesteSemestre).length, texto: 'Professores recém-admitidos', icone: <Sparkles size={23} /> },
+    { titulo: 'Total de professores', valor: orientadores.length, texto: 'Professores cadastrados no campus', icone: <UsersRound size={23} />, variante: 'azul' },
+    { titulo: 'Orientadores ativos', valor: orientadores.filter((item) => item.status === 'Ativo').length, texto: 'Disponíveis no semestre atual', icone: <BookOpenCheck size={23} />, variante: 'verde' },
+    { titulo: 'Sem vínculo', valor: orientadores.filter((item) => item.alunosOrientados === 0).length, texto: 'Disponíveis para novos projetos', icone: <UserMinus size={23} />, variante: 'cinza' },
+    { titulo: 'Novos neste semestre', valor: orientadores.filter((item) => item.novoNesteSemestre).length, texto: 'Professores recém-admitidos', icone: <Sparkles size={23} />, variante: 'azul' },
   ];
 
   const limparFiltros = () => {
@@ -103,7 +103,7 @@ function PainelOrientadoresDiretor() {
 
           <Row className="g-4 mb-4">
             {indicadores.map((indicador) => <Col key={indicador.titulo} xs={12} sm={6} lg={3}>
-              <CardPequeno {...indicador} cor="#2e7d32" corFundo="#e8f5e9" />
+              <CardPequeno {...indicador} />
             </Col>)}
           </Row>
 
