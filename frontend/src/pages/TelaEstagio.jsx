@@ -7,7 +7,7 @@ import Footer from '../components/Footer.jsx';
 import CardDadosEstagio from '../components/Estagio/CardDadosEstagio.jsx';
 import CardProgresso from '../components/Estagio/CardProgresso.jsx';
 import CardDocumentos from '../components/aluno/CardDocumentos.jsx';
-import dados from '../dadosAluno.jsx';
+import dados from '../data/aluno.js';
 import '../App.css';
 
 function TelaEstagio() {

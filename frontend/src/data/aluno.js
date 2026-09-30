@@ -1,4 +1,4 @@
-const dadosAluno = {
+const aluno = {
   aluno: {
     nome: "Marcos Junio Rodrigues Sena",
     curso: "Tecnologia em Analise e Desenvolvimento de Sistemas",
@@ -174,6 +174,6 @@ const dadosAluno = {
   }
 };
 
-dadosAluno.progresso = dadosAluno.progressoTotal;
+aluno.progresso = aluno.progressoTotal;
 
-export default dadosAluno;
+export default aluno;

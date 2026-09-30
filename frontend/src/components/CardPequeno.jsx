@@ -1,11 +1,5 @@
 import Card from "react-bootstrap/Card";
 
-/**
- * Card de indicador (número + legenda).
- *
- * - Sem `corFundo`: comportamento antigo (quadrado sólido com `cor` e ícone branco).
- * - Com `corFundo`: quadrado suave com `corFundo` e ícone colorido com `cor`.
- */
 function CardPequeno({ titulo, valor, icone, texto, cor, corFundo }) {
   const suave = Boolean(corFundo);
 

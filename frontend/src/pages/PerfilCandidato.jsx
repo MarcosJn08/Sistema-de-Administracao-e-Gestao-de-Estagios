@@ -4,7 +4,7 @@ import { Row, Col } from 'react-bootstrap';
 import { ArrowLeft, CheckCircle2, User } from 'lucide-react';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
-import dadosEmpresa, { candidatosDesenvolvedorBackend } from '../dadosEmpresa.jsx';
+import dadosEmpresa, { candidatosDesenvolvedorBackend } from '../data/empresa.js';
 import './PerfilCandidato.css';
 
 function PerfilCandidato() {

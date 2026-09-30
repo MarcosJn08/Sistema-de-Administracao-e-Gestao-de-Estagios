@@ -12,9 +12,10 @@ import TelaEstagio from '../../pages/TelaEstagio.jsx';
 import DashboardDiretor from '../../pages/DashboardDiretor.jsx';
 import DashboardEmpresa from '../../pages/DashboardEmpresa.jsx';
 import PainelAlunosDiretor from '../../pages/PainelAlunosDiretor.jsx';
+import PainelOrientadoresDiretor from '../../pages/PainelOrientadoresDiretor.jsx';
+import PainelConveniosDiretor from '../../pages/PainelConveniosDiretor.jsx';
 import GestaoCandidatos from '../../pages/GestaoCandidatos.jsx';
 import PerfilCandidato from '../../pages/PerfilCandidato.jsx';
-import PainelOrientadoresDiretor from '../../pages/PainelOrientadoresDiretor.jsx';
 
 function AppRoutes() {
   return (
@@ -34,6 +35,7 @@ function AppRoutes() {
 
         <Route path="/sage/diretor/alunos" element={<PainelAlunosDiretor />} />
         <Route path="/sage/diretor/orientadores" element={<PainelOrientadoresDiretor />} />
+        <Route path="/sage/diretor/convenios" element={<PainelConveniosDiretor />} />
         <Route path="/sage/vagas" element={<VitrineVagas />} />
         <Route path="/sage/documentos" element={<CentralDocumentos />} />
         <Route path="/sage/login" element={<Login />} />

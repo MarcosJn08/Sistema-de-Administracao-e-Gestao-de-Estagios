@@ -1,0 +1,19 @@
+.painel-convenios { background: #f4f6f8; }
+.painel-convenios-container { max-width: 1200px; }
+.painel-convenios .card-title { min-height: 36px; }
+.painel-convenios-cabecalho { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px; margin-bottom: 24px; }
+.painel-convenios-cabecalho h1 { margin: 0 0 6px; color: #1e293b; font-size: var(--sage-font-3xl, 28px); font-weight: 700; }
+.painel-convenios-cabecalho p { margin: 0; color: #64748b; }
+.painel-convenios-tabela { min-width: 1080px; }
+.painel-convenios-tabela th { white-space: normal; }
+.painel-convenios-tabela td { font-size: var(--sage-font-sm, 14px); }
+.painel-convenios-tabela td:nth-child(2) { min-width: 200px; }
+.painel-convenios-acoes { display: flex; align-items: center; justify-content: center; gap: 4px; }
+.convenio-acao { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 32px; padding: 5px 10px; border: 1px solid #b7c8bc; border-radius: 6px; background: #fff; color: #245d36; font-size: 11px; font-weight: 650; white-space: nowrap; }
+.convenio-acao:hover { background: #edf5ee; }
+.convenio-acao-icone { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: #526b91; }
+.convenio-acao-icone:hover { background: #eef3f8; color: #244d73; }
+.convenio-acao-icone:focus-visible { outline: 2px solid #2e7d32; outline-offset: 2px; }
+.convenio-acao-principal { border-color: #168343; background: #168343; color: #fff; }
+.convenio-acao-principal:hover { background: #116735; }
+@media (max-width: 575.98px) { .painel-convenios-cabecalho > .botao-sage-verde { width: 100%; } }

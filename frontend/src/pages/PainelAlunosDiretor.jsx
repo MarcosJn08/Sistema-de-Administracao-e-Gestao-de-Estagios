@@ -11,7 +11,7 @@ import StatusBadge from '../components/StatusBadge.jsx';
 import Paginacao from '../components/Paginacao.jsx';
 import DetalhesAluno from '../components/aluno/DetalhesAluno.jsx';
 import ModalCadastroAluno from '../components/aluno/ModalCadastroAluno.jsx';
-import dadosDiretor from '../dadosDiretor.jsx';
+import dadosDiretor from '../data/diretor.js';
 import alunosIniciais, { cursos, situacoesEstagio, orientadores } from '../data/alunos.js';
 import { aplicarAcaoAluno } from '../utils/gestaoAluno.js';
 import '../App.css';

@@ -14,7 +14,6 @@ export function pendenciasAssinaturas(documento) {
   return partes.filter((parte) => documento.assinaturas?.[parte] !== 'assinado');
 }
 
-// Regras do protótipo. A API deverá aplicar as mesmas permissões e validações.
 export function aplicarAcaoAluno(aluno, acao, { perfil, orientadores = [], alunos = [] } = {}) {
   if (perfil !== 'diretor') throw new Error('Esta ação é exclusiva da Direção.');
   const agora = new Date().toISOString();

@@ -289,7 +289,7 @@ const candidatosDesenvolvedorBackend = [
   }
 ];
 
-const dadosEmpresa = {
+const empresa = {
   empresa: {
     nome: "Shelby LTDA",
     cnpj: "12.345.678/0001-90",
@@ -405,4 +405,4 @@ const dadosEmpresa = {
 };
 
 export { candidatosDesenvolvedorBackend };
-export default dadosEmpresa;
+export default empresa;
