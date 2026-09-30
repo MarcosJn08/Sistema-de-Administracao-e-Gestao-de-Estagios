@@ -7,12 +7,14 @@ function CardDocumentos({
   documentos = [],
   aoClicarAcao,
   onActionClick,
+  titulo = 'Documentos',
+  somenteLeitura = false,
 }) {
   const lidarComAcao = aoClicarAcao || onActionClick;
 
   return (
     <div className="cartao-sage">
-      <h2 className="cartao-sage-titulo">Documentos</h2>
+      <h2 className="cartao-sage-titulo">{titulo}</h2>
 
       <div className="tabela-sage-container">
         <table className="tabela-sage">
@@ -22,10 +24,13 @@ function CardDocumentos({
               <th style={{ width: '20%' }}>Documento</th>
               <th style={{ width: '28%' }}>Descrição</th>
               <th style={{ width: '18%' }}>Status</th>
-              <th style={{ minWidth: '310px' }}>Ação</th>
+              {somenteLeitura ? <th>Data</th> : <th style={{ minWidth: '310px' }}>Ação</th>}
             </tr>
           </thead>
           <tbody>
+            {documentos.length === 0 && (
+              <tr><td colSpan={5} className="text-center text-secondary py-4">Nenhum documento ou relatório registrado.</td></tr>
+            )}
             {documentos.map((doc) => (
               <tr key={doc.id}>
                 <td className="fw-bold text-dark">{doc.id}</td>
@@ -34,7 +39,7 @@ function CardDocumentos({
                 <td>
                   <StatusBadge status={doc.status} />
                 </td>
-                <td>
+                {somenteLeitura ? <td className="text-nowrap">{doc.data || 'Não informada'}</td> : <td>
                   <div className="d-flex flex-nowrap gap-2 align-items-center">
                     {doc.acoes?.map((acao, index) => (
                       <BotaoAcao
@@ -44,7 +49,7 @@ function CardDocumentos({
                       />
                     ))}
                   </div>
-                </td>
+                </td>}
               </tr>
             ))}
           </tbody>

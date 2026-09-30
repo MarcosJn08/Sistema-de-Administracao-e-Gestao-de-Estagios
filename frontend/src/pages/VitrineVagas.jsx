@@ -6,7 +6,7 @@ import VagaCard from '../components/VagaCard.jsx';
 import ModalDetalhesVaga from '../components/vagas/ModalDetalhesVaga.jsx';
 import LogoBranca from '../assets/LogoBranca.png';
 import vagasIniciais from '../data/vagas.json';
-import dados from '../dadosAluno.jsx';
+import dados from '../data/aluno.js';
 import './VitrineVagas.css';
 
 function VitrineVagas() {
@@ -37,7 +37,6 @@ function VitrineVagas() {
       <Header
         pagina01="Dashboard"
         pagina02="Vagas"
-        pagina03="Documentos"
         paginaAtiva="Vagas"
         usuario={dados.aluno}
       />

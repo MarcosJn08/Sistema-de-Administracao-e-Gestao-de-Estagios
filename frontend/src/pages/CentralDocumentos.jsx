@@ -7,7 +7,7 @@ import CardProgresso from '../components/aluno/CardProgresso.jsx';
 import CardEstagioAtual from '../components/aluno/CardEstagioAtual.jsx';
 import CardDocumentos from '../components/aluno/CardDocumentos.jsx';
 import CardMinhasInscricoes from '../components/aluno/CardMinhasInscricoes.jsx';
-import dados from '../dadosAluno.jsx';
+import dados from '../data/aluno.js';
 import '../App.css';
 
 function DashboardAluno() {

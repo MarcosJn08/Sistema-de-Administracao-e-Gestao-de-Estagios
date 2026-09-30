@@ -6,6 +6,8 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import Button from './Button.jsx';
 import LogoBranca from '../assets/LogoBranca.png';
 
+import { Code } from 'lucide-react';
+
 function Header({
   pagina01 = 'Início',
   pagina02 = 'Minhas funcionalidades',
@@ -17,11 +19,14 @@ function Header({
   usuario,
   customLinks,
   somenteInicio = false,
+  mostrarBotaoSair,
 }) {
   const [expanded, setExpanded] = useState(false);
   const closeMenu = () => setExpanded(false);
 
   const isDashboard = Boolean(usuario);
+  const isEmpresa = usuario?.tipo === 'empresa';
+  const exibirBotaoSair = mostrarBotaoSair === true;
 
   const landingLinks = [
     [pagina01, '#inicio'],
@@ -32,16 +37,18 @@ function Header({
     ...(pagina06 ? [[pagina06, '#como-funciona']] : []),
   ];
 
-  const isDiretor = pagina01 === 'Dashboard' && pagina02 === 'Alunos';
+  const isDiretor = usuario?.role === 'diretor';
+  const isProfessor = usuario?.role === 'professor';
 
   const diretorLinks = [
-    [pagina01, '/sage/diretor'],
-    [pagina02, '#'],
-    [pagina03, '#'],
-    [pagina04, '#'],
-    [pagina05, '#'],
-    ...(pagina06 ? [[pagina06, '#']] : []),
+    ['Dashboard', '/sage/diretor'],
+    ['Alunos', '/sage/diretor/alunos'],
+    ['Orientadores', '/sage/diretor/orientadores'],
+    ['Empresas', '/sage/diretor/convenios'],
+    ['Documentos', '/sage/diretor/documentos'],
+    ['Relatórios', '#'],
   ];
+  const professorLinks = [['Dashboard', '#'], ['Alunos', '#'], ['Estágios', '#']];
 
   const dashboardAlunoLinks = [
     ['Início', '/sage'],
@@ -60,6 +67,8 @@ function Header({
       ? cadastroLinks
       : isDiretor
       ? diretorLinks
+      : isProfessor
+      ? professorLinks
       : isDashboard
       ? dashboardAlunoLinks
       : landingLinks);
@@ -119,18 +128,25 @@ function Header({
                 {isDashboard ? (
                   <div className="d-flex align-items-center gap-3">
                     <div className="perfil-usuario-header">
-                      <div className="avatar-usuario-header">
-                        {usuario?.foto ? (
+                      <div
+                        className="avatar-usuario-header"
+                        style={isEmpresa ? { backgroundColor: '#0f172a', borderColor: '#38bdf8' } : {}}
+                      >
+                        {isEmpresa ? (
+                          <Code size={18} color="#38bdf8" />
+                        ) : usuario?.foto ? (
                           <img src={usuario.foto} alt={usuario.nome} />
                         ) : (
                           <span>{letraAvatar}</span>
                         )}
                       </div>
                       <span className="nome-usuario-header">
-                        {nomeExibicao}
+                        {isEmpresa ? usuario.nome : (nomeExibicao)}
                       </span>
                     </div>
-                    <Button texto="Sair" tipo="botao-texto-branco" href="/sage/login" />
+                    {exibirBotaoSair && (
+                      <Button texto="Sair" tipo="botao-texto-branco" href="/sage/login" />
+                    )}
                   </div>
                 ) : (
                   <>

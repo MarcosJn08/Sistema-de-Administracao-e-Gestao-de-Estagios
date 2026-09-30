@@ -1,4 +1,4 @@
-const dados = {
+const diretor = {
   progresso: {
     horasConcluidas: 100,
     metaHoras: 200,
@@ -7,6 +7,7 @@ const dados = {
   },
 
   diretor: {
+    role: 'diretor',
     nome: "Carlos Almeida",
     foto: null
   },
@@ -160,4 +161,4 @@ const dados = {
   ]
 };
 
-export default dados;
+export default diretor;

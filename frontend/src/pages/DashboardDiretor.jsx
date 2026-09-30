@@ -11,7 +11,7 @@ import CardAtividadeRecente from "../components/diretor/CardAtividadeRecente.jsx
 import CardAcoesRapidas from "../components/diretor/CardAcoesRapidas.jsx";
 import CardProximosVencimentos from "../components/diretor/CardProximosVencimentos.jsx";
 
-import dados from "../dadosDiretor.jsx";
+import dados from '../data/diretor.js';
 
 import "../App.css";
 
@@ -26,8 +26,8 @@ function DashboardDiretor() {
         pagina02="Alunos"
         pagina03="Orientadores"
         pagina04="Empresas"
-        pagina05="Estágios"
-        pagina06="Documentos"
+        pagina05="Documentos"
+        pagina06="Relatórios"
         paginaAtiva="Dashboard"
         usuario={dados.diretor}
       />

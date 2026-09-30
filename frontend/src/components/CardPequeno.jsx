@@ -1,12 +1,7 @@
 import Card from "react-bootstrap/Card";
+import "../App.css";
 
-/**
- * Card de indicador (número + legenda).
- *
- * - Sem `corFundo`: comportamento antigo (quadrado sólido com `cor` e ícone branco).
- * - Com `corFundo`: quadrado suave com `corFundo` e ícone colorido com `cor`.
- */
-function CardPequeno({ titulo, valor, icone, texto, cor, corFundo }) {
+function CardPequeno({ titulo, valor, icone, texto, cor, corFundo, variante }) {
   const suave = Boolean(corFundo);
 
   return (
@@ -46,6 +41,7 @@ function CardPequeno({ titulo, valor, icone, texto, cor, corFundo }) {
           </div>
 
           <div
+            className={variante ? `badge-status-${variante}` : undefined}
             style={{
               width: "45px",
               height: "45px",
@@ -53,15 +49,15 @@ function CardPequeno({ titulo, valor, icone, texto, cor, corFundo }) {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: suave ? corFundo : cor,
+              backgroundColor: variante ? undefined : suave ? corFundo : cor,
               flexShrink: 0,
             }}
           >
-            <i
+            {typeof icone === 'string' ? <i
               className={icone}
-              style={suave ? { color: cor } : undefined}
+              style={!variante && suave ? { color: cor } : undefined}
               aria-hidden="true"
-            ></i>
+            ></i> : <span style={{ color: variante ? 'inherit' : suave ? cor : '#fff' }} aria-hidden="true">{icone}</span>}
           </div>
         </div>
 

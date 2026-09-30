@@ -1,0 +1,20 @@
+.painel-orientadores { background: #f4f6f8; }
+.painel-orientadores-container { max-width: 1200px; }
+.painel-orientadores .card-title { min-height: 36px; }
+.painel-orientadores-cabecalho { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px; margin-bottom: 24px; }
+.painel-orientadores-cabecalho h1 { margin: 0 0 6px; color: #1e293b; font-size: var(--sage-font-3xl, 28px); font-weight: 700; }
+.painel-orientadores-cabecalho p { margin: 0; color: #64748b; }
+.painel-orientadores-tabela { min-width: 1080px; }
+.painel-orientadores-tabela th { white-space: normal; }
+.painel-orientadores-tabela td { font-size: var(--sage-font-sm, 14px); }
+.painel-orientadores-tabela td:nth-child(2) { min-width: 190px; }
+.painel-orientadores-tabela td:nth-child(3) { min-width: 150px; }
+.painel-orientadores-tabela td:nth-child(4) { min-width: 225px; }
+.painel-orientadores-tabela td:nth-child(5),
+.painel-orientadores-tabela th:nth-child(5) { text-align: center; }
+.painel-orientadores-tabela a { color: #526174; text-decoration: none; }
+.painel-orientadores-tabela a:hover { color: var(--sage-green); text-decoration: underline; }
+
+@media (max-width: 575.98px) {
+  .painel-orientadores-cabecalho > .botao-sage-verde { width: 100%; }
+}

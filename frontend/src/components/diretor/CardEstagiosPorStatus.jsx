@@ -2,10 +2,6 @@ import React from 'react';
 import '../../App.css';
 import './CardsDiretor.css';
 
-/**
- * Barras horizontais por status.
- * `total` é a base de cálculo da largura (valor / total).
- */
 function CardEstagiosPorStatus({ titulo = 'Estágios por status', itens = [], total = 100 }) {
   return (
     <div className="cartao-sage h-100 mb-0">

@@ -1,0 +1,74 @@
+.modal-analise-convenio .modal-content { border: 0; border-radius: 16px; overflow: hidden; }
+.modal-analise-convenio .modal-header { align-items: flex-start; padding: 28px 28px 22px; border-bottom: 0; background: #f7f9fb; color: #172033; }
+.modal-analise-convenio .modal-header .btn-close { flex-shrink: 0; margin-top: 0; }
+.modal-analise-convenio .modal-title { font-size: 22px; font-weight: 750; line-height: 1.4; }
+.modal-analise-convenio .modal-body { padding: 0 28px 28px; background: #f7f9fb; color: #172033; }
+.modal-analise-convenio .modal-footer { padding: 12px 28px; }
+.analise-convenio-cabecalho { min-width: 0; padding-right: 16px; }
+.analise-convenio-titulo { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.analise-convenio-titulo .badge-status { padding: 3px 8px; border: 1px solid #93b4ff; border-radius: 7px; font-size: 10px; line-height: 1.4; }
+.analise-convenio-titulo .badge-status-ambar { border-color: #fcd34d; }
+.analise-convenio-cabecalho > p { margin: 10px 0 0; color: #64748b; font-size: 12px; line-height: 1.6; }
+.analise-convenio-grid { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); align-items: start; gap: 18px; }
+.analise-convenio-cartao { min-width: 0; padding: 22px; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; box-shadow: 0 3px 2px -1px rgb(15 23 42 / 24%), 0 5px 9px rgb(15 23 42 / 10%); }
+.analise-convenio-grid > .analise-convenio-cartao:first-child { align-self: stretch; }
+.analise-convenio-cartao > h3,
+.analise-convenio-decisoes > h3 { display: flex; align-items: center; gap: 9px; margin: 0 0 18px; font-size: 14px; font-weight: 750; line-height: 1.5; }
+.analise-convenio-cartao > h3 > svg { flex-shrink: 0; color: #566cc5; }
+.analise-convenio-dados { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; margin: 24px 0 8px; }
+.analise-convenio-dados dt { margin-bottom: 3px; color: #8292ab; font-size: 9px; font-weight: 500; text-transform: uppercase; }
+.analise-convenio-dados dd { margin: 0; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.analise-convenio-documentos { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.analise-convenio-documentos li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 9px; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; background: #f7f9fc; }
+.analise-convenio-documento-icone { color: #ff4656; }
+.analise-convenio-documentos button { display: grid; gap: 2px; min-width: 0; padding: 0; border: 0; background: transparent; color: #172033; text-align: left; }
+.analise-convenio-documentos button:hover strong { text-decoration: underline; }
+.analise-convenio-documentos strong { font-size: 11px; font-weight: 600; overflow-wrap: anywhere; }
+.analise-convenio-documentos span { color: #64748b; font-size: 9px; }
+.analise-convenio-documentos li > p { grid-column: 1 / -1; margin: 4px 0 0; color: #64748b; font-size: 11px; }
+.analise-convenio-decisoes { margin-top: 26px; }
+.analise-convenio-decisoes > h3 { margin-bottom: 12px; font-size: 16px; }
+.analise-convenio-decisoes-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.analise-convenio-decisao { display: flex; flex-direction: column; min-width: 0; padding: 22px 18px 20px; border: 1px solid #edf0f4; border-left: 4px solid var(--decisao-cor); border-radius: 12px; background: #fff; color: var(--decisao-texto); box-shadow: 0 3px 2px -1px rgb(15 23 42 / 24%), 0 5px 9px rgb(15 23 42 / 10%); }
+.analise-convenio-decisao-titulo { display: flex; align-items: center; gap: 10px; min-height: 36px; }
+.analise-convenio-decisao-icone { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 32px; height: 32px; border-radius: 50%; background: var(--decisao-fundo); color: var(--decisao-cor); }
+.analise-convenio-decisao h4 { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.5; }
+.analise-convenio-decisao-descricao { min-height: 54px; margin: 18px 0 12px; color: #526079; font-size: 12px; line-height: 1.6; }
+.analise-convenio-decisao-informacoes { display: grid; align-content: start; gap: 10px; flex: 1; margin: 0 0 20px; padding: 12px 0 0; border-top: 1px solid #e7edf4; list-style: none; }
+.analise-convenio-decisao-informacoes li { display: flex; align-items: flex-start; gap: 7px; }
+.analise-convenio-decisao-informacoes svg { flex-shrink: 0; margin-top: 2px; color: var(--decisao-cor); }
+.analise-convenio-decisao-informacoes p { margin: 0; color: #64748b; font-size: 11px; line-height: 1.5; }
+.analise-convenio-decisao-informacoes strong { color: var(--decisao-texto); font-weight: 600; }
+.analise-convenio-decisao button { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; min-height: 36px; margin-top: auto; padding: 8px; border: 1px solid var(--decisao-cor); border-radius: 5px; background: #fff; color: var(--decisao-cor); font-size: 11px; font-weight: 600; }
+.analise-convenio-decisao button:hover { background: var(--decisao-fundo); }
+.analise-convenio-aprovar { --decisao-cor: #10b981; --decisao-texto: #047857; --decisao-fundo: #d1fae5; }
+.analise-convenio-reprovar { --decisao-cor: #ff4656; --decisao-texto: #b91c1c; --decisao-fundo: #ffe1e5; }
+.analise-convenio-devolver { --decisao-cor: #f59e0b; --decisao-texto: #b45309; --decisao-fundo: #fef3c7; }
+.analise-convenio-aprovar button { background: #fff; color: var(--decisao-cor); }
+.analise-convenio-aprovar button:hover { border-color: #059669; background: var(--decisao-fundo); color: #047857; }
+.analise-convenio-decisao button:focus-visible,
+.analise-convenio-documentos button:focus-visible { outline: 2px solid #526b91; outline-offset: 3px; }
+.analise-convenio-regras { display: flex; align-items: flex-start; gap: 9px; margin: 24px 0 0; padding: 11px 12px; border: 1px solid #e2e8f0; border-radius: 5px; background: #f1f5f9; color: #526079; font-size: 10px; line-height: 1.5; }
+.analise-convenio-regras svg { flex-shrink: 0; }
+.analise-convenio-form-decisao { margin-top: 18px; }
+.analise-convenio-form-decisao > p { color: #64748b; font-size: 12px; }
+.analise-convenio-form-decisao label { display: grid; gap: 7px; color: #334155; font-size: 12px; font-weight: 650; }
+.analise-convenio-form-decisao textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 7px; font: inherit; font-weight: 400; resize: vertical; }
+.analise-convenio-acoes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.analise-convenio-acoes button { min-height: 36px; padding: 7px 13px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+.analise-botao-perigo { border: 1px solid #dc2626; background: #dc2626; color: #fff; }
+.analise-botao-neutro { border: 1px solid #cbd5e1; background: #fff; color: #334155; }
+.analise-convenio-erro { padding: 8px 10px; border-radius: 6px; background: #fee2e2; color: #b91c1c !important; }
+
+@media (max-width: 767.98px) {
+  .analise-convenio-grid,
+  .analise-convenio-decisoes-grid { grid-template-columns: minmax(0, 1fr); }
+  .analise-convenio-decisao-descricao { min-height: 0; }
+}
+@media (max-width: 575.98px) {
+  .modal-analise-convenio .modal-header { padding: 20px 16px; }
+  .modal-analise-convenio .modal-title { font-size: 19px; }
+  .modal-analise-convenio .modal-body { padding: 0 16px 20px; }
+  .analise-convenio-cartao { padding: 18px; }
+  .analise-convenio-dados { grid-template-columns: minmax(0, 1fr); }
+}

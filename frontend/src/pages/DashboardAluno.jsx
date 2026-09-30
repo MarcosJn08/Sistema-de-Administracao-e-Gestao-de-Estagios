@@ -7,11 +7,11 @@ import Footer from '../components/Footer.jsx';
 import CardDadosAluno from '../components/aluno/CardDadosAluno.jsx';
 import CardProgresso from '../components/aluno/CardProgresso.jsx';
 import CardEstagioAtual from '../components/aluno/CardEstagioAtual.jsx';
-import CardMinhasInscricoes from '../components/aluno/CardMinhasInscricoes.jsx';
 import CardEstagio from '../components/Estagio/cardEstagios/CardEstagio.jsx';
-import dados from '../dadosAluno.jsx';
+import dados from '../data/aluno.js';
 import '../App.css';
 import '../components/Estagio/cardEstagios/CardEstagio.css';
+import VagasSection from '../components/landing/VagasSection.jsx';
 
 function DashboardAluno() {
   const navigate = useNavigate();
@@ -87,7 +87,7 @@ function DashboardAluno() {
               ))}
             </div>
           </section>
-
+              <VagasSection/>
         </Container>
       </main>
 
