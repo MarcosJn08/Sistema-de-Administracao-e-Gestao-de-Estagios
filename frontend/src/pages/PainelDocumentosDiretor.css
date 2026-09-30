@@ -1,0 +1,19 @@
+.painel-documentos { background: #f4f6f8; }
+.painel-documentos-container { max-width: 1200px; }
+.painel-documentos-cabecalho { margin-bottom: 24px; }
+.painel-documentos-cabecalho h1 { margin: 0 0 6px; color: #1e293b; font-size: var(--sage-font-3xl, 28px); font-weight: 700; }
+.painel-documentos-cabecalho p { margin: 0; color: #64748b; }
+.painel-documentos .card-title { min-height: 36px; }
+.painel-documentos-busca { position: relative; }
+.painel-documentos-busca > svg { position: absolute; top: 50%; left: 12px; transform: translateY(-50%); z-index: 1; color: #64748b; pointer-events: none; }
+.painel-documentos-busca .form-control { padding-left: 38px; }
+.painel-documentos-tabela { min-width: 1000px; }
+.painel-documentos-tabela td { font-size: 13px; }
+.painel-documentos-tabela td:nth-child(2) { min-width: 120px; color: #182132; }
+.painel-documentos-tabela td:nth-child(3) { min-width: 170px; }
+.painel-documentos-tabela th:last-child { text-align: center; }
+.painel-documentos-acoes { display: flex; align-items: center; justify-content: center; gap: 6px; }
+.painel-documentos-acoes .botao-sage-verde { min-height: 32px; padding: 6px 13px; border-radius: 5px; font-size: 11px; }
+.painel-documentos-icone { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 5px; background: #f1f6f2; color: #2e7d32; text-decoration: none; }
+.painel-documentos-icone:hover { background: #e3f0e5; color: #1b5e20; }
+.painel-documentos-icone:focus-visible { outline: 2px solid #2e7d32; outline-offset: 3px; }

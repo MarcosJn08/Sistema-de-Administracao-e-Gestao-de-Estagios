@@ -1,6 +1,7 @@
 import Card from "react-bootstrap/Card";
+import "../App.css";
 
-function CardPequeno({ titulo, valor, icone, texto, cor, corFundo }) {
+function CardPequeno({ titulo, valor, icone, texto, cor, corFundo, variante }) {
   const suave = Boolean(corFundo);
 
   return (
@@ -40,6 +41,7 @@ function CardPequeno({ titulo, valor, icone, texto, cor, corFundo }) {
           </div>
 
           <div
+            className={variante ? `badge-status-${variante}` : undefined}
             style={{
               width: "45px",
               height: "45px",
@@ -47,15 +49,15 @@ function CardPequeno({ titulo, valor, icone, texto, cor, corFundo }) {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: suave ? corFundo : cor,
+              backgroundColor: variante ? undefined : suave ? corFundo : cor,
               flexShrink: 0,
             }}
           >
             {typeof icone === 'string' ? <i
               className={icone}
-              style={suave ? { color: cor } : undefined}
+              style={!variante && suave ? { color: cor } : undefined}
               aria-hidden="true"
-            ></i> : <span style={{ color: suave ? cor : '#fff' }} aria-hidden="true">{icone}</span>}
+            ></i> : <span style={{ color: variante ? 'inherit' : suave ? cor : '#fff' }} aria-hidden="true">{icone}</span>}
           </div>
         </div>
 

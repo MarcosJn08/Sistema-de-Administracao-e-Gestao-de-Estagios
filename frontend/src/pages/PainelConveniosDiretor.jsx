@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Col, Container, Row, Table } from 'react-bootstrap';
+import { Alert, Col, Container, Row, Table } from 'react-bootstrap';
 import { CircleAlert, Clock3, Handshake, Pencil, Plus, RefreshCw, RotateCcw, Search } from 'lucide-react';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
@@ -14,6 +14,7 @@ import ModalAnaliseConvenio from '../components/convenio/ModalAnaliseConvenio.js
 import dadosDiretor from '../data/diretor.js';
 import conveniosIniciais, { statusConvenio, tiposConvenio } from '../data/convenios.js';
 import { calcularVigenciaCincoAnos } from '../utils/convenio.js';
+import { registrarDevolucao } from '../utils/devolucao.js';
 import '../App.css';
 import './PainelConveniosDiretor.css';
 
@@ -32,6 +33,7 @@ function PainelConveniosDiretor() {
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [formulario, setFormulario] = useState(null);
   const [analiseId, setAnaliseId] = useState(null);
+  const [mensagem, setMensagem] = useState('');
 
   const convenioFormulario = convenios.find((item) => item.id === formulario?.id);
   const convenioAnalise = convenios.find((item) => item.id === analiseId);
@@ -46,9 +48,9 @@ function PainelConveniosDiretor() {
   const ultimoExibido = Math.min(indiceInicial + ITENS_POR_PAGINA, filtrados.length);
 
   const indicadores = [
-    { titulo: 'Convênios ativos', valor: convenios.filter((item) => item.status === 'Ativo').length, texto: 'Parcerias vigentes e regulares', icone: <Handshake size={23} />, cor: '#0f7b44', corFundo: '#d1f4e0' },
-    { titulo: 'Solicitações pendentes', valor: convenios.filter((item) => ['Pendente de análise', 'Ajustes solicitados'].includes(item.status)).length, texto: 'Novos cadastros aguardando homologação', icone: <Clock3 size={23} />, cor: '#b45309', corFundo: '#fef3c7' },
-    { titulo: 'Convênios vencidos / expirados', valor: convenios.filter((item) => item.status === 'Expirado').length, texto: 'Atingiram o prazo limite de vigência', icone: <CircleAlert size={23} />, cor: '#b91c1c', corFundo: '#fee2e2' },
+    { titulo: 'Convênios ativos', valor: convenios.filter((item) => item.status === 'Ativo').length, texto: 'Parcerias vigentes e regulares', icone: <Handshake size={23} />, variante: 'verde' },
+    { titulo: 'Solicitações pendentes', valor: convenios.filter((item) => ['Pendente de análise', 'Ajustes solicitados'].includes(item.status)).length, texto: 'Novos cadastros aguardando homologação', icone: <Clock3 size={23} />, variante: 'ambar' },
+    { titulo: 'Convênios vencidos / expirados', valor: convenios.filter((item) => item.status === 'Expirado').length, texto: 'Atingiram o prazo limite de vigência', icone: <CircleAlert size={23} />, variante: 'vermelho' },
   ];
 
   const salvarConvenio = (dados, modo) => {
@@ -76,8 +78,15 @@ function PainelConveniosDiretor() {
     const vigencia = tipo === 'aprovar'
       ? { inicio: vigenciaCalculada.inicio, vencimento: vigenciaCalculada.vencimento }
       : {};
+    const notificacao = tipo === 'devolver' ? registrarDevolucao({
+      email: convenioAnalise.email, responsavel: convenioAnalise.representante,
+      referencia: 'Proposta de convênio', itens: dados.itens, observacoes: dados.observacoes,
+    }) : null;
     setConvenios((atuais) => atuais.map((item) => item.id === analiseId
-      ? { ...item, ...vigencia, status: statusNovo, decisao: { tipo, ...dados, registradaEm: new Date().toISOString() } } : item));
+      ? { ...item, ...vigencia, status: statusNovo, decisao: { tipo, ...dados, registradaEm: new Date().toISOString() },
+        ...(notificacao ? { notificacoes: [notificacao, ...(item.notificacoes || [])] } : {}),
+      } : item));
+    if (notificacao) setMensagem(`Devolução registrada para ${convenioAnalise.razaoSocial}. Notificação simulada para ${notificacao.destinatario}.`);
   };
   const limparFiltros = () => { setBusca(''); setStatus(''); setPaginaAtual(1); };
 
@@ -96,6 +105,8 @@ function PainelConveniosDiretor() {
           <Row className="g-4 mb-4">{indicadores.map((indicador) => <Col key={indicador.titulo} xs={12} md={4}>
             <CardPequeno {...indicador} />
           </Col>)}</Row>
+
+          {mensagem && <Alert variant="success" dismissible onClose={() => setMensagem('')} role="status">{mensagem}</Alert>}
 
           <section className="cartao-sage" aria-labelledby="filtros-convenios-titulo">
             <h2 id="filtros-convenios-titulo" className="cartao-sage-titulo d-flex align-items-center gap-2"><Search size={20} /> Pesquisa e filtros</h2>
