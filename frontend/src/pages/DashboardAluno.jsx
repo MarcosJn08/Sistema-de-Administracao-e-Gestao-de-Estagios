@@ -12,6 +12,7 @@ import CardEstagio from '../components/Estagio/cardEstagios/CardEstagio.jsx';
 import dados from '../dadosAluno.jsx';
 import '../App.css';
 import '../components/Estagio/cardEstagios/CardEstagio.css';
+import VagasSection from '../components/landing/VagasSection.jsx';
 
 function DashboardAluno() {
   const navigate = useNavigate();
@@ -87,7 +88,7 @@ function DashboardAluno() {
               ))}
             </div>
           </section>
-
+              <VagasSection/>
         </Container>
       </main>
 
