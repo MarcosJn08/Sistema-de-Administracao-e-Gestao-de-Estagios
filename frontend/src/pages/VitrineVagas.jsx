@@ -37,7 +37,6 @@ function VitrineVagas() {
       <Header
         pagina01="Dashboard"
         pagina02="Vagas"
-        pagina03="Documentos"
         paginaAtiva="Vagas"
         usuario={dados.aluno}
       />
