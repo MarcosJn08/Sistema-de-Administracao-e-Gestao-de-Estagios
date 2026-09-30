@@ -1,0 +1,277 @@
+.perfil-candidato-wrapper {
+  background-color: #f8fafc;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.perfil-candidato-container {
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 36px 20px 60px 20px;
+}
+
+/* Breadcrumbs */
+.perfil-candidato-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.breadcrumb-link {
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.breadcrumb-link:hover {
+  color: #0f172a;
+}
+
+.breadcrumb-separator {
+  color: #94a3b8;
+  font-size: 0.8125rem;
+}
+
+.breadcrumb-active {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+/* Header & Title */
+.perfil-candidato-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.perfil-candidato-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+/* Cards Base */
+.card-detalhe-candidato {
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.card-detalhe-title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.card-detalhe-divider {
+  border-top: 1px solid #f1f5f9;
+  margin: 16px 0 20px 0;
+}
+
+/* Perfil Básico (Avatar e Nome) */
+.aluno-header-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.aluno-avatar-circulo {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid #e2e8f0;
+}
+
+.aluno-avatar-circulo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.aluno-avatar-fallback {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+.aluno-nome-principal {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+
+.aluno-matricula-texto {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Lista Chave-Valor */
+.info-row-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  font-size: 0.875rem;
+}
+
+.info-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.info-value {
+  color: #0f172a;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Tags de Habilidades */
+.tags-habilidades-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tag-habilidade {
+  background-color: #ffffff;
+  color: #16a34a;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+/* Informações da Candidatura */
+.candidatura-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 576px) {
+  .candidatura-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.candidatura-campo-label {
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.candidatura-vaga-destaque {
+  color: #2e7d32;
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.candidatura-data-destaque {
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.carta-apresentacao-texto {
+  color: #334155;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* Barra de Ações Inferior */
+.barra-acoes-perfil {
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.btn-voltar-listagem {
+  background: none;
+  border: none;
+  color: #475569;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: color 0.15s ease;
+  text-decoration: none;
+}
+
+.btn-voltar-listagem:hover {
+  color: #0f172a;
+}
+
+.botoes-decisao-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-reprovar-perfil {
+  background-color: #ffffff;
+  color: #dc2626;
+  border: 1px solid #dc2626;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-reprovar-perfil:hover {
+  background-color: #fef2f2;
+}
+
+.btn-aprovar-perfil {
+  background-color: #2e7d32;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-aprovar-perfil:hover {
+  background-color: #1b5e20;
+}

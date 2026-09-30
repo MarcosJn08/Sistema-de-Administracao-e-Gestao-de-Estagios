@@ -1,0 +1,316 @@
+.modal-candidato-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 20px 16px;
+  overflow-y: auto;
+}
+
+.modal-candidato-container {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 900px;
+  border-radius: 20px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: modalCandidatoIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalCandidatoIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Header do Modal */
+.modal-candidato-header {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f1f5f9;
+  background-color: #ffffff;
+}
+
+.modal-candidato-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.modal-candidato-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.btn-fechar-modal-candidato {
+  background: none;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-fechar-modal-candidato:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+/* Corpo do Modal */
+.modal-candidato-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+  background-color: #f8fafc;
+}
+
+.modal-candidato-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .modal-candidato-grid {
+    grid-template-columns: 1fr 1.15fr;
+  }
+}
+
+.modal-candidato-card {
+  background-color: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  padding: 20px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.modal-card-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 12px 0;
+}
+
+.modal-card-divisor {
+  border-top: 1px solid #f1f5f9;
+  margin: 12px 0 16px 0;
+}
+
+/* Identificação */
+.modal-aluno-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.modal-avatar-circulo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #f1f5f9;
+  border: 2px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.modal-avatar-circulo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-avatar-fallback {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+.modal-aluno-nome {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+
+.modal-aluno-matricula {
+  font-size: 0.8125rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Linhas de Chave-Valor */
+.modal-info-linha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 0.84rem;
+  border-bottom: 1px solid #f8fafc;
+}
+
+.modal-info-linha:last-child {
+  border-bottom: none;
+}
+
+.modal-info-rotulo {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.modal-info-valor {
+  color: #0f172a;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Habilidades */
+.modal-tags-habilidades {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.modal-tag-hab {
+  background-color: #ffffff;
+  color: #16a34a;
+  border: 1px solid #86efac;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 0.775rem;
+  font-weight: 600;
+}
+
+/* Informações da Candidatura */
+.modal-candidatura-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.modal-meta-campo-rotulo {
+  font-size: 0.8125rem;
+  color: #64748b;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.modal-meta-vaga-destaque {
+  font-size: 0.9375rem;
+  color: #2e7d32;
+  font-weight: 700;
+  margin: 0;
+}
+
+.modal-meta-data-destaque {
+  font-size: 0.9375rem;
+  color: #0f172a;
+  font-weight: 700;
+  margin: 0;
+}
+
+.modal-carta-texto {
+  font-size: 0.85rem;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0;
+  background-color: #f8fafc;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
+}
+
+/* Footer do Modal */
+.modal-candidato-footer {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #f1f5f9;
+  background-color: #ffffff;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.btn-fechar-secundario {
+  background-color: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 9px 18px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-fechar-secundario:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.modal-acoes-principais {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-modal-reprovar {
+  background-color: #ffffff;
+  color: #dc2626;
+  border: 1px solid #dc2626;
+  border-radius: 8px;
+  padding: 9px 18px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-modal-reprovar:hover {
+  background-color: #fef2f2;
+}
+
+.btn-modal-aprovar {
+  background-color: #2e7d32;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 18px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-modal-aprovar:hover {
+  background-color: #1b5e20;
+}

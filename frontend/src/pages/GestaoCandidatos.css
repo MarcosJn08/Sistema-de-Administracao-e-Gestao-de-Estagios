@@ -1,0 +1,320 @@
+.gestao-candidatos-wrapper {
+  background-color: #f8fafc;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.gestao-candidatos-container {
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 36px 20px 60px 20px;
+}
+
+.gestao-candidatos-header {
+  margin-bottom: 28px;
+}
+
+.gestao-candidatos-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.02em;
+}
+
+.gestao-candidatos-subtitle {
+  font-size: 0.9375rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.card-tabela-candidatos {
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.filtro-candidatos-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 768px) {
+  .filtro-candidatos-container {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.campo-busca-candidato {
+  position: relative;
+  flex-grow: 1;
+}
+
+.campo-busca-candidato input {
+  width: 100%;
+  padding: 10px 14px 10px 42px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.875rem;
+  color: #1e293b;
+  outline: none;
+  background-color: #ffffff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.campo-busca-candidato input:focus {
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+}
+
+.icone-busca-candidato {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.select-status-wrapper {
+  position: relative;
+  min-width: 170px;
+}
+
+.select-status-candidato {
+  width: 100%;
+  padding: 10px 36px 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.875rem;
+  color: #1e293b;
+  appearance: none;
+  background-color: #ffffff;
+  cursor: pointer;
+  font-weight: 500;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.select-status-candidato:focus {
+  border-color: #2e7d32;
+}
+
+.icone-select-chevron {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  pointer-events: none;
+}
+
+/* Badges de Status */
+.badge-candidato-analise {
+  background-color: #fef3c7;
+  color: #b45309;
+  padding: 4px 12px;
+  border-radius: 50rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.badge-candidato-aprovado {
+  background-color: #dcfce7;
+  color: #15803d;
+  padding: 4px 12px;
+  border-radius: 50rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.badge-candidato-reprovado {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 4px 12px;
+  border-radius: 50rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Botões de Ação */
+.btn-ver-perfil {
+  background-color: #ffffff;
+  color: #2e7d32;
+  border: 1px solid #2e7d32;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-ver-perfil:hover {
+  background-color: #f0fdf4;
+  color: #1b5e20;
+}
+
+.btn-aprovar-candidato {
+  background-color: #2e7d32;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-aprovar-candidato:hover {
+  background-color: #1b5e20;
+}
+
+.btn-reprovar-candidato {
+  background-color: #dc2626;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-reprovar-candidato:hover {
+  background-color: #b91c1c;
+}
+
+/* Menu de Ações (Três Pontos) */
+.dropdown-acoes-candidato {
+  position: relative;
+  display: inline-flex;
+}
+
+.btn-menu-tres-pontos {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.btn-menu-tres-pontos:hover,
+.btn-menu-tres-pontos.ativo {
+  background-color: #e2e8f0;
+  color: #0f172a;
+}
+
+.menu-dropdown-acoes {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  min-width: 140px;
+  padding: 6px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: fadeInDown 0.15s ease;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.item-dropdown-acao {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1e293b;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.item-dropdown-acao:hover {
+  background-color: #f8fafc;
+}
+
+.item-dropdown-acao.item-aprovar:hover {
+  background-color: #f0fdf4;
+  color: #15803d;
+}
+
+.item-dropdown-acao.item-reprovar:hover {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+
+.toast-feedback-candidato {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideInUp 0.3s ease;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
