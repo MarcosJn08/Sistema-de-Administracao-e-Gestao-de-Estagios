@@ -4,7 +4,7 @@ import { FileText, GraduationCap, UserRound } from 'lucide-react';
 import StatusBadge from '../StatusBadge.jsx';
 import Botao from '../Button.jsx';
 import FormAcaoDiretor from './FormAcaoDiretor.jsx';
-import DocumentoAlunoDiretor from './DocumentoAlunoDiretor.jsx';
+import DocumentoAluno from './DocumentoAluno.jsx';
 import { baixarPreviaCertidao, podeHomologarHoras } from '../../utils/gestaoAluno.js';
 import './DetalhesAluno.css';
 
@@ -143,7 +143,8 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', orientad
             {documentos.length > 0 ? (
               <ul className="perfil-aluno-documentos-lista">
                 {documentos.map((documento) => (
-                  <DocumentoAlunoDiretor key={documento.id} documento={documento} diretor={diretor} aoAtualizar={salvar} />
+                  <DocumentoAluno key={documento.id} documento={documento} perfil={perfil}
+                    aoAtualizar={typeof aoAtualizar === 'function' ? salvar : undefined} />
                 ))}
               </ul>
             ) : (

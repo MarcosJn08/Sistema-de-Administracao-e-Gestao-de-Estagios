@@ -1,0 +1,11 @@
+﻿.dashboard-professor { background: #f4f6f8; }
+.dashboard-professor-container { max-width: 1200px; }
+.dashboard-professor-titulo { font-size: var(--sage-font-3xl, 28px); font-weight: 700; color: #1e293b; }
+.dashboard-professor .card-title { min-height: 36px; }
+.dashboard-professor-busca { position: relative; }
+.dashboard-professor-busca > svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #64748b; pointer-events: none; }
+.dashboard-professor-busca .form-control { padding-left: 36px; }
+.dashboard-professor-tabela { min-width: 940px; }
+.dashboard-professor-tabela td { font-size: var(--sage-font-sm, 14px); }
+.dashboard-professor-tabela td:nth-child(2) { min-width: 180px; }
+.dashboard-professor-perfil { padding: 6px 12px; font-size: 12px; white-space: nowrap; }

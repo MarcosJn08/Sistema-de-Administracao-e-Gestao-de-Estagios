@@ -18,12 +18,14 @@ function StatusBadge({ status, aberto, variante, variant, children }) {
     if (
       (textoNormalizado.includes('deferido') && !textoNormalizado.includes('indeferido')) ||
       textoNormalizado.includes('aprovado') ||
-      textoNormalizado.includes('andamento') ||
       textoNormalizado === 'ativo' ||
       textoNormalizado === 'em estágio ativo' ||
       textoNormalizado === 'concluído'
     ) {
       return 'badge-status-verde';
+    }
+    if (textoNormalizado.includes('andamento')) {
+      return 'badge-status-azul';
     }
 
     if (

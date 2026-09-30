@@ -65,8 +65,8 @@
 }
 
 .status-andamento {
-  background: #FEF3C7;
-  color: #92400E;
+  background: var(--azul-claro);
+  color: var(--azul);
 }
 
 .status-concluido {

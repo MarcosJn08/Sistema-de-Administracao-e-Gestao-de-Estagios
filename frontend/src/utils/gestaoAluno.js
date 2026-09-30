@@ -14,8 +14,17 @@ export function pendenciasAssinaturas(documento) {
   return partes.filter((parte) => documento.assinaturas?.[parte] !== 'assinado');
 }
 
+export function podeAvaliarDocumentoAluno(documento, perfil) {
+  if (perfil === 'diretor') return true;
+  if (perfil !== 'professor') return false;
+  return !exigeHomologacaoFinal(documento) || !(documento.aprovadoPelaDirecao
+    || (['Aprovado', 'Deferido'].includes(documento.status) && documento.assinaturas?.direcao === 'assinado'));
+}
+
 export function aplicarAcaoAluno(aluno, acao, { perfil, orientadores = [], alunos = [] } = {}) {
-  if (perfil !== 'diretor') throw new Error('Esta ação é exclusiva da Direção.');
+  if (perfil !== 'diretor' && !(perfil === 'professor' && ['aprovar', 'devolver'].includes(acao.tipo))) {
+    throw new Error('Esta ação é exclusiva da Direção.');
+  }
   const agora = new Date().toISOString();
   const motivo = String(acao.motivo || '').trim();
   const estagioEditavel = aluno.estagio && !['Encerrado', 'Concluído'].includes(aluno.situacao);
@@ -57,9 +66,18 @@ export function aplicarAcaoAluno(aluno, acao, { perfil, orientadores = [], aluno
     case 'devolver': {
       const documento = aluno.documentos.find((item) => item.id === acao.documentoId);
       if (!documento) throw new Error('Documento não encontrado.');
+      if (!podeAvaliarDocumentoAluno(documento, perfil)) throw new Error('Este documento já foi homologado pela Direção.');
       if (acao.tipo === 'devolver' && !motivo) throw new Error('Informe a justificativa da devolução.');
-      if (acao.tipo === 'aprovar' && exigeHomologacaoFinal(documento) && pendenciasAssinaturas(documento).length) {
+      if (perfil === 'diretor' && acao.tipo === 'aprovar' && exigeHomologacaoFinal(documento) && pendenciasAssinaturas(documento).length) {
         throw new Error('Aguarde as assinaturas do aluno e, no TCE, da empresa para aprovar.');
+      }
+      if (perfil === 'professor') {
+        const aprovado = acao.tipo === 'aprovar';
+        return { ...aluno, documentos: aluno.documentos.map((item) => item.id === documento.id
+          ? { ...item, status: aprovado ? (exigeHomologacaoFinal(item) ? 'Em análise' : 'Aprovado') : 'Requer ajuste',
+            parecerProfessor: aprovado ? 'Aprovado' : 'Requer ajuste',
+            justificativa: aprovado ? '' : motivo, analisadoPeloProfessorEm: agora }
+          : item) };
       }
       return { ...aluno, documentos: aluno.documentos.map((item) => item.id === documento.id
         ? { ...item, status: acao.tipo === 'aprovar' ? 'Aprovado' : 'Requer ajuste',
