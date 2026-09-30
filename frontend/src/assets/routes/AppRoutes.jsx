@@ -11,6 +11,7 @@ import ConfirmacaoEmpresa from '../../pages/Cadastro/Confirmacao.jsx';
 import TelaEstagio from '../../pages/TelaEstagio.jsx';
 import DashboardDiretor from '../../pages/DashboardDiretor.jsx';
 import DashboardEmpresa from '../../pages/DashboardEmpresa.jsx';
+import EnviarDocumento from "../../pages/EnviarDocumento.jsx";
 
 function AppRoutes() {
   return (
@@ -31,6 +32,7 @@ function AppRoutes() {
         <Route path="/sage/cadastro/confirmacao" element={<ConfirmacaoEmpresa />} />
         <Route path="/sage/estagio" element={<TelaEstagio />} />
         <Route path="*" element={<Navigate to="/sage" replace />} />
+        <Route path="/sage/enviar-documento" element={<EnviarDocumento />} />
       </Routes>
     </BrowserRouter>
   );
