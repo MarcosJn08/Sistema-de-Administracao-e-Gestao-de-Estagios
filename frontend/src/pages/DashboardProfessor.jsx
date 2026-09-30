@@ -19,7 +19,7 @@ import dados from '../dadosProfessor.jsx';
 import './DashboardProfessor.css';
 
 export default function DashboardProfessor() {
-  const linksProfessor = [
+  const linksProfessor = [ 
     ['Dashboard', '/sage/professor'],
     ['Alunos', '#'],
     ['Orientadores', '#'],

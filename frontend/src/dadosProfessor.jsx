@@ -67,7 +67,7 @@ const dados = {
     icone: 'bi bi-briefcase fs-4',
     cor: '#2E7D32',
     corFundo: '#E8F5E9',
-  },
+  }, 
   {
     id: 3,
     titulo: 'Pendências Documentais',
