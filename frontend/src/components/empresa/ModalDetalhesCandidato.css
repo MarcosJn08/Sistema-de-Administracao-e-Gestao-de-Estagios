@@ -307,3 +307,63 @@
 .btn-modal-aprovar:hover {
   background-color: #1b5e20;
 }
+
+@media (max-width: 575.98px) {
+  .modal-candidato-overlay {
+    padding: 12px 8px;
+  }
+
+  .modal-candidato-container {
+    border-radius: 16px;
+    max-height: 94vh;
+  }
+
+  .modal-candidato-header {
+    padding: 16px;
+  }
+
+  .modal-candidato-title {
+    font-size: 1.2rem;
+  }
+
+  .modal-candidato-body {
+    padding: 16px 12px;
+  }
+
+  .modal-candidato-card {
+    padding: 16px 14px;
+  }
+
+  .modal-candidatura-meta {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .modal-candidato-footer {
+    padding: 14px 16px;
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .modal-acoes-principais {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-modal-reprovar,
+  .btn-modal-aprovar {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+    padding: 10px 14px;
+  }
+
+  .btn-fechar-secundario {
+    width: 100%;
+    text-align: center;
+    padding: 10px 14px;
+  }
+}
+

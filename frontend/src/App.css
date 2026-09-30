@@ -1156,6 +1156,7 @@ button.sage-text-link,
 .sage-table-container {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tabela-sage,
@@ -1391,6 +1392,21 @@ button.sage-text-link,
     width: 100%;
     height: auto;
     padding: 28px 20px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .login-image {
+    height: 22vh;
+    min-height: 140px;
+  }
+
+  .login-content {
+    padding: 24px 16px;
+  }
+
+  .login-content h1 {
+    font-size: 24px;
   }
 }
 

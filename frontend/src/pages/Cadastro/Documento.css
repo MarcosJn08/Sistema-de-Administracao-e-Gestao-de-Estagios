@@ -10,8 +10,6 @@
   padding: 40px 0 56px;
 }
 
-/* ── TÍTULO ─────────────────────────────── */
-
 .titulo-cadastro {
   display: flex;
   align-items: center;
@@ -46,8 +44,6 @@
   font-weight: 500;
 }
 
-/* ── CARD DO DOCUMENTO ───────────────────── */
-
 .documento-card {
   border: 1px solid #e2e8f0;
   border-radius: 16px;
@@ -55,8 +51,6 @@
   padding: 24px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
-
-/* ── TOOLBAR ─────────────────────────────── */
 
 .documento-toolbar {
   height: 56px;
@@ -107,8 +101,6 @@
 .zoom-text {
   margin-left: 6px;
 }
-
-/* ── PREVIEW ─────────────────────────────── */
 
 .documento-preview {
   height: 520px;
@@ -164,8 +156,6 @@
   max-width: 380px;
 }
 
-/* ── AÇÕES ABAIXO DO PREVIEW ─────────────── */
-
 .documento-acoes {
   margin-top: 18px;
   display: flex;
@@ -180,8 +170,6 @@
   gap: 12px;
   flex-wrap: wrap;
 }
-
-/* ── UPLOAD ──────────────────────────────── */
 
 .documento-acoes .mb-3 {
   margin-bottom: 0 !important;
@@ -200,8 +188,6 @@
   border-radius: 8px;
   border: 1px solid #d1d5db;
 }
-
-/* ── STATUS ──────────────────────────────── */
 
 .documento-status {
   margin-top: 16px;
@@ -238,15 +224,11 @@
   margin-right: 8px;
 }
 
-/* ── BOTÃO PRÓXIMO (canto direito) ────────── */
-
 .area-botao-documento {
   display: flex;
   justify-content: flex-end;
   margin-top: 28px;
 }
-
-/* ── RESPONSIVO ──────────────────────────── */
 
 @media (max-width: 700px) {
   .documento-content {
@@ -269,6 +251,62 @@
 
   .area-botao-documento .botao {
     width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .documento-content {
+    width: 95%;
+    padding: 20px 0 32px;
+  }
+
+  .titulo-cadastro {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .titulo-cadastro h1 {
+    font-size: 24px;
+  }
+
+  .documento-card {
+    padding: 16px 12px;
+  }
+
+  .documento-toolbar {
+    height: auto;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 4px;
+  }
+
+  .botao-ferramenta,
+  .documento-toolbar button {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .documento-preview {
+    height: 280px;
+  }
+
+  .btn-enviar {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .botoes-documento {
+    width: 100%;
+  }
+
+  .botoes-documento .botao {
+    width: 100%;
+    text-align: center;
     justify-content: center;
   }
 }

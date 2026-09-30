@@ -10,13 +10,9 @@
   padding: 56px 0 64px;
 }
 
-/* ── TÍTULO (oculto) ─────────────────────── */
-
 .titulo-confirmacao {
   display: none;
 }
-
-/* ── CARD CENTRAL ────────────────────────── */
 
 .sucesso-card {
   width: 56%;
@@ -49,8 +45,6 @@
   background-color: #e5e7eb;
 }
 
-/* ── INFORMAÇÕES ─────────────────────────── */
-
 .informacao {
   display: flex;
   align-items: center;
@@ -69,8 +63,6 @@
   font-weight: 700;
   color: #111827;
 }
-
-/* ── AVISO ───────────────────────────────── */
 
 .aviso {
   display: flex;
@@ -96,8 +88,6 @@
   line-height: 1.55;
 }
 
-/* ── ÁREA DO BOTÃO LOGIN (canto direito) ─── */
-
 .area-login {
   width: 56%;
   max-width: 580px;
@@ -111,8 +101,6 @@
   min-height: 50px;
   padding: 12px 32px;
 }
-
-/* ── RESPONSIVO ──────────────────────────── */
 
 @media (max-width: 900px) {
   .sucesso-card,
@@ -140,5 +128,38 @@
   .area-login .botao {
     width: 100%;
     justify-content: center;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .confirmacao-content {
+    width: 95%;
+    padding: 28px 0 40px;
+  }
+
+  .sucesso-card {
+    padding: 24px 16px;
+    border-radius: 16px;
+  }
+
+  .sucesso-card h2 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .informacao {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .informacao strong {
+    word-break: break-all;
+  }
+
+  .aviso {
+    padding: 14px;
+    font-size: 14px;
   }
 }
