@@ -1,0 +1,29 @@
+.modal-professor .modal-content { border: 0; border-radius: 16px; overflow: hidden; }
+.modal-professor .modal-header { color: var(--sage-dark-green); }
+.modal-professor .modal-title { display: flex; align-items: center; gap: 9px; font-size: 18px; font-weight: 700; }
+.modal-professor .modal-body { padding: 24px; background: #f8fafc; }
+.modal-professor .modal-footer { padding: 14px 24px; }
+.modal-professor-erro { padding: 10px 12px; border-radius: 7px; background: #fee2e2; color: #b91c1c; font-size: 13px; }
+.modal-professor-identidade { display: flex; align-items: center; gap: 14px; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; }
+.modal-professor-identidade .badge-status { margin-left: auto; }
+.modal-professor-avatar { display: grid; place-items: center; flex: 0 0 54px; height: 54px; border-radius: 50%; background: #e8f5e9; color: #2e7d32; }
+.modal-professor-identidade h3 { margin: 0 0 4px; color: #182132; font-size: 17px; font-weight: 700; }
+.modal-professor-identidade p { margin: 0; color: #64748b; font-size: 13px; }
+.modal-professor-dados { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin: 18px 0 0; overflow: hidden; border: 1px solid #e2e8f0; border-radius: 12px; background: #e2e8f0; }
+.modal-professor-dados > div { min-width: 0; padding: 16px; background: #fff; }
+.modal-professor-dados dt { margin-bottom: 5px; color: #64748b; font-size: 12px; font-weight: 600; }
+.modal-professor-dados dd { margin: 0; color: #182132; font-size: 14px; overflow-wrap: anywhere; }
+.modal-professor-formulario { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.modal-professor-formulario label { display: grid; gap: 6px; color: #334155; font-size: 13px; font-weight: 600; }
+.modal-professor-formulario input,
+.modal-professor-formulario select { min-width: 0; min-height: 42px; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 7px; background: #fff; color: #182132; font: inherit; font-weight: 400; }
+.modal-professor-checkbox { display: flex !important; grid-column: 1 / -1; grid-template-columns: auto 1fr; align-items: center; }
+.modal-professor-campo-largo { grid-column: 1 / -1; }
+.modal-professor-checkbox input { min-height: auto; width: 17px; height: 17px; }
+
+@media (max-width: 575.98px) {
+  .modal-professor-formulario,
+  .modal-professor-dados { grid-template-columns: minmax(0, 1fr); }
+  .modal-professor-identidade { align-items: flex-start; flex-wrap: wrap; }
+  .modal-professor-identidade .badge-status { margin-left: 0; }
+}

@@ -1,0 +1,17 @@
+.modal-cadastro-aluno .modal-content { border: 0; border-radius: 16px; overflow: hidden; }
+.modal-cadastro-aluno .modal-header { color: var(--sage-dark-green); }
+.modal-cadastro-aluno .modal-title { display: flex; align-items: center; gap: 9px; font-size: 18px; font-weight: 700; }
+.modal-cadastro-aluno .modal-body { padding: 24px; background: #f8fafc; }
+.modal-cadastro-aluno .modal-footer { padding: 14px 24px; }
+.modal-cadastro-aluno-ajuda { margin: 0 0 18px; color: #64748b; font-size: 13px; }
+.modal-cadastro-aluno-erro { padding: 10px 12px; border-radius: 7px; background: #fee2e2; color: #b91c1c; font-size: 13px; }
+.modal-cadastro-aluno-formulario { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.modal-cadastro-aluno-formulario label { display: grid; gap: 6px; color: #334155; font-size: 13px; font-weight: 600; }
+.modal-cadastro-aluno-formulario input,
+.modal-cadastro-aluno-formulario select { min-width: 0; min-height: 42px; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 7px; background: #fff; color: #182132; font: inherit; font-weight: 400; }
+.modal-cadastro-aluno-secao { grid-column: 1 / -1; margin-top: 4px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; color: #182132; font-size: 14px; font-weight: 700; }
+.modal-cadastro-aluno-campo-largo { grid-column: 1 / -1; }
+
+@media (max-width: 575.98px) {
+  .modal-cadastro-aluno-formulario { grid-template-columns: minmax(0, 1fr); }
+}

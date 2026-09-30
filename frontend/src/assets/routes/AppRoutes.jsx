@@ -14,6 +14,7 @@ import DashboardEmpresa from '../../pages/DashboardEmpresa.jsx';
 import PainelAlunosDiretor from '../../pages/PainelAlunosDiretor.jsx';
 import GestaoCandidatos from '../../pages/GestaoCandidatos.jsx';
 import PerfilCandidato from '../../pages/PerfilCandidato.jsx';
+import PainelOrientadoresDiretor from '../../pages/PainelOrientadoresDiretor.jsx';
 
 function AppRoutes() {
   return (
@@ -32,6 +33,7 @@ function AppRoutes() {
         <Route path="/sage/empresa/candidato/perfil" element={<PerfilCandidato />} />
 
         <Route path="/sage/diretor/alunos" element={<PainelAlunosDiretor />} />
+        <Route path="/sage/diretor/orientadores" element={<PainelOrientadoresDiretor />} />
         <Route path="/sage/vagas" element={<VitrineVagas />} />
         <Route path="/sage/documentos" element={<CentralDocumentos />} />
         <Route path="/sage/login" element={<Login />} />

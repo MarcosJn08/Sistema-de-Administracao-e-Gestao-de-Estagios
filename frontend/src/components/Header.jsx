@@ -26,7 +26,7 @@ function Header({
 
   const isDashboard = Boolean(usuario);
   const isEmpresa = usuario?.tipo === 'empresa';
-  const exibirBotaoSair = mostrarBotaoSair !== undefined ? mostrarBotaoSair : !isEmpresa;
+  const exibirBotaoSair = mostrarBotaoSair === true;
 
   const landingLinks = [
     [pagina01, '#inicio'],
@@ -43,7 +43,7 @@ function Header({
   const diretorLinks = [
     ['Dashboard', '/sage/diretor'],
     ['Alunos', '/sage/diretor/alunos'],
-    ['Orientadores', '#'],
+    ['Orientadores', '/sage/diretor/orientadores'],
     ['Empresas', '#'],
     ['Documentos', '#'],
     ['Relatórios', '#'],

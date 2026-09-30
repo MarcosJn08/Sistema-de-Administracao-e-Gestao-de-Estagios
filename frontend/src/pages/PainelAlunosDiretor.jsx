@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Container, Row, Col, Table, ProgressBar } from 'react-bootstrap';
-import { Users, BriefcaseBusiness, GraduationCap, UserSearch, Search, Eye, RotateCcw } from 'lucide-react';
+import { Users, BriefcaseBusiness, GraduationCap, UserSearch, Search, Eye, Plus, RotateCcw } from 'lucide-react';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import CardPequeno from '../components/CardPequeno.jsx';
@@ -10,6 +10,7 @@ import Botao from '../components/Button.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
 import Paginacao from '../components/Paginacao.jsx';
 import DetalhesAluno from '../components/aluno/DetalhesAluno.jsx';
+import ModalCadastroAluno from '../components/aluno/ModalCadastroAluno.jsx';
 import dadosDiretor from '../dadosDiretor.jsx';
 import alunosIniciais, { cursos, situacoesEstagio, orientadores } from '../data/alunos.js';
 import { aplicarAcaoAluno } from '../utils/gestaoAluno.js';
@@ -25,6 +26,7 @@ function PainelAlunosDiretor() {
   const [curso, setCurso] = useState('');
   const [situacao, setSituacao] = useState('');
   const [paginaAtual, setPaginaAtual] = useState(1);
+  const [cadastroAberto, setCadastroAberto] = useState(false);
   const [alunoSelecionadoId, setAlunoSelecionadoId] = useState(null);
   const alunoSelecionado = alunos.find((aluno) => aluno.id === alunoSelecionadoId);
   const atualizarAluno = (acao) => {
@@ -49,12 +51,37 @@ function PainelAlunosDiretor() {
   const ultimoExibido = Math.min(indiceInicial + ITENS_POR_PAGINA, filtrados.length);
   const contar = (status) => alunos.filter((aluno) => aluno.situacao === status).length;
   const indicadores = [
-    { titulo: 'Total de Alunos Cadastrados', valor: alunos.length, icone: <Users size={23} /> },
-    { titulo: 'Estudantes em Estágio Ativo', valor: contar('Em estágio ativo'), icone: <BriefcaseBusiness size={23} /> },
-    { titulo: 'Estágios Concluídos', valor: contar('Concluído'), icone: <GraduationCap size={23} /> },
-    { titulo: 'Sem Vínculo / Em Busca de Vaga', valor: contar('Sem estágio'), icone: <UserSearch size={23} /> },
+    { titulo: 'Total de alunos cadastrados', valor: alunos.length, texto: 'Alunos matriculados no campus', icone: <Users size={23} /> },
+    { titulo: 'Estudantes em estágio ativo', valor: contar('Em estágio ativo'), texto: 'Com vínculo vigente', icone: <BriefcaseBusiness size={23} /> },
+    { titulo: 'Estágios concluídos', valor: contar('Concluído'), texto: 'Carga horária homologada', icone: <GraduationCap size={23} /> },
+    { titulo: 'Sem vínculo / em busca de vaga', valor: contar('Sem estágio'), texto: 'Disponíveis para novas vagas', icone: <UserSearch size={23} /> },
   ];
   const limparFiltros = () => { setBusca(''); setCurso(''); setSituacao(''); setPaginaAtual(1); };
+  const cadastrarAluno = (dados) => {
+    if (!dados.nome || !dados.matricula || !dados.cpf || !dados.dataNascimento || !dados.email || !dados.telefone
+      || !dados.curso || !dados.semestre || !dados.periodoAno || !dados.turno || !dados.cep || !dados.logradouro
+      || !dados.numero || !dados.bairro || !dados.cidade || !dados.estado) {
+      throw new Error('Preencha os campos obrigatórios.');
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dados.email)) {
+      throw new Error('Informe um e-mail válido.');
+    }
+    if (alunos.some((aluno) => aluno.matricula === dados.matricula)) {
+      throw new Error('Já existe um aluno com esta matrícula.');
+    }
+    if (alunos.some((aluno) => aluno.cpf === dados.cpf)) {
+      throw new Error('Já existe um aluno com este CPF.');
+    }
+    setAlunos((atuais) => [{
+      ...dados,
+      id: `aluno-${Date.now()}`,
+      situacao: 'Sem estágio',
+      progresso: { horasConcluidas: 0, metaHoras: 200, horasEstagio: 0, horasProjeto: 0 },
+      estagio: null,
+      documentos: [],
+    }, ...atuais]);
+    setPaginaAtual(1);
+  };
 
   return (
     <div className="painel-alunos d-flex flex-column min-vh-100">
@@ -70,9 +97,14 @@ function PainelAlunosDiretor() {
       />
       <main className="flex-grow-1 py-4">
         <Container className="px-3 painel-alunos-container">
-          <div className="mb-4">
-            <h1 className="painel-alunos-titulo">Painel Geral de Alunos</h1>
-            <p className="text-secondary mb-0">Visão consolidada de todos os discentes e seus respectivos vínculos de estágio no IFNMG Campus Almenara</p>
+          <div className="painel-alunos-cabecalho">
+            <div>
+              <h1 className="painel-alunos-titulo">Painel geral de alunos</h1>
+              <p className="text-secondary mb-0">Visão consolidada de todos os discentes e seus respectivos vínculos de estágio no IFNMG Campus Almenara</p>
+            </div>
+            <Botao tipo="botao-sage-verde" className="gap-2" onClick={() => setCadastroAberto(true)}>
+              <Plus size={17} aria-hidden="true" /> Cadastrar aluno
+            </Botao>
           </div>
           <Row className="g-4 mb-4">
             {indicadores.map((indicador) => (
@@ -159,6 +191,8 @@ function PainelAlunosDiretor() {
       <DetalhesAluno key={alunoSelecionadoId || 'fechado'} aberto={Boolean(alunoSelecionado)} aluno={alunoSelecionado}
         perfil={dadosDiretor.diretor.role} orientadores={orientadores} aoAtualizar={atualizarAluno}
         aoFechar={() => setAlunoSelecionadoId(null)} />
+      <ModalCadastroAluno key={cadastroAberto ? 'cadastro-aberto' : 'cadastro-fechado'} aberto={cadastroAberto}
+        cursos={cursos} aoCadastrar={cadastrarAluno} aoFechar={() => setCadastroAberto(false)} />
       <Footer />
     </div>
   );
