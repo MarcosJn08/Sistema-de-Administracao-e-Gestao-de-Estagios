@@ -6,6 +6,7 @@
   font-weight: 700;
   color: #1e293b;
 }
+.painel-alunos-cabecalho { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px; margin-bottom: 24px; }
 .painel-alunos-tabela { min-width: 1040px; }
 .painel-alunos-tabela th { white-space: normal; }
 .painel-alunos-tabela td { font-size: var(--sage-font-sm, 14px); }
@@ -13,3 +14,7 @@
 .painel-alunos-tabela td:nth-child(4) { min-width: 180px; }
 .painel-alunos-tabela .progress { height: 8px; background: #e8f5e9; }
 .painel-alunos-tabela .progress-bar { background: var(--sage-green); }
+
+@media (max-width: 575.98px) {
+  .painel-alunos-cabecalho > .botao-sage-verde { width: 100%; }
+}

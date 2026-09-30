@@ -1,3 +1,4 @@
+import orientadores from './orientadores.js';
 
 export const cursos = [
   'Análise e Desenvolvimento de Sistemas',
@@ -15,12 +16,7 @@ export const situacoesEstagio = [
   'Encerrado',
 ];
 
-export const orientadores = [
-  { id: 'carlos', nome: 'Prof. Carlos Almeida' },
-  { id: 'juliana', nome: 'Profa. Juliana Mendes' },
-  { id: 'andre', nome: 'Prof. André Ribeiro' },
-  { id: 'helena', nome: 'Profa. Helena Costa' },
-];
+export { orientadores };
 
 const alunos = [
   {
