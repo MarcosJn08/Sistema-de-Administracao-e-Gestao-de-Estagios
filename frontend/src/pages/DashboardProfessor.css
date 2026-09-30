@@ -1,0 +1,140 @@
+.dashboard-professor {
+  background-color: #f5f7f6;
+  min-height: 100vh;
+}
+
+.dashboard-professor-container {
+  max-width: 1280px;
+}
+
+/* Título */
+
+.dashboard-professor-titulo {
+  color: #182033;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.dashboard-professor-subtitulo {
+  color: #687386;
+  font-size: 15px;
+  margin-bottom: 0;
+}
+
+/* Card principal da tabela */
+
+.dashboard-professor-card {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 18px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* Campo de busca */
+
+.dashboard-professor-busca {
+  position: relative;
+}
+
+.dashboard-professor-busca-icone {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  color: #7b8495;
+  z-index: 3;
+}
+
+.dashboard-professor-busca .form-control {
+  padding-left: 45px;
+}
+
+/* Inputs e selects */
+
+.dashboard-professor .form-control,
+.dashboard-professor .form-select {
+  border-color: #dfe4e1;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.dashboard-professor .form-control:focus,
+.dashboard-professor .form-select:focus {
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+}
+
+/* Tabela */
+
+.dashboard-professor-tabela {
+  border: 1px solid #edf0ee;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.dashboard-professor-tabela .table {
+  margin-bottom: 0;
+}
+
+.dashboard-professor-tabela thead th {
+  background-color: #f5f7f6;
+  color: #182033;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e8e7;
+  white-space: nowrap;
+}
+
+.dashboard-professor-tabela tbody td {
+  color: #687386;
+  font-size: 14px;
+  padding: 14px 16px;
+  border-color: #edf0ee;
+  vertical-align: middle;
+}
+
+.dashboard-professor-tabela tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.dashboard-professor-tabela tbody tr:hover td {
+  background-color: #f8faf9;
+}
+
+/* Matrícula e nome */
+
+.dashboard-professor-aluno-destaque {
+  color: #182033 !important;
+  font-weight: 600;
+}
+
+/* Paginação */
+
+.dashboard-professor-paginacao-texto {
+  color: #687386;
+  font-size: 13px;
+}
+
+.dashboard-professor-paginacao {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Responsividade */
+
+@media (max-width: 767px) {
+  .dashboard-professor-titulo {
+    font-size: 27px;
+  }
+
+  .dashboard-professor-card .card-body {
+    padding: 18px !important;
+  }
+
+  .dashboard-professor-tabela thead th,
+  .dashboard-professor-tabela tbody td {
+    padding: 12px;
+  }
+}

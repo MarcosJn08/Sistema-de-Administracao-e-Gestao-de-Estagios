@@ -14,56 +14,11 @@ import Select from '../components/Select.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
 import Button from '../components/Button.jsx';
 
-const alunos = [
-  {
-    matricula: '20231234',
-    nome: 'Maria Silva',
-    curso: 'Tecnologia em ADS',
-    empresa: 'Tech Soluções Ltda',
-    status: 'Em Andamento',
-  },
-  {
-    matricula: '20231235',
-    nome: 'Marcos Junio Rodrigues Sena',
-    curso: 'Tecnologia em ADS',
-    empresa: 'IFNMG Campus Almenara',
-    status: 'Em Andamento',
-  },
-  {
-    matricula: '20240012',
-    nome: 'Bruno Oliveira Souza',
-    curso: 'Técnico em Agropecuária',
-    empresa: 'Fazenda Campo Verde',
-    status: 'Concluído',
-  },
-  {
-    matricula: '20240982',
-    nome: 'Amanda Costa Duarte',
-    curso: 'Técnico em Informática',
-    empresa: 'N/A',
-    status: 'Sem Vínculo',
-  },
-  {
-    matricula: '20230554',
-    nome: 'Gabriel Santos Neves',
-    curso: 'Tecnologia em ADS',
-    empresa: 'Inova Digital',
-    status: 'Pendente',
-  },
-  {
-    matricula: '20230221',
-    nome: 'Isabela Martins Rocha',
-    curso: 'Técnico em Enfermagem',
-    empresa: 'Hospital Municipal',
-    status: 'Concluído',
-  },
-];
+import dados from '../dadosProfessor.jsx';
+
+import './DashboardProfessor.css';
 
 export default function DashboardProfessor() {
-  const usuario = {
-    nome: 'Professor',
-  };
-
   const linksProfessor = [
     ['Dashboard', '/sage/professor'],
     ['Alunos', '#'],
@@ -76,166 +31,75 @@ export default function DashboardProfessor() {
   return (
     <>
       <Header
-        usuario={usuario}
+        usuario={dados.professor}
         customLinks={linksProfessor}
         paginaAtiva="Dashboard"
       />
 
-      <main
-        style={{
-          backgroundColor: '#f5f7f6',
-          minHeight: '100vh',
-        }}
-      >
-        <Container
-          className="py-5"
-          style={{
-            maxWidth: '1280px',
-          }}
-        >
+      <main className="dashboard-professor">
+        <Container className="py-5 dashboard-professor-container">
           <section className="mb-4">
-            <h1
-              style={{
-                color: '#182033',
-                fontSize: '32px',
-                fontWeight: '700',
-                marginBottom: '6px',
-              }}
-            >
+            <h1 className="dashboard-professor-titulo">
               Gerenciar Alunos
             </h1>
 
-            <p
-              style={{
-                color: '#687386',
-                fontSize: '15px',
-                marginBottom: 0,
-              }}
-            >
+            <p className="dashboard-professor-subtitulo">
               Monitore a situação dos alunos do campus de forma centralizada
             </p>
           </section>
 
-          <Row className="g-3 mb-4">
-            <Col xs={12} sm={6} xl={3}>
-              <CardPequeno
-                titulo="Total de Alunos"
-                valor="234"
-                texto="+12 novos este semestre"
-                icone="bi bi-people"
-                cor="#246b3c"
-                corFundo="#e4f4e8"
-              />
-            </Col>
-
-            <Col xs={12} sm={6} xl={3}>
-              <CardPequeno
-                titulo="Estágios Ativos"
-                valor="48"
-                texto="Vínculos regulares vigentes"
-                icone="bi bi-file-earmark-text"
-                cor="#3977a8"
-                corFundo="#e5f1fa"
-              />
-            </Col>
-
-            <Col xs={12} sm={6} xl={3}>
-              <CardPequeno
-                titulo="Pendências Documentais"
-                valor="15"
-                texto="Necessitam de ajustes ou envio"
-                icone="bi bi-exclamation-triangle"
-                cor="#9a7312"
-                corFundo="#fff6d8"
-              />
-            </Col>
-
-            <Col xs={12} sm={6} xl={3}>
-              <CardPequeno
-                titulo="Sem Vínculo"
-                valor="23"
-                texto="Disponíveis para contratação"
-                icone="bi bi-person-plus"
-                cor="#8e4550"
-                corFundo="#f9e7e9"
-              />
-            </Col>
+          {/* Indicadores */}
+          <Row className="g-4 mb-4">
+            {dados.indicadores.map((indicador) => (
+              <Col key={indicador.id} xs={12} sm={6} xl={3}>
+                <CardPequeno
+                  titulo={indicador.titulo}
+                  valor={indicador.valor}
+                  texto={indicador.texto}
+                  icone={indicador.icone}
+                  cor={indicador.cor}
+                  corFundo={indicador.corFundo}
+                />
+              </Col>
+            ))}
           </Row>
 
-          <Card
-            style={{
-              borderRadius: '18px',
-              border: '1px solid rgba(0, 0, 0, 0.05)',
-              boxShadow: '0 3px 12px rgba(0, 0, 0, 0.05)',
-            }}
-          >
+          {/* Card principal */}
+          <Card className="dashboard-professor-card">
             <Card.Body className="p-4">
               {/* Filtros */}
               <Row className="g-3 align-items-start">
                 <Col xs={12} lg={7}>
-                  <div className="position-relative">
-                    <i
-                      className="bi bi-search position-absolute"
-                      style={{
-                        left: '16px',
-                        top: '16px',
-                        color: '#7b8495',
-                        zIndex: 3,
-                      }}
-                    />
+                  <div className="dashboard-professor-busca">
+                    <i className="bi bi-search dashboard-professor-busca-icone" />
 
                     <Input
                       id="buscar-aluno"
                       tipo="text"
                       textoDeFundo="Buscar por nome ou matrícula..."
-                      style={{
-                        paddingLeft: '45px',
-                      }}
                     />
                   </div>
                 </Col>
 
                 <Col xs={12} md={6} lg={2}>
-                  <Select id="filtro-curso" valorPadrao="">
-                    <option value="">Curso: Todos</option>
-                    <option value="ads">
-                      Tecnologia em ADS
-                    </option>
-                    <option value="informatica">
-                      Técnico em Informática
-                    </option>
-                    <option value="agropecuaria">
-                      Técnico em Agropecuária
-                    </option>
-                    <option value="enfermagem">
-                      Técnico em Enfermagem
-                    </option>
-                  </Select>
+                  <Select
+                    id="filtro-curso"
+                    valorPadrao=""
+                    opcoes={dados.filtros.cursos}
+                  />
                 </Col>
 
                 <Col xs={12} md={6} lg={3}>
-                  <Select id="filtro-periodo" valorPadrao="">
-                    <option value="">
-                      Ano/Período: Todos
-                    </option>
-                    <option value="2026-1">
-                      2026/1
-                    </option>
-                    <option value="2026-2">
-                      2026/2
-                    </option>
-                  </Select>
+                  <Select
+                    id="filtro-periodo"
+                    valorPadrao=""
+                    opcoes={dados.filtros.periodos}
+                  />
                 </Col>
               </Row>
 
-              <div
-                className="table-responsive"
-                style={{
-                  border: '1px solid #edf0ee',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                }}
-              >
+              {/* Tabela */}
+              <div className="table-responsive dashboard-professor-tabela">
                 <Table
                   hover
                   responsive
@@ -255,39 +119,21 @@ export default function DashboardProfessor() {
                   </thead>
 
                   <tbody>
-                    {alunos.map((aluno) => (
+                    {dados.alunos.map((aluno) => (
                       <tr key={aluno.matricula}>
-                        <td
-                          style={{
-                            fontWeight: '600',
-                            color: '#182033',
-                          }}
-                        >
+                        <td className="dashboard-professor-aluno-destaque">
                           {aluno.matricula}
                         </td>
 
-                        <td
-                          style={{
-                            fontWeight: '600',
-                            color: '#182033',
-                          }}
-                        >
+                        <td className="dashboard-professor-aluno-destaque">
                           {aluno.nome}
                         </td>
 
-                        <td
-                          style={{
-                            color: '#687386',
-                          }}
-                        >
+                        <td>
                           {aluno.curso}
                         </td>
 
-                        <td
-                          style={{
-                            color: '#687386',
-                          }}
-                        >
+                        <td>
                           {aluno.empresa}
                         </td>
 
@@ -309,6 +155,7 @@ export default function DashboardProfessor() {
                 </Table>
               </div>
 
+              {/* Paginação */}
               <div
                 className="
                   d-flex
@@ -320,16 +167,11 @@ export default function DashboardProfessor() {
                   mt-4
                 "
               >
-                <span
-                  style={{
-                    color: '#687386',
-                    fontSize: '13px',
-                  }}
-                >
+                <span className="dashboard-professor-paginacao-texto">
                   Mostrando 6 de 234 alunos
                 </span>
 
-                <div className="d-flex align-items-center gap-2">
+                <div className="dashboard-professor-paginacao">
                   <button
                     type="button"
                     className="btn btn-outline-secondary btn-sm"
