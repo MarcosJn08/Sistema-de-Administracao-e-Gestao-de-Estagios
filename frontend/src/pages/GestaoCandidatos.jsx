@@ -18,6 +18,7 @@ import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import CardMetricaEmpresa from '../components/empresa/CardMetricaEmpresa.jsx';
 import ModalDetalhesCandidato from '../components/empresa/ModalDetalhesCandidato.jsx';
+import Paginacao from '../components/Paginacao.jsx';
 import dadosEmpresa, { candidatosDesenvolvedorBackend } from '../dadosEmpresa.jsx';
 import './GestaoCandidatos.css';
 
@@ -49,7 +50,7 @@ function GestaoCandidatos() {
   const [menuAbertoId, setMenuAbertoId] = useState(null);
   const [candidatoModal, setCandidatoModal] = useState(null);
   const [modalAberto, setModalAberto] = useState(false);
-  const itensPorPagina = 5;
+  const itensPorPagina = 10;
 
   // Fecha o menu de três pontos ao clicar fora
   useEffect(() => {
@@ -160,8 +161,8 @@ function GestaoCandidatos() {
                 titulo="Total de Candidatos"
                 valor={metricas.total}
                 icone={Users}
-                corIcone="#16a34a"
-                corFundoIcone="#e8f7ee"
+                corIcone="#0284c7"
+                corFundoIcone="#e0f2fe"
               />
             </Col>
             <Col xs={12} sm={6} lg={3}>
@@ -178,8 +179,8 @@ function GestaoCandidatos() {
                 titulo="Aprovados"
                 valor={metricas.aprovados}
                 icone={Handshake}
-                corIcone="#0284c7"
-                corFundoIcone="#e0f2fe"
+                corIcone="#16a34a"
+                corFundoIcone="#e8f7ee"
               />
             </Col>
             <Col xs={12} sm={6} lg={3}>
@@ -452,77 +453,12 @@ function GestaoCandidatos() {
               </table>
             </div>
 
-            {/* Rodapé da Tabela / Paginação */}
-            <div
-              className="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 pt-3 mt-2"
-              style={{ borderTop: '1px solid #f1f5f9' }}
-            >
-              <span style={{ fontSize: '0.875rem', color: '#64748b' }}>
-                Mostrando {candidatosPaginados.length} de {candidatosFiltrados.length} candidatos inscritos
-              </span>
-
-              <div className="d-flex align-items-center gap-2">
-                <button
-                  type="button"
-                  disabled={paginaAtual === 1}
-                  onClick={() => setPaginaAtual((prev) => Math.max(1, prev - 1))}
-                  style={{
-                    padding: '6px 14px',
-                    borderRadius: '8px',
-                    border: '1px solid #e2e8f0',
-                    backgroundColor: '#ffffff',
-                    color: paginaAtual === 1 ? '#94a3b8' : '#334151',
-                    fontSize: '0.875rem',
-                    fontWeight: 500,
-                    cursor: paginaAtual === 1 ? 'not-allowed' : 'pointer',
-                  }}
-                >
-                  Anterior
-                </button>
-
-                {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((num) => (
-                  <button
-                    key={num}
-                    type="button"
-                    onClick={() => setPaginaAtual(num)}
-                    style={{
-                      width: '34px',
-                      height: '34px',
-                      borderRadius: '8px',
-                      border: num === paginaAtual ? 'none' : '1px solid #e2e8f0',
-                      backgroundColor: num === paginaAtual ? '#2e7d32' : '#ffffff',
-                      color: num === paginaAtual ? '#ffffff' : '#334151',
-                      fontSize: '0.875rem',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {num}
-                  </button>
-                ))}
-
-                <button
-                  type="button"
-                  disabled={paginaAtual >= totalPaginas}
-                  onClick={() => setPaginaAtual((prev) => Math.min(totalPaginas, prev + 1))}
-                  style={{
-                    padding: '6px 14px',
-                    borderRadius: '8px',
-                    border: '1px solid #e2e8f0',
-                    backgroundColor: '#ffffff',
-                    color: paginaAtual >= totalPaginas ? '#94a3b8' : '#334151',
-                    fontSize: '0.875rem',
-                    fontWeight: 500,
-                    cursor: paginaAtual >= totalPaginas ? 'not-allowed' : 'pointer',
-                  }}
-                >
-                  Próxima
-                </button>
-              </div>
-            </div>
+            <Paginacao
+              paginaAtual={paginaAtual}
+              totalPaginas={totalPaginas}
+              aoMudarPagina={setPaginaAtual}
+              textoResumo={`Mostrando ${candidatosPaginados.length} de ${candidatosFiltrados.length} candidatos inscritos`}
+            />
           </div>
         </div>
       </main>
