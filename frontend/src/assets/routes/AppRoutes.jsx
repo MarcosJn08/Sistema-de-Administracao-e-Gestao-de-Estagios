@@ -30,6 +30,7 @@ function AppRoutes() {
         
         <Route path="/sage/aluno" element={<DashboardAluno />} />
         <Route path="/sage/professor" element={<DashboardProfessor />} />
+        <Route path="/sage/professor/alunos" element={<DashboardProfessor />} />
         <Route path="/sage/diretor" element={<DashboardDiretor />} />
         <Route path="/sage/empresa" element={<DashboardEmpresa />} />
         <Route path="/sage/empresa/candidatos" element={<GestaoCandidatos />} />

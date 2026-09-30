@@ -1,17 +1,20 @@
 import { useState } from 'react';
 import { CheckCircle2, Clock3 } from 'lucide-react';
 import StatusBadge from '../StatusBadge.jsx';
-import { assinaturaPartes, exigeHomologacaoFinal, pendenciasAssinaturas } from '../../utils/gestaoAluno.js';
+import { assinaturaPartes, exigeHomologacaoFinal, pendenciasAssinaturas, podeAvaliarDocumentoAluno } from '../../utils/gestaoAluno.js';
 
-export default function DocumentoAlunoDiretor({ documento, diretor, aoAtualizar }) {
+export default function DocumentoAluno({ documento, perfil = 'professor', aoAtualizar }) {
   const [devolvendo, setDevolvendo] = useState(false);
   const [visualizando, setVisualizando] = useState(false);
   const [erro, setErro] = useState('');
   const homologacaoFinal = exigeHomologacaoFinal(documento);
-  const pendencias = homologacaoFinal ? pendenciasAssinaturas(documento) : [];
+  const diretor = perfil === 'diretor';
+  const podeAvaliar = typeof aoAtualizar === 'function' && podeAvaliarDocumentoAluno(documento, perfil);
+  const pendencias = diretor && homologacaoFinal ? pendenciasAssinaturas(documento) : [];
   const aprovado = homologacaoFinal
     ? documento.aprovadoPelaDirecao || (['Aprovado', 'Deferido'].includes(documento.status) && documento.assinaturas?.direcao === 'assinado')
     : ['Aprovado', 'Deferido'].includes(documento.status);
+  const parecerAprovado = documento.parecerProfessor === 'Aprovado' && documento.status === 'Em análise';
   const partes = documento.tipo === 'tce' ? ['empresa', 'aluno', 'direcao']
     : documento.tipo === 'ficha-matricula' ? ['aluno', 'direcao'] : Object.keys(documento.assinaturas || {});
 
@@ -33,6 +36,7 @@ export default function DocumentoAlunoDiretor({ documento, diretor, aoAtualizar 
         <StatusBadge status={documento.status} />
       </div>
       {homologacaoFinal && <p className="perfil-aluno-alcada">Homologação final da Direção</p>}
+      {homologacaoFinal && parecerAprovado && !aprovado && <p className="perfil-aluno-ajuda">Parecer do professor aprovado. Aguardando homologação da Direção.</p>}
       {documento.descricao && <p className="perfil-aluno-documento-descricao">{documento.descricao}</p>}
       {partes.length > 0 && <div className="perfil-aluno-assinaturas" aria-label="Status das assinaturas digitais">
         <span>Assinaturas digitais</span>
@@ -55,9 +59,9 @@ export default function DocumentoAlunoDiretor({ documento, diretor, aoAtualizar 
           <button type="button" className="perfil-aluno-botao perfil-aluno-botao-visualizar" onClick={() => setVisualizando(!visualizando)}
             aria-expanded={visualizando} aria-controls={`documento-previa-${documento.id}`} aria-label={`Visualizar ${documento.nome}`}>Visualizar</button>
         )}
-        {diretor && <>
-          <button type="button" className="perfil-aluno-botao perfil-aluno-botao-primario" disabled={aprovado || pendencias.length > 0}
-            onClick={() => atualizar({ tipo: 'aprovar' })} aria-label={`Aprovar ${documento.nome}`}>Aprovar</button>
+        {podeAvaliar && <>
+          <button type="button" className="perfil-aluno-botao perfil-aluno-botao-primario" disabled={aprovado || pendencias.length > 0 || (!diretor && parecerAprovado)}
+            onClick={() => atualizar({ tipo: 'aprovar' })} aria-label={`Aprovar ${documento.nome}`}>{!diretor && homologacaoFinal ? 'Aprovar parecer' : 'Aprovar'}</button>
           <button type="button" className="perfil-aluno-botao perfil-aluno-botao-perigo" onClick={() => setDevolvendo(!devolvendo)}
             aria-expanded={devolvendo} aria-controls={`documento-devolucao-${documento.id}`} aria-label={`Devolver ${documento.nome}`}>Devolver</button>
         </>}
@@ -68,7 +72,7 @@ export default function DocumentoAlunoDiretor({ documento, diretor, aoAtualizar 
         <p>{documento.descricao || 'Sem descrição cadastrada.'}</p>
         <p>O arquivo deste documento ainda não está disponível para visualização.</p>
       </div>}
-      {devolvendo && <form id={`documento-devolucao-${documento.id}`} className="perfil-aluno-devolucao" onSubmit={(evento) => {
+      {podeAvaliar && devolvendo && <form id={`documento-devolucao-${documento.id}`} className="perfil-aluno-devolucao" onSubmit={(evento) => {
         evento.preventDefault();
         atualizar({ tipo: 'devolver', motivo: new FormData(evento.currentTarget).get('motivo') });
       }}>
