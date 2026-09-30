@@ -2,10 +2,10 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import './Input/Input.css';
 
-function Input({ id, titulo, tipo = 'text', textoDeFundo, texto, placeholder, value, onChange, className = '', ...props }) {
+function Input({ id, titulo, tipo = 'text', textoDeFundo, texto, placeholder, value, onChange, onSubmit, className = '', ...props }) {
   const ph = textoDeFundo ?? texto ?? placeholder;
   return (
-    <Form className="w-100">
+    <Form className="w-100" onSubmit={onSubmit}>
       <Form.Group className={`input-container ${className}`.trim()} controlId={id}>
         {titulo && <Form.Label>{titulo}</Form.Label>}
         <Form.Control

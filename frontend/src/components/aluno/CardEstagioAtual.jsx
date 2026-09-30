@@ -13,6 +13,7 @@ function CardEstagioAtual({
   cargaHorariaSemanal,
   aoVerHistorico,
   onVerHistorico,
+  somenteLeitura = false,
 }) {
   const lidarComVerHistorico = aoVerHistorico || onVerHistorico;
 
@@ -58,14 +59,14 @@ function CardEstagioAtual({
         </div>
       </div>
 
-      <div className="d-flex justify-content-end mt-4">
+      {!somenteLeitura && <div className="d-flex justify-content-end mt-4">
         <Botao
           tipo="botao-sage-verde"
           onClick={lidarComVerHistorico}
         >
           Ver Historico
         </Botao>
-      </div>
+      </div>}
     </div>
   );
 }

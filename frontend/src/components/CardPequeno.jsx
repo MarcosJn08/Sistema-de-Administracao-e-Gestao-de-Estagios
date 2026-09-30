@@ -57,11 +57,11 @@ function CardPequeno({ titulo, valor, icone, texto, cor, corFundo }) {
               flexShrink: 0,
             }}
           >
-            <i
+            {typeof icone === 'string' ? <i
               className={icone}
               style={suave ? { color: cor } : undefined}
               aria-hidden="true"
-            ></i>
+            ></i> : <span style={{ color: suave ? cor : '#fff' }} aria-hidden="true">{icone}</span>}
           </div>
         </div>
 
