@@ -315,3 +315,29 @@
     opacity: 1;
   }
 }
+
+@media (max-width: 575.98px) {
+  .gestao-candidatos-container {
+    padding: 20px 14px 40px 14px;
+  }
+
+  .gestao-candidatos-title {
+    font-size: 1.5rem;
+  }
+
+  .card-tabela-candidatos {
+    padding: 16px 12px;
+  }
+
+  .select-status-wrapper {
+    width: 100%;
+  }
+
+  .toast-feedback-candidato {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    justify-content: center;
+  }
+}
+

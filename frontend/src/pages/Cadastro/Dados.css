@@ -10,8 +10,6 @@
   padding: 40px 0 56px;
 }
 
-/* TÍTULO */
-
 .titulo-cadastro {
   display: flex;
   align-items: center;
@@ -46,8 +44,6 @@
   font-weight: 500;
 }
 
-/* CARDS */
-
 .card-cadastro {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
@@ -74,8 +70,6 @@
   font-size: 16px;
 }
 
-/* GRID DOS INPUTS */
-
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -87,13 +81,9 @@
   grid-column: 1 / -1;
 }
 
-/* TELEFONE */
-
 .campo-telefone {
   grid-column: 1 / 2;
 }
-
-/* BOTÃO */
 
 .area-botao {
   display: flex;
@@ -116,8 +106,6 @@
   border-color: #1b5e20 !important;
 }
 
-/* SELECT */
-
 .input-container .form-select {
   height: 50px;
   border: 1px solid #cbd5e1;
@@ -132,8 +120,6 @@
   border-color: #2db04f;
   box-shadow: 0 0 0 3px rgba(45, 176, 79, 0.12);
 }
-
-/* RESPONSIVO */
 
 @media (max-width: 700px) {
   .dados-content {
@@ -155,5 +141,31 @@
 
   .btn-proximo {
     width: 100%;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .dados-content {
+    width: 95%;
+    padding: 24px 0 40px;
+  }
+
+  .titulo-cadastro {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .titulo-cadastro h1 {
+    font-size: 24px;
+  }
+
+  .card-cadastro {
+    padding: 20px 16px;
+  }
+
+  .card-titulo h2 {
+    font-size: 19px;
   }
 }

@@ -267,3 +267,42 @@
 .btn-aprovar-perfil:hover {
   background-color: #1b5e20;
 }
+
+@media (max-width: 575.98px) {
+  .perfil-candidato-container {
+    padding: 20px 14px 40px 14px;
+  }
+
+  .perfil-candidato-title {
+    font-size: 1.5rem;
+  }
+
+  .card-detalhe-candidato {
+    padding: 16px;
+  }
+
+  .barra-acoes-perfil {
+    padding: 16px;
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .botoes-decisao-wrapper {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-reprovar-perfil,
+  .btn-aprovar-perfil {
+    flex: 1;
+    text-align: center;
+    padding: 10px 12px;
+  }
+
+  .btn-voltar-listagem {
+    justify-content: center;
+  }
+}
+
