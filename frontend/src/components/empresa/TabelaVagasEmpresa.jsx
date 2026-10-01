@@ -10,7 +10,7 @@ function TabelaVagasEmpresa({ vagas, onAlternarStatus, onEditarVaga }) {
   const [filtroStatus, setFiltroStatus] = useState('Todos');
   const [filtroArea, setFiltroArea] = useState('Todas');
   const [paginaAtual, setPaginaAtual] = useState(1);
-  const itensPorPagina = 5;
+  const itensPorPagina = 10;
 
   const vagasFiltradas = useMemo(() => {
     return vagas.filter((vaga) => {
@@ -41,15 +41,7 @@ function TabelaVagasEmpresa({ vagas, onAlternarStatus, onEditarVaga }) {
   };
 
   return (
-    <div
-      className="bg-white"
-      style={{
-        borderRadius: '16px',
-        border: '1px solid #e2e8f0',
-        padding: '24px',
-        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.02)',
-      }}
-    >
+    <div className="card-tabela-empresa">
       <div className="d-flex flex-column flex-md-row gap-3 mb-4 align-items-stretch align-items-md-center">
         <div
           className="flex-grow-1 d-flex align-items-center"

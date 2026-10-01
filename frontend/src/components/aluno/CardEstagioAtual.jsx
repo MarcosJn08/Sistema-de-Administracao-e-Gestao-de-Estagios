@@ -26,22 +26,22 @@ function CardEstagioAtual({
         </div>
 
         <div className="d-flex flex-column gap-2" style={{ fontSize: '0.9375rem' }}>
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-1">
             <span className="fw-bold text-dark">Empresa:</span>
             <span className="text-secondary">{empresa}</span>
           </div>
 
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-1">
             <span className="fw-bold text-dark">Professor Orientador:</span>
             <span className="text-secondary">{professorOrientador}</span>
           </div>
 
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-1">
             <span className="fw-bold text-dark">Supervisor de Estágio (Empresa):</span>
             <span className="text-secondary">{supervisorEstagio}</span>
           </div>
 
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div className="d-flex align-items-center">
               <span className="fw-bold text-dark me-2">Início:</span>
               <span className="text-secondary">{dataInicio}</span>
@@ -52,7 +52,7 @@ function CardEstagioAtual({
             </div>
           </div>
 
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-1">
             <span className="fw-bold text-dark">Carga Horária Semanal:</span>
             <span className="text-secondary">{cargaHorariaSemanal}</span>
           </div>

@@ -60,3 +60,37 @@
 .btn-nova-vaga:active {
   transform: translateY(0);
 }
+
+.card-tabela-empresa {
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+@media (max-width: 575.98px) {
+  .dashboard-empresa-container {
+    padding: 20px 16px 40px 16px;
+  }
+
+  .dashboard-empresa-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .dashboard-empresa-title {
+    font-size: 1.5rem;
+  }
+
+  .btn-nova-vaga {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .card-tabela-empresa {
+    padding: 16px 12px;
+  }
+}

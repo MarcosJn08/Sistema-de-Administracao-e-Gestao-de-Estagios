@@ -314,3 +314,51 @@
   background-color: #94a3b8;
   cursor: not-allowed;
 }
+
+@media (max-width: 575.98px) {
+  .modal-detalhes-overlay {
+    padding: 12px 8px;
+  }
+
+  .modal-detalhes-container {
+    border-radius: 16px;
+    max-height: 94vh;
+  }
+
+  .modal-detalhes-header {
+    padding: 16px 18px 12px 18px;
+  }
+
+  .modal-detalhes-title {
+    font-size: 1.25rem;
+  }
+
+  .modal-detalhes-body {
+    padding: 16px 18px;
+  }
+
+  .modal-detalhes-footer {
+    padding: 14px 16px;
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .modal-detalhes-acoes-direita {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-salvar-vaga,
+  .btn-candidatar-vaga {
+    flex: 1;
+    justify-content: center;
+    text-align: center;
+    padding: 10px 14px;
+  }
+
+  .btn-compartilhar-vaga {
+    justify-content: center;
+  }
+}

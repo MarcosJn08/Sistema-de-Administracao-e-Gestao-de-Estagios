@@ -307,3 +307,39 @@
 .btn-modal-publicar:hover {
   background-color: #1b5e20;
 }
+
+@media (max-width: 575.98px) {
+  .modal-vaga-overlay {
+    padding: 12px 8px;
+  }
+
+  .modal-vaga-container {
+    border-radius: 16px;
+    max-height: 94vh;
+  }
+
+  .modal-vaga-header {
+    padding: 16px 18px 12px 18px;
+  }
+
+  .modal-vaga-title {
+    font-size: 1.25rem;
+  }
+
+  .modal-vaga-body {
+    padding: 16px 18px;
+  }
+
+  .modal-vaga-footer {
+    padding: 14px 18px;
+    gap: 10px;
+  }
+
+  .btn-modal-cancelar,
+  .btn-modal-publicar {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+    padding: 10px 14px;
+  }
+}
