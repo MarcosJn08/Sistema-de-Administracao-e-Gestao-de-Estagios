@@ -1,0 +1,180 @@
+.estagios-aluno-pagina,
+.detalhes-estagio-pagina {
+  background: #f4f6f8;
+}
+
+.estagios-aluno-container,
+.detalhes-estagio-container {
+  max-width: 1200px;
+}
+
+.estagios-aluno-cabecalho,
+.detalhes-estagio-cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.estagios-aluno-cabecalho h1,
+.detalhes-estagio-titulo h1 {
+  margin: 0 0 6px;
+  color: #17212b;
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 800;
+}
+
+.estagios-aluno-cabecalho p,
+.detalhes-estagio-titulo p,
+.estagios-aluno-secao-cabecalho p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.estagios-aluno-secao-cabecalho {
+  margin-bottom: 20px;
+}
+
+.estagios-aluno-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.detalhes-estagio-cabecalho {
+  align-items: flex-end;
+}
+
+.detalhes-estagio-titulo-linha {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.dados-estagio-card {
+  margin-bottom: 24px;
+}
+
+.dados-estagio-empresa {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.dados-estagio-empresa-icone,
+.dados-estagio-icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #2e7d32;
+  background: #e8f5e9;
+}
+
+.dados-estagio-empresa-icone {
+  width: 48px;
+  height: 48px;
+  padding: 5px;
+  border: 1px solid #dce7de;
+  border-radius: 12px;
+  background: #ffffff;
+  flex: 0 0 48px;
+}
+
+.dados-estagio-empresa-icone img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.dados-estagio-empresa span,
+.dados-estagio-empresa strong,
+.dados-estagio-empresa small {
+  display: block;
+}
+
+.dados-estagio-empresa span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.dados-estagio-empresa strong {
+  margin: 2px 0;
+  color: #17212b;
+  font-size: 18px;
+}
+
+.dados-estagio-empresa small {
+  color: #64748b;
+}
+
+.dados-estagio-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 28px;
+  margin: 0;
+}
+
+.dados-estagio-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  min-width: 0;
+}
+
+.dados-estagio-icone {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  flex: 0 0 34px;
+}
+
+.dados-estagio-item dt {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.dados-estagio-item dd {
+  margin: 2px 0 0;
+  color: #17212b;
+  font-size: 14px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.detalhes-estagio-conteudo > [class*='col-'] {
+  display: flex;
+}
+
+.detalhes-estagio-conteudo .cartao-sage {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+@media (max-width: 991.98px) {
+  .estagios-aluno-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767.98px) {
+  .estagios-aluno-cabecalho,
+  .detalhes-estagio-cabecalho {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .dados-estagio-grid,
+  .estagios-aluno-grid {
+    grid-template-columns: 1fr;
+  }
+}

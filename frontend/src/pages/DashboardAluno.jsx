@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
+import Botao from '../components/Button.jsx';
 import CardDadosAluno from '../components/aluno/CardDadosAluno.jsx';
 import CardProgresso from '../components/aluno/CardProgresso.jsx';
 import CardEstagioAtual from '../components/aluno/CardEstagioAtual.jsx';
@@ -12,14 +13,16 @@ import dados from '../data/aluno.js';
 import '../App.css';
 import '../components/Estagio/cardEstagios/CardEstagio.css';
 import VagasSection from '../components/landing/VagasSection.jsx';
+import ModalDetalhesVaga from '../components/vagas/ModalDetalhesVaga.jsx';
 
 function DashboardAluno() {
   const navigate = useNavigate();
+  const [vagaSelecionada, setVagaSelecionada] = useState(null);
 
   const estagios = dados.meusEstagios || [];
 
   const abrirEstagio = (estagio) => {
-    navigate('/sage/estagio', { state: { estagio } });
+    navigate(`/sage/aluno/estagios/${estagio.id}`);
   };
 
   return (
@@ -59,6 +62,7 @@ function DashboardAluno() {
                 dataInicio={dados.estagioAtual.dataInicio}
                 dataFim={dados.estagioAtual.dataFim}
                 cargaHorariaSemanal={dados.estagioAtual.cargaHorariaSemanal}
+                aoVerHistorico={() => navigate('/sage/aluno/estagios')}
               />
             </Col>
           </Row>
@@ -67,14 +71,14 @@ function DashboardAluno() {
             <div className="dashboard-estagios-cabecalho">
               <h2 id="titulo-meus-estagios">Meus Estágios</h2>
 
-              <button
-                type="button"
-                className="dashboard-estagios-ver-todos"
-                onClick={() => navigate('/sage/estagio')}
+              <Botao
+                tipo="botao-acao-contorno"
+                className="gap-2 text-nowrap"
+                onClick={() => navigate('/sage/aluno/estagios')}
               >
                 Ver todos
                 <ArrowRight size={16} aria-hidden="true" />
-              </button>
+              </Botao>
             </div>
 
             <div className="dashboard-estagios-grid">
@@ -87,9 +91,12 @@ function DashboardAluno() {
               ))}
             </div>
           </section>
-              <VagasSection/>
+          <VagasSection modoAluno cursoAluno={dados.aluno.curso} onVerDetalhes={setVagaSelecionada} />
         </Container>
       </main>
+
+      <ModalDetalhesVaga key={vagaSelecionada?.id || 'sem-vaga'} aberto={Boolean(vagaSelecionada)}
+        vaga={vagaSelecionada} aoFechar={() => setVagaSelecionada(null)} />
 
       <Footer />
     </div>

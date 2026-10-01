@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Search, ChevronDown } from 'lucide-react';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
@@ -10,9 +11,11 @@ import dados from '../data/aluno.js';
 import './VitrineVagas.css';
 
 function VitrineVagas() {
+  const navigate = useNavigate();
+  const { vagaId } = useParams();
   const [busca, setBusca] = useState('');
   const [cursoFiltro, setCursoFiltro] = useState('Todos');
-  const [vagaSelecionada, setVagaSelecionada] = useState(null);
+  const vagaSelecionada = useMemo(() => vagasIniciais.find((vaga) => String(vaga.id) === vagaId) || null, [vagaId]);
 
   const cursosDisponiveis = useMemo(() => {
     const cursosSet = new Set();
@@ -91,7 +94,7 @@ function VitrineVagas() {
             {vagasFiltradas.length > 0 ? (
               vagasFiltradas.map((vaga) => (
                 <div key={vaga.id} className="col-12 col-md-6 col-lg-4">
-                  <VagaCard vaga={vaga} onVerDetalhes={(v) => setVagaSelecionada(v)} />
+                  <VagaCard vaga={vaga} onVerDetalhes={(vagaAberta) => navigate(`/sage/vagas/${vagaAberta.id}`)} />
                 </div>
               ))
             ) : (
@@ -106,9 +109,10 @@ function VitrineVagas() {
       </main>
 
       <ModalDetalhesVaga
+        key={vagaSelecionada?.id || 'sem-vaga'}
         aberto={Boolean(vagaSelecionada)}
         vaga={vagaSelecionada}
-        aoFechar={() => setVagaSelecionada(null)}
+        aoFechar={() => navigate('/sage/vagas')}
       />
 
       <Footer />

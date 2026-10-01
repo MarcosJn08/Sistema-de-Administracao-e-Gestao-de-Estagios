@@ -54,7 +54,8 @@ function Header({
     ['Início', '/sage'],
     ['Dashboard', '/sage/aluno'],
     ['Vagas', '/sage/vagas'],
-    ...(pagina03 === 'Documentos' ? [['Documentos', '/sage/documentos']] : []),
+    ['Estágios', '/sage/aluno/estagios'],
+    ['Documentos', '/sage/documentos'],
   ];
 
   const cadastroLinks = [

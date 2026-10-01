@@ -83,6 +83,40 @@
   row-gap: 4px;
 }
 
+.campo-cadastro {
+  min-width: 0;
+  margin-bottom: 22px;
+}
+
+.campo-cadastro .input-container {
+  margin-bottom: 0;
+}
+
+.campo-cadastro-erro,
+.campo-cadastro-ajuda {
+  margin: 6px 2px 0;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.campo-cadastro-erro {
+  color: #b91c1c;
+}
+
+.campo-cadastro-ajuda {
+  color: #64748b;
+}
+
+.cadastro-empresa-aviso {
+  margin: 8px 0 0;
+  padding: 12px 14px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #991b1b;
+  font-size: 14px;
+}
+
 .campo-full {
   grid-column: 1 / -1;
 }

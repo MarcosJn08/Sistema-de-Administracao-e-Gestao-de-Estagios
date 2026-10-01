@@ -1,7 +1,8 @@
 import React from 'react';
+import { Download, Eye, FilePenLine, Send, SquarePen } from 'lucide-react';
 import '../../App.css';
 
-function BotaoAcao({ tipo = 'Visualizar', aoClicar, onClick, texto, rotulo }) {
+function BotaoAcao({ tipo = 'Visualizar', aoClicar, onClick, texto, rotulo, somenteIcone = false, ariaLabel }) {
   const textoBotao = texto || rotulo || tipo;
   const textoNormalizado = (textoBotao || '').toLowerCase().trim();
 
@@ -18,14 +19,28 @@ function BotaoAcao({ tipo = 'Visualizar', aoClicar, onClick, texto, rotulo }) {
   }
 
   const lidarComClique = aoClicar || onClick;
+  const Icone = textoNormalizado.includes('editar')
+    ? FilePenLine
+    : textoNormalizado.includes('visualizar')
+      ? Eye
+      : textoNormalizado.includes('pdf')
+        ? Download
+        : textoNormalizado.includes('enviar')
+          ? Send
+          : textoNormalizado.includes('preencher')
+            ? SquarePen
+            : null;
 
   return (
     <button
       type="button"
-      className={`botao-acao-pilula ${classeVariante}`}
+      className={`botao-acao-pilula ${classeVariante}${somenteIcone ? ' botao-acao-somente-icone' : ''}`}
       onClick={lidarComClique}
+      aria-label={ariaLabel || (somenteIcone ? textoBotao : undefined)}
+      title={somenteIcone ? textoBotao : undefined}
     >
-      {textoBotao}
+      {Icone && <Icone size={14} aria-hidden="true" />}
+      {!somenteIcone && textoBotao}
     </button>
   );
 }

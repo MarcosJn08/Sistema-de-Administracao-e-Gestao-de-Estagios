@@ -15,6 +15,7 @@ import {
   Bookmark,
   Share2,
 } from 'lucide-react';
+import LogoEmpresa from '../LogoEmpresa.jsx';
 import './ModalDetalhesVaga.css';
 
 function ModalDetalhesVaga({ aberto, vaga, aoFechar }) {
@@ -79,12 +80,17 @@ function ModalDetalhesVaga({ aberto, vaga, aoFechar }) {
     <div className="modal-detalhes-overlay" onClick={aoFechar} role="dialog" aria-modal="true">
       <div className="modal-detalhes-container" onClick={(e) => e.stopPropagation()}>
         <div className="modal-detalhes-header">
-          <div>
-            <div className="modal-detalhes-title-row">
-              <h2 className="modal-detalhes-title">{vaga.titulo}</h2>
-              <span className="badge-ativa-detalhes">{status}</span>
+          <div className="modal-detalhes-identidade">
+            <div className="modal-detalhes-logo">
+              <LogoEmpresa empresa={vaga.empresa} logoEmpresa={vaga.logoEmpresa} tamanho={52} />
             </div>
-            <p className="modal-detalhes-empresa">{vaga.empresa}</p>
+            <div>
+              <div className="modal-detalhes-title-row">
+                <h2 className="modal-detalhes-title">{vaga.titulo}</h2>
+                <span className="badge-ativa-detalhes">{status}</span>
+              </div>
+              <p className="modal-detalhes-empresa">{vaga.empresa}</p>
+            </div>
           </div>
           <button
             type="button"

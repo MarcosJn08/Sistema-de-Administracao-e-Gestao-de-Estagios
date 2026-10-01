@@ -9,6 +9,7 @@ import DadosEmpresa from '../../pages/Cadastro/Dados.jsx';
 import DocumentosEmpresa from '../../pages/Cadastro/Documentos.jsx';
 import ConfirmacaoEmpresa from '../../pages/Cadastro/Confirmacao.jsx';
 import TelaEstagio from '../../pages/TelaEstagio.jsx';
+import MeusEstagiosAluno from '../../pages/MeusEstagiosAluno.jsx';
 import DashboardDiretor from '../../pages/DashboardDiretor.jsx';
 import DashboardProfessor from '../../pages/DashboardProfessor.jsx';
 import DashboardEmpresa from '../../pages/DashboardEmpresa.jsx';
@@ -29,6 +30,8 @@ function AppRoutes() {
         <Route path="/sage" element={<LandingPage />} />
         
         <Route path="/sage/aluno" element={<DashboardAluno />} />
+        <Route path="/sage/aluno/estagios" element={<MeusEstagiosAluno />} />
+        <Route path="/sage/aluno/estagios/:estagioId" element={<TelaEstagio />} />
         <Route path="/sage/professor" element={<DashboardProfessor />} />
         <Route path="/sage/professor/alunos" element={<DashboardProfessor />} />
         <Route path="/sage/diretor" element={<DashboardDiretor />} />
@@ -46,13 +49,14 @@ function AppRoutes() {
         <Route path="/sage/diretor/convenios" element={<PainelConveniosDiretor />} />
         <Route path="/sage/diretor/documentos" element={<PainelDocumentosDiretor />} />
         <Route path="/sage/vagas" element={<VitrineVagas />} />
+        <Route path="/sage/vagas/:vagaId" element={<VitrineVagas />} />
         <Route path="/sage/documentos" element={<CentralDocumentos />} />
         <Route path="/sage/login" element={<Login />} />
 
         <Route path="/sage/cadastro/empresa" element={<DadosEmpresa />} />
         <Route path="/sage/cadastro/documento" element={<DocumentosEmpresa />} />
         <Route path="/sage/cadastro/confirmacao" element={<ConfirmacaoEmpresa />} />
-        <Route path="/sage/estagio" element={<TelaEstagio />} />
+        <Route path="/sage/estagio" element={<Navigate to="/sage/aluno/estagios/1" replace />} />
         <Route path="*" element={<Navigate to="/sage" replace />} />
         <Route path="/sage/enviar-documento" element={<EnviarDocumento />} />
       </Routes>

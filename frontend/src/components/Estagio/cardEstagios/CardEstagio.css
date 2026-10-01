@@ -2,8 +2,6 @@
   --verde: #16a34a;
   --verde-sage: #2e7d32;
   --verde-claro: #dff7e8;
-  --azul-claro: #e8f1ff;
-  --azul: #2563eb;
   --texto: #18212b;
   --texto-suave: #69727c;
   --borda: #e4e9ee;
@@ -51,27 +49,8 @@
   text-transform: uppercase;
 }
 
-.card-estagio-status {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 24px;
-  padding: 3px 12px;
-  border-radius: 999px;
+.card-estagio-topo .badge-status {
   font-size: 11px;
-  line-height: 1.2;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.status-andamento {
-  background: var(--azul-claro);
-  color: var(--azul);
-}
-
-.status-concluido {
-  background: #d7f7e5;
-  color: #118b48;
 }
 
 .card-estagio-empresa {
@@ -90,6 +69,13 @@
   border-radius: 10px;
   background: #f0f2f4;
   color: #64707a;
+}
+
+.card-estagio-icone img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
 }
 
 .card-estagio-identificacao {
@@ -182,37 +168,9 @@
   margin-top: 16px;
   padding: 8px 14px;
   border-radius: 8px;
-  font-family: inherit;
   font-size: 14px;
   line-height: 1.2;
   font-weight: 800;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-}
-
-.card-estagio-botao-atual {
-  border: 1px solid var(--verde);
-  background: var(--verde);
-  color: #fff;
-}
-
-.card-estagio-botao-atual:hover {
-  background: #15803d;
-  border-color: #15803d;
-}
-
-.card-estagio-botao-outline {
-  border: 1px solid var(--verde);
-  background: #fff;
-  color: var(--verde);
-}
-
-.card-estagio-botao-outline:hover {
-  background: #f0fff4;
 }
 
 .card-estagio-botao:focus-visible {

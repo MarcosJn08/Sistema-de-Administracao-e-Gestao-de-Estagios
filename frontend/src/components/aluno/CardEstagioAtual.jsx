@@ -64,7 +64,7 @@ function CardEstagioAtual({
           tipo="botao-sage-verde"
           onClick={lidarComVerHistorico}
         >
-          Ver Historico
+          Ver histórico
         </Botao>
       </div>}
     </div>

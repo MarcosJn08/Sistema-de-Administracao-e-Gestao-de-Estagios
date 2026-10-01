@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { X, User, Check, XCircle } from 'lucide-react';
+import { X, User } from 'lucide-react';
 import './ModalDetalhesCandidato.css';
 
 function ModalDetalhesCandidato({
