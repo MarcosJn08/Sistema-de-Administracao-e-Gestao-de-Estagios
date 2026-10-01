@@ -489,7 +489,7 @@ const empresa = {
         telefone: "(33)99155-8822",
         inicio: "01/02/2026",
         termino: "01/08/2026",
-        status: "Em Experiência",
+        status: "Em Integração",
         empresaConcedente: "Shelby LTDA",
         supervisor: "Thomas Shelby",
         orientador: "Carlos Alberto",

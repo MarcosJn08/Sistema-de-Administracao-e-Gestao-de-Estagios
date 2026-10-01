@@ -1,0 +1,21 @@
+.candidaturas-aluno-lista { margin: 0; padding: 0; list-style: none; }
+.candidaturas-aluno-item { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 0; }
+.candidaturas-aluno-item + .candidaturas-aluno-item { border-top: 1px solid #edf1f5; }
+.candidaturas-aluno-identidade { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.candidaturas-aluno-logo { display: flex; align-items: center; justify-content: center; flex: 0 0 54px; width: 54px; height: 54px; border-radius: 12px; border: 1px solid #e2e8f0; background: #fff; }
+.candidaturas-aluno-identidade h3 { margin: 0 0 5px; font-size: 16px; font-weight: 700; color: #172033; overflow-wrap: anywhere; }
+.candidaturas-aluno-identidade p { margin: 0 0 8px; color: #198754; font-size: 13px; overflow-wrap: anywhere; }
+.candidaturas-aluno-data { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-size: 12px; color: #64748b; }
+.candidaturas-aluno-item-acoes { display: flex; align-items: center; gap: 24px; flex-shrink: 0; }
+.candidaturas-aluno-item-acoes .badge-status { white-space: nowrap; }
+.candidaturas-aluno-vazio { padding: 32px 16px; text-align: center; }
+.candidaturas-aluno-vazio > svg { color: #198754; margin-bottom: 16px; }
+.candidaturas-aluno-vazio h3 { font-size: 18px; color: #172033; }
+.candidaturas-aluno-vazio p { margin: 10px auto 20px; max-width: 440px; font-size: 14px; color: #64748b; }
+.candidaturas-aluno-topo { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+.candidaturas-aluno-topo p { margin: 0; font-size: 13px; color: #64748b; }
+@media (max-width: 767.98px) {
+  .candidaturas-aluno-item { align-items: stretch; flex-direction: column; gap: 16px; }
+  .candidaturas-aluno-item-acoes { justify-content: space-between; gap: 12px; }
+  .candidaturas-aluno-topo { align-items: flex-start; flex-wrap: wrap; }
+}

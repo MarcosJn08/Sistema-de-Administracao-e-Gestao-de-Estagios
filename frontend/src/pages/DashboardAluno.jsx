@@ -6,10 +6,13 @@ import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import Botao from '../components/Button.jsx';
 import CardDadosAluno from '../components/aluno/CardDadosAluno.jsx';
+import ListaCandidaturasAluno from '../components/aluno/ListaCandidaturasAluno.jsx';
+import useCandidaturasAluno from '../hooks/useCandidaturasAluno.js';
 import CardProgresso from '../components/aluno/CardProgresso.jsx';
 import CardEstagioAtual from '../components/aluno/CardEstagioAtual.jsx';
 import CardEstagio from '../components/Estagio/cardEstagios/CardEstagio.jsx';
 import dados from '../data/aluno.js';
+import { carregarPerfilAluno } from '../utils/candidaturaAluno.js';
 import '../App.css';
 import '../components/Estagio/cardEstagios/CardEstagio.css';
 import VagasSection from '../components/landing/VagasSection.jsx';
@@ -18,6 +21,8 @@ import ModalDetalhesVaga from '../components/vagas/ModalDetalhesVaga.jsx';
 function DashboardAluno() {
   const navigate = useNavigate();
   const [vagaSelecionada, setVagaSelecionada] = useState(null);
+  const [perfil] = useState(carregarPerfilAluno);
+  const candidaturas = useCandidaturasAluno();
 
   const estagios = dados.meusEstagios || [];
 
@@ -38,9 +43,10 @@ function DashboardAluno() {
         <Container style={{ maxWidth: '1200px' }} className="px-3">
           <CardDadosAluno
             nome={dados.aluno.nome}
-            curso={dados.aluno.curso}
+            curso={perfil.formacao.curso}
             email={dados.aluno.email}
             matricula={dados.aluno.matricula}
+            aoEditarPerfil={() => navigate('/sage/aluno/perfil')}
           />
 
           <Row className="g-4 mb-4">
@@ -91,7 +97,16 @@ function DashboardAluno() {
               ))}
             </div>
           </section>
-          <VagasSection modoAluno cursoAluno={dados.aluno.curso} onVerDetalhes={setVagaSelecionada} />
+          <section className="cartao-sage" aria-labelledby="titulo-minhas-candidaturas">
+            <div className="candidaturas-aluno-topo">
+              <div><h2 id="titulo-minhas-candidaturas" className="cartao-sage-titulo mb-1">Minhas candidaturas</h2><p>Suas inscrições mais recentes</p></div>
+              <Botao tipo="botao-acao-contorno" className="gap-2 text-nowrap" onClick={() => navigate('/sage/aluno/candidaturas')}>
+                Ver todas <ArrowRight size={16} aria-hidden="true" />
+              </Botao>
+            </div>
+            <ListaCandidaturasAluno candidaturas={candidaturas.slice(0, 3)} />
+          </section>
+          <VagasSection modoAluno cursoAluno={perfil.formacao.curso} onVerDetalhes={setVagaSelecionada} />
         </Container>
       </main>
 

@@ -1,0 +1,15 @@
+.minhas-candidaturas-pagina { background: #f4f6f8; }
+.minhas-candidaturas-container { max-width: 1200px; }
+.minhas-candidaturas-cabecalho { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+.minhas-candidaturas-cabecalho h1 { margin: 0 0 6px; font-size: clamp(26px, 3vw, 34px); font-weight: 800; color: #172033; }
+.minhas-candidaturas-cabecalho p { margin: 0; font-size: 14px; color: #64748b; }
+.minhas-candidaturas-cabecalho button { flex-shrink: 0; }
+.minhas-candidaturas-filtros { display: flex; gap: 16px; margin-bottom: 16px; }
+.minhas-candidaturas-busca { position: relative; flex: 1; }
+.minhas-candidaturas-busca svg { position: absolute; top: 50%; left: 12px; transform: translateY(-50%); color: #64748b; pointer-events: none; }
+.minhas-candidaturas-busca input { padding-left: 40px; }
+.minhas-candidaturas-filtros select { min-width: 180px; }
+.minhas-candidaturas-ordem { font-size: 12px; color: #64748b; margin: 0; }
+@media (max-width: 767.98px) {
+  .minhas-candidaturas-cabecalho, .minhas-candidaturas-filtros { flex-direction: column; align-items: stretch; }
+}

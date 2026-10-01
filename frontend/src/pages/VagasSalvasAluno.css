@@ -1,0 +1,22 @@
+.vagas-salvas-pagina { background: #f4f6f8; }
+.vagas-salvas-container { max-width: 1200px; padding-bottom: 24px; }
+.vagas-salvas-cabecalho { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+.vagas-salvas-cabecalho h1 { font-size: clamp(26px, 3vw, 34px); font-weight: 800; color: #172033; margin: 0 0 6px; }
+.vagas-salvas-cabecalho p, .vagas-salvas-resumo { color: #64748b; font-size: 14px; margin: 0; }
+.vagas-salvas-cabecalho button { flex-shrink: 0; }
+.vagas-salvas-busca { position: relative; margin-bottom: 14px; }
+.vagas-salvas-busca svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #64748b; }
+.vagas-salvas-busca input { padding: 12px 14px 12px 42px; }
+.vagas-salvas-resumo { margin-bottom: 20px; font-size: 12px; }
+.vagas-salvas-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.vagas-salvas-grid > article { min-width: 0; }
+.vagas-salvas-grid .btn-salvar-vaga { padding: 7px 10px; font-size: 12px; }
+.vagas-salvas-vazio { text-align: center; padding: 40px 20px; }
+.vagas-salvas-vazio > svg { color: #198754; margin-bottom: 16px; }
+.vagas-salvas-vazio h2 { font-size: 20px; color: #172033; }
+.vagas-salvas-vazio p { color: #64748b; font-size: 14px; max-width: 460px; margin: 12px auto 24px; }
+@media (max-width: 991.98px) { .vagas-salvas-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 767.98px) {
+  .vagas-salvas-grid { grid-template-columns: 1fr; }
+  .vagas-salvas-cabecalho { flex-direction: column; align-items: stretch; }
+}

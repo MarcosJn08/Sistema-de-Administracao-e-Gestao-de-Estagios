@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { X, User } from 'lucide-react';
+import HabilidadesBadges from '../aluno/HabilidadesBadges.jsx';
+import ExperienciaPerfil from '../aluno/ExperienciaPerfil.jsx';
 import './ModalDetalhesCandidato.css';
 
 function ModalDetalhesCandidato({
@@ -117,34 +119,14 @@ function ModalDetalhesCandidato({
 
                 <div className="mb-2">
                   <span className="modal-info-rotulo d-block mb-1">Habilidades:</span>
-                  <div className="modal-tags-habilidades">
-                    {candidato.habilidades && candidato.habilidades.length > 0 ? (
-                      candidato.habilidades.map((hab, idx) => (
-                        <span key={idx} className="modal-tag-hab">
-                          {hab}
-                        </span>
-                      ))
-                    ) : (
-                      <span className="text-muted small">Nenhuma habilidade cadastrada</span>
-                    )}
-                  </div>
+                  <HabilidadesBadges habilidades={candidato.habilidades} />
                 </div>
 
-                <div>
-                  <span className="modal-info-rotulo d-block mb-1">Experiência Prévia:</span>
-                  <p
-                    className="modal-info-valor mb-0"
-                    style={{
-                      textAlign: 'left',
-                      fontWeight: 500,
-                      color: '#334155',
-                      lineHeight: 1.45,
-                      fontSize: '0.84rem',
-                    }}
-                  >
-                    {candidato.experiencia}
-                  </p>
-                </div>
+              </div>
+              <div className="modal-candidato-card">
+                <h4 className="modal-card-titulo">Experiência prévia</h4>
+                <div className="modal-card-divisor" />
+                <ExperienciaPerfil experiencia={candidato.experiencia} anexos={candidato.anexos} />
               </div>
             </div>
 

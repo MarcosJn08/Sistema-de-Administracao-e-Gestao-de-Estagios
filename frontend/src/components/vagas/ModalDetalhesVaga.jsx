@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { carregarCandidatura } from '../../utils/candidaturaAluno.js';
 import {
   X,
   MapPin,
@@ -12,16 +14,17 @@ import {
   Bus,
   ShieldCheck,
   Award,
-  Bookmark,
   Share2,
 } from 'lucide-react';
 import LogoEmpresa from '../LogoEmpresa.jsx';
+import BotaoSalvarVaga from './BotaoSalvarVaga.jsx';
 import './ModalDetalhesVaga.css';
 
 function ModalDetalhesVaga({ aberto, vaga, aoFechar }) {
-  const [salvo, setSalvo] = useState(false);
-  const [candidatado, setCandidatado] = useState(false);
+  const navigate = useNavigate();
+  const [candidatura] = useState(() => vaga ? carregarCandidatura(vaga.id) : null);
   const [copiado, setCopiado] = useState(false);
+  const [erroCompartilhar, setErroCompartilhar] = useState('');
 
   if (!aberto || !vaga) return null;
 
@@ -38,6 +41,7 @@ function ModalDetalhesVaga({ aberto, vaga, aoFechar }) {
   const periodo = vaga.periodo || '01/03/2026 a 01/09/2026';
   const vagasDisponiveis = vaga.vagas_disponiveis || 3;
   const status = vaga.status || (vaga.inscricoes_abertas ? 'Ativa' : 'Encerrada');
+  const encerrada = vaga.inscricoes_abertas === false || status === 'Encerrada';
 
   const descricao =
     vaga.descricao ||
@@ -53,16 +57,20 @@ function ModalDetalhesVaga({ aberto, vaga, aoFechar }) {
       ? vaga.beneficios
       : ['Vale-transporte', 'Seguro de vida', 'Certificado de conclusão de estágio'];
 
-  const lidarComCompartilhar = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
+  const lidarComCompartilhar = async () => {
+    try {
+      await navigator.clipboard.writeText(new URL(`/sage/vagas/${encodeURIComponent(vaga.id)}`, window.location.origin).href);
+      setErroCompartilhar('');
       setCopiado(true);
       setTimeout(() => setCopiado(false), 2000);
+    } catch {
+      setCopiado(false);
+      setErroCompartilhar('Não foi possível copiar o link. Tente novamente ou permita o acesso à área de transferência.');
     }
   };
 
   const lidarComCandidatar = () => {
-    setCandidatado(true);
+    navigate(`/sage/vagas/${vaga.id}/candidatura`);
   };
 
   const obterIconeBeneficio = (beneficio) => {
@@ -103,6 +111,7 @@ function ModalDetalhesVaga({ aberto, vaga, aoFechar }) {
         </div>
 
         <div className="modal-detalhes-body">
+          {erroCompartilhar && <div className="alert alert-warning" role="alert">{erroCompartilhar}</div>}
           <div className="detalhes-grid-info">
             <div className="detalhes-info-item">
               <div className="detalhes-info-icone">
@@ -215,21 +224,14 @@ function ModalDetalhesVaga({ aberto, vaga, aoFechar }) {
           </button>
 
           <div className="modal-detalhes-acoes-direita">
-            <button
-              type="button"
-              className={`btn-salvar-vaga ${salvo ? 'salvo' : ''}`}
-              onClick={() => setSalvo(!salvo)}
-            >
-              <Bookmark size={16} fill={salvo ? '#2e7d32' : 'none'} />
-              {salvo ? 'Vaga Salva' : 'Salvar Vaga'}
-            </button>
+            <BotaoSalvarVaga vaga={vaga} />
             <button
               type="button"
               className="btn-candidatar-vaga"
-              disabled={candidatado}
+              disabled={encerrada && !candidatura}
               onClick={lidarComCandidatar}
             >
-              {candidatado ? 'Candidatura Enviada ✓' : 'Candidatar-se'}
+              {candidatura ? 'Ver candidatura' : encerrada ? 'Inscrições encerradas' : 'Candidatar-se'}
             </button>
           </div>
         </div>

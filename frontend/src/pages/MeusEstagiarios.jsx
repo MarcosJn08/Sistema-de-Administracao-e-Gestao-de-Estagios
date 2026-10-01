@@ -1,15 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import {
-  FileText,
   AlertCircle,
-  Briefcase,
+  CalendarClock,
   Search,
   ChevronDown,
   CheckCircle2,
+  Eye,
+  Hourglass,
 } from 'lucide-react';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
+import Botao from '../components/Button.jsx';
 import CardMetricaEmpresa from '../components/empresa/CardMetricaEmpresa.jsx';
 import ModalDetalhesEstagiario from '../components/empresa/ModalDetalhesEstagiario.jsx';
 import Paginacao from '../components/Paginacao.jsx';
@@ -30,7 +32,7 @@ function MeusEstagiarios() {
 
   const metricas = useMemo(() => {
     const ativos = estagiarios.filter((e) => e.status === 'Ativo').length;
-    const emExperiencia = estagiarios.filter((e) => e.status === 'Em Experiência').length;
+    const emIntegracao = estagiarios.filter((e) => e.status === 'Em Integração').length;
     const docsPendentes = estagiarios.reduce((acc, curr) => {
       const temPendente = curr.documentos?.some(
         (d) => d.status === 'Pendente' || d.status === 'Pendente de Envio'
@@ -41,7 +43,7 @@ function MeusEstagiarios() {
 
     return {
       ativos: ativos || 5,
-      emExperiencia: emExperiencia || 2,
+      emIntegracao: emIntegracao || 2,
       docsPendentes: docsPendentes || 3,
       proximosVencer,
     };
@@ -58,8 +60,8 @@ function MeusEstagiarios() {
       let matchStatus = true;
       if (filtroStatus === 'Ativos') {
         matchStatus = item.status === 'Ativo';
-      } else if (filtroStatus === 'Em Experiência') {
-        matchStatus = item.status === 'Em Experiência';
+      } else if (filtroStatus === 'Em Integração') {
+        matchStatus = item.status === 'Em Integração';
       } else if (filtroStatus === 'Encerrado') {
         matchStatus = item.status === 'Encerrado';
       } else if (filtroStatus === 'Todos') {
@@ -119,8 +121,8 @@ function MeusEstagiarios() {
     switch (status) {
       case 'Ativo':
         return <span className="badge-tabela-ativo">Ativo</span>;
-      case 'Em Experiência':
-        return <span className="badge-tabela-experiencia">Em Experiência</span>;
+      case 'Em Integração':
+        return <span className="badge-tabela-integracao">Em Integração</span>;
       case 'Encerrado':
         return <span className="badge-tabela-encerrado">Encerrado</span>;
       default:
@@ -168,9 +170,9 @@ function MeusEstagiarios() {
             </Col>
             <Col xs={12} sm={6} lg={3}>
               <CardMetricaEmpresa
-                titulo="Em Experiência"
-                valor={metricas.emExperiencia}
-                icone={FileText}
+                titulo="Em Integração"
+                valor={metricas.emIntegracao}
+                icone={Hourglass}
                 corIcone="#d97706"
                 corFundoIcone="#fef3c7"
               />
@@ -188,7 +190,7 @@ function MeusEstagiarios() {
               <CardMetricaEmpresa
                 titulo="Próximos a Vencer"
                 valor={metricas.proximosVencer}
-                icone={Briefcase}
+                icone={CalendarClock}
                 corIcone="#dc2626"
                 corFundoIcone="#fee2e2"
               />
@@ -222,7 +224,7 @@ function MeusEstagiarios() {
                   id="select-status-filtro"
                 >
                   <option value="Ativos">Status: Ativos</option>
-                  <option value="Em Experiência">Status: Em Experiência</option>
+                  <option value="Em Integração">Status: Em Integração</option>
                   <option value="Encerrado">Status: Encerrado</option>
                   <option value="Todos">Status: Todos</option>
                 </select>
@@ -254,30 +256,15 @@ function MeusEstagiarios() {
                         <td className="celula-data-estagiario">{estagiario.termino}</td>
                         <td>{renderBadgeTabela(estagiario.status)}</td>
                         <td>
-                          <div className="d-flex align-items-center justify-content-center gap-2">
-                            <button
-                              type="button"
-                              className="btn-acao-tabela-detalhes"
+                          <div className="d-flex justify-content-center">
+                            <Botao
+                              tipo="botao-sage-verde"
+                              className="gap-2 text-nowrap"
                               onClick={() => abrirDetalhes(estagiario)}
+                              aria-label={`Ver detalhes de ${estagiario.nome}`}
                             >
-                              Detalhes
-                            </button>
-                            <button
-                              type="button"
-                              className="btn-acao-tabela-docs"
-                              onClick={() => abrirDetalhes(estagiario)}
-                            >
-                              Docs
-                            </button>
-                            {estagiario.status !== 'Encerrado' && (
-                              <button
-                                type="button"
-                                className="btn-acao-tabela-avaliar"
-                                onClick={() => abrirDetalhes(estagiario)}
-                              >
-                                Avaliar
-                              </button>
-                            )}
+                              <Eye size={16} aria-hidden="true" /> Ver Detalhes
+                            </Botao>
                           </div>
                         </td>
                       </tr>

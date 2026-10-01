@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, CheckCircle2, Clock3, LayoutDashboard } from 'lucide-react';
+import { BriefcaseBusiness, CheckCircle2, Clock3, Handshake, LayoutDashboard } from 'lucide-react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header.jsx';
@@ -17,9 +17,9 @@ function MeusEstagiosAluno() {
   const horasRegistradas = estagios.reduce((total, estagio) => total + Number(estagio.horasConcluidas || 0), 0);
   const indicadores = [
     { titulo: 'Total de estágios', valor: estagios.length, texto: 'Vínculos registrados no sistema', icone: <BriefcaseBusiness size={23} />, variante: 'azul' },
-    { titulo: 'Estágio atual', valor: ativos, texto: 'Vínculo em andamento', icone: <Clock3 size={23} />, variante: 'ambar' },
+    { titulo: 'Estágio atual', valor: ativos, texto: 'Vínculo em andamento', icone: <Handshake size={23} />, variante: 'ambar' },
     { titulo: 'Concluídos', valor: concluidos, texto: 'Vínculos finalizados', icone: <CheckCircle2 size={23} />, variante: 'verde' },
-    { titulo: 'Horas registradas', valor: `${horasRegistradas}h`, texto: 'Somadas em todos os estágios', icone: <LayoutDashboard size={23} />, variante: 'verde' },
+    { titulo: 'Horas registradas', valor: `${horasRegistradas}h`, texto: 'Somadas em todos os estágios', icone: <Clock3 size={23} />, variante: 'verde' },
   ];
 
   return (

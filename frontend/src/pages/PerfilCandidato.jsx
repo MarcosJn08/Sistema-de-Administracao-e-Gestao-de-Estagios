@@ -4,6 +4,8 @@ import { Row, Col } from 'react-bootstrap';
 import { ArrowLeft, CheckCircle2, User } from 'lucide-react';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
+import HabilidadesBadges from '../components/aluno/HabilidadesBadges.jsx';
+import ExperienciaPerfil from '../components/aluno/ExperienciaPerfil.jsx';
 import dadosEmpresa, { candidatosDesenvolvedorBackend } from '../data/empresa.js';
 import './PerfilCandidato.css';
 
@@ -151,33 +153,14 @@ function PerfilCandidato() {
 
                   <div className="mb-3">
                     <span className="info-label d-block mb-2">Habilidades:</span>
-                    <div className="tags-habilidades-wrapper">
-                      {candidato.habilidades && candidato.habilidades.length > 0 ? (
-                        candidato.habilidades.map((hab, idx) => (
-                          <span key={idx} className="tag-habilidade">
-                            {hab}
-                          </span>
-                        ))
-                      ) : (
-                        <span className="text-muted">Nenhuma habilidade cadastrada</span>
-                      )}
-                    </div>
+                    <HabilidadesBadges habilidades={candidato.habilidades} />
                   </div>
 
-                  <div>
-                    <span className="info-label d-block mb-1">Experiência Prévia:</span>
-                    <p
-                      className="info-value mb-0"
-                      style={{
-                        textAlign: 'left',
-                        fontWeight: 500,
-                        color: '#334155',
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      {candidato.experiencia}
-                    </p>
-                  </div>
+                </div>
+                <div className="card-detalhe-candidato">
+                  <h3 className="card-detalhe-title">Experiência prévia</h3>
+                  <div className="card-detalhe-divider" />
+                  <ExperienciaPerfil experiencia={candidato.experiencia} anexos={candidato.anexos} />
                 </div>
               </div>
             </Col>

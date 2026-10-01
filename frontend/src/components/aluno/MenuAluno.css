@@ -1,0 +1,15 @@
+.menu-perfil-aluno .menu-perfil-aluno-gatilho { border: 0; background: transparent; color: #fff; text-decoration: none; box-shadow: none; }
+.menu-perfil-aluno .menu-perfil-aluno-gatilho:hover, .menu-perfil-aluno .menu-perfil-aluno-gatilho.show { background: rgba(255,255,255,.1); color: #fff; }
+.menu-perfil-aluno .dropdown-menu { min-width: 250px; padding: 8px; margin-top: 12px; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 12px 32px #0f172a26; }
+.menu-perfil-aluno .dropdown-header { padding: 10px 12px; white-space: normal; }
+.menu-perfil-aluno .dropdown-header strong { display: block; color: #172033; font-size: 13px; overflow-wrap: anywhere; }
+.menu-perfil-aluno .dropdown-header span { color: #64748b; font-size: 12px; }
+.menu-perfil-aluno .dropdown-item { display: flex; align-items: center; gap: 10px; border-radius: 7px; padding: 10px 12px; color: #334155; font-size: 14px; }
+.menu-perfil-aluno .dropdown-item:hover, .menu-perfil-aluno .dropdown-item:focus, .menu-perfil-aluno .dropdown-item.active { color: #146c43; background: #eaf7ef; }
+.menu-perfil-aluno .dropdown-item:focus-visible { outline: 2px solid #198754; outline-offset: -2px; }
+@media (max-width: 991.98px) {
+  .menu-perfil-aluno { width: 100%; }
+  .menu-perfil-aluno .menu-perfil-aluno-gatilho { width: 100%; margin-top: 0; }
+  .menu-perfil-aluno-gatilho > svg { margin-left: auto; }
+  .menu-perfil-aluno .dropdown-menu { position: static !important; transform: none !important; width: 100%; min-width: 0; }
+}
