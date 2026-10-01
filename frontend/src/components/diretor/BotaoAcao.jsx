@@ -1,4 +1,5 @@
 import React from 'react';
+import { ArrowRight, Eye, FileSearch } from 'lucide-react';
 import '../../App.css';
 
 const VARIANTES = ['azul', 'ambar', 'verde', 'roxo', 'primario', 'contorno'];
@@ -11,6 +12,9 @@ function BotaoAcao({
   rotulo,
   nomeBotao,
   variante,
+  icone: Icone,
+  className = '',
+  ...props
 }) {
   const textoBotao = texto || rotulo || nomeBotao || tipo;
 
@@ -38,13 +42,22 @@ function BotaoAcao({
   }
 
   const lidarComClique = aoClicar || onClick;
+  const IconeBotao = Icone || (textoNormalizado === 'analisar'
+    ? FileSearch
+    : textoNormalizado === 'ver'
+      ? Eye
+      : textoNormalizado.includes('ver todas')
+        ? ArrowRight
+        : null);
 
   return (
     <button
       type="button"
-      className={`botao-acao-pilula ${classeVariante}`}
+      className={`botao-acao-pilula ${classeVariante} ${className}`.trim()}
       onClick={lidarComClique}
+      {...props}
     >
+      {IconeBotao && <IconeBotao size={15} aria-hidden="true" />}
       {textoBotao}
     </button>
   );

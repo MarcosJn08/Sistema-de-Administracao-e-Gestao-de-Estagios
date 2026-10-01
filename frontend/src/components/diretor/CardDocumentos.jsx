@@ -15,39 +15,22 @@ function CardDocumentos({
 
   return (
     <div className="cartao-sage mb-0">
-      <div className="d-flex justify-content-between align-items-center mb-3">
+      <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
         <h2 className="cartao-sage-titulo mb-0">{titulo}</h2>
-        {textoVerTodos && (
-          <button
-            type="button"
-            className="btn btn-sm"
-            style={{
-              border: '1px solid #d1d5db',
-              backgroundColor: '#ffffff',
-              color: '#475569',
-              borderRadius: '8px',
-              padding: '6px 14px',
-              fontSize: '13px',
-              fontWeight: 500,
-              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.04)',
-            }}
-            onClick={aoVerTodos}
-          >
-            {textoVerTodos}
-          </button>
-        )}
+        {textoVerTodos && <BotaoAcao texto={textoVerTodos} variante="contorno" aoClicar={aoVerTodos} />}
       </div>
 
-      <div className="tabela-sage-container">
+      <div className="tabela-sage-container" tabIndex={0} role="region" aria-label="Pendências documentais, role horizontalmente para ver todas as colunas">
         <table className="tabela-sage">
+          <caption className="visually-hidden">Documentos pendentes de conferência pelo diretor</caption>
           <thead>
             <tr>
-              <th style={{ width: '18%' }}>Aluno</th>
-              <th style={{ width: '22%' }}>Pendência</th>
-              <th style={{ width: '20%' }}>Empresa</th>
-              <th style={{ width: '14%' }}>Data</th>
-              <th style={{ width: '14%' }}>Status</th>
-              <th style={{ width: '12%', textAlign: 'center' }}>Ação</th>
+              <th scope="col" style={{ width: '18%' }}>Aluno</th>
+              <th scope="col" style={{ width: '22%' }}>Pendência</th>
+              <th scope="col" style={{ width: '20%' }}>Empresa</th>
+              <th scope="col" style={{ width: '14%' }}>Data</th>
+              <th scope="col" style={{ width: '14%' }}>Status</th>
+              <th scope="col" style={{ width: '12%', textAlign: 'center' }}>Ação</th>
             </tr>
           </thead>
 
@@ -58,32 +41,23 @@ function CardDocumentos({
                 <td>{doc.descricao}</td>
                 <td style={{ color: '#475569' }}>{doc.empresa}</td>
                 <td style={{ color: '#475569' }}>{doc.data}</td>
-                <td>
-                  <StatusBadge status={doc.status} />
-                </td>
+                <td><StatusBadge status={doc.status} /></td>
                 <td className="text-center">
                   <div className="d-flex justify-content-center gap-2 align-items-center">
-                    {doc.acoes?.map((acao, index) => (
-                      <BotaoAcao
-                        key={index}
-                        tipo={acao}
-                        aoClicar={() =>
-                          lidarComAcao && lidarComAcao(doc, acao)
-                        }
-                      />
-                    ))}
+                    {doc.acoes?.map((acao, index) => <BotaoAcao
+                      key={`${doc.id}-${acao}-${index}`}
+                      tipo={acao}
+                      aria-label={`${acao} ${doc.descricao} de ${doc.nome}`}
+                      aoClicar={() => lidarComAcao && lidarComAcao(doc, acao)}
+                    />)}
                   </div>
                 </td>
               </tr>
             ))}
 
-            {documentos.length === 0 && (
-              <tr>
-                <td colSpan="6" className="text-center py-4 text-muted">
-                  Nenhuma pendência encontrada.
-                </td>
-              </tr>
-            )}
+            {documentos.length === 0 && <tr>
+              <td colSpan="6" className="text-center py-4 text-muted">Nenhuma pendência encontrada.</td>
+            </tr>}
           </tbody>
         </table>
       </div>
@@ -92,4 +66,3 @@ function CardDocumentos({
 }
 
 export default CardDocumentos;
-

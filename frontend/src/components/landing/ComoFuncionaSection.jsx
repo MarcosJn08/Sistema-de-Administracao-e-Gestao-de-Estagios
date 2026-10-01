@@ -48,7 +48,7 @@ export default function ComoFuncionaSection() {
               className="col-12 col-lg-4"
               key={titulo}
               data-reveal
-              style={{ '--reveal-delay': `${index * 150}ms` }}
+              style={{ '--reveal-delay': `${index * 80}ms` }}
             >
               <article className="card etapa-card h-100">
                 <div className="card-body d-flex flex-column">

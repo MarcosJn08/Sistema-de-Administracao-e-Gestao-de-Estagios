@@ -1,57 +1,47 @@
-import React from "react";
-import "../../App.css";
-import Botao from "../Button.jsx";
+import { CalendarDays, Clock3, IdCard, MapPinned, ShieldCheck, UserRound } from 'lucide-react';
+import LogoEmpresa from '../LogoEmpresa.jsx';
+import '../../App.css';
+
+function ItemDado({ icone: Icone, titulo, children }) {
+  return (
+    <div className="dados-estagio-item">
+      <span className="dados-estagio-icone"><Icone size={18} aria-hidden="true" /></span>
+      <div><dt>{titulo}</dt><dd>{children || 'Não informado'}</dd></div>
+    </div>
+  );
+}
 
 function CardDadosEstagio({
-  status,
   empresa,
+  cnpj,
+  cargo,
   professorOrientador,
   supervisorEstagio,
   dataInicio,
   dataFim,
   cargaHorariaSemanal,
-  aoEditarPerfil,
-  onEditProfile,
+  modalidade,
+  seguro,
 }) {
-  const lidarComEdicao = aoEditarPerfil || onEditProfile;
-
   return (
-    <div className="cartao-sage">
-      <h2 className="cartao-sage-titulo mb-3">Dados Estágio</h2>
+    <section className="cartao-sage dados-estagio-card" aria-labelledby="dados-estagio-titulo">
+      <h2 id="dados-estagio-titulo" className="cartao-sage-titulo">Dados do estágio</h2>
 
-      <div className="d-flex align-items-start gap-3">
-        <div className="flex-grow-1" style={{ fontSize: "0.9375rem" }}>
-          <div className="mb-3">
-            <span className="fw-bold text-dark">Empresa:</span>
-            <span className="text-secondary ms-1">{empresa}</span>
-          </div>
-
-          <div className="row g-3">
-            <div className="col-md-3">
-              <div className="fw-bold text-dark">{professorOrientador}</div>
-              <div className="text-secondary small">Professor Orientador</div>
-            </div>
-
-            <div className="col-md-3">
-              <div className="fw-bold text-dark">
-                {dataInicio} a {dataFim}
-              </div>
-              <div className="text-secondary small">Período de Estágio</div>
-            </div>
-
-            <div className="col-md-3">
-              <div className="fw-bold text-dark">{cargaHorariaSemanal}</div>
-              <div className="text-secondary small">Carga Horária Semanal</div>
-            </div>
-
-            <div className="col-md-3">
-              <div className="fw-bold text-dark">{supervisorEstagio}</div>
-              <div className="text-secondary small">Supervisor (Empresa)</div>
-            </div>
-          </div>
-        </div>
+      <div className="dados-estagio-empresa">
+        <span className="dados-estagio-empresa-icone"><LogoEmpresa empresa={empresa} tamanho={34} /></span>
+        <div><span>Empresa concedente</span><strong>{empresa}</strong><small>{cargo}</small></div>
       </div>
-    </div>
+
+      <dl className="dados-estagio-grid">
+        <ItemDado icone={IdCard} titulo="CNPJ">{cnpj}</ItemDado>
+        <ItemDado icone={UserRound} titulo="Professor orientador">{professorOrientador}</ItemDado>
+        <ItemDado icone={UserRound} titulo="Supervisor da empresa">{supervisorEstagio}</ItemDado>
+        <ItemDado icone={CalendarDays} titulo="Período do estágio">{dataInicio} a {dataFim}</ItemDado>
+        <ItemDado icone={Clock3} titulo="Carga horária semanal">{cargaHorariaSemanal}</ItemDado>
+        <ItemDado icone={MapPinned} titulo="Modalidade">{modalidade}</ItemDado>
+        <ItemDado icone={ShieldCheck} titulo="Seguro contra acidentes">{seguro}</ItemDado>
+      </dl>
+    </section>
   );
 }
 

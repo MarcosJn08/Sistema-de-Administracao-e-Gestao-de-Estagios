@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Input from "../components/InputLogin/Input.jsx";
 import GoogleButton from "../components/GoogleButton.jsx";
 import Button from "../components/Button.jsx";
-import ImgLogin from "../assets/Login.png";
+import ImgLogin from "../assets/LoginHD.png";
 
 function Login() {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ function Login() {
   return (
     <div className="login-container">
       <div className="login-image">
-        <Image src={ImgLogin} alt="SAGE — Tela de Login" />
+        <Image src={ImgLogin} alt="SAGE — Tela de Login" width="1062" height="1482" />
       </div>
 
       <div className="login-content">

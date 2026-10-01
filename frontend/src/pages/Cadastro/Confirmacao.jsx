@@ -2,8 +2,21 @@ import "./Confirmacao.css";
 import Botao from "../../components/Button.jsx";
 import InfoLinha from "../../components/cadastro/InfoLinha.jsx";
 import Footer from "../../components/Footer.jsx";
+import { Navigate } from 'react-router-dom';
+
+function obterEnvio() {
+  try {
+    const envio = sessionStorage.getItem('sage-cadastro-documento');
+    return envio ? JSON.parse(envio) : null;
+  } catch {
+    return null;
+  }
+}
 
 function Confirmacao() {
+  const envio = obterEnvio();
+  if (!envio) return <Navigate to="/sage/cadastro/documento" replace />;
+
   return (
     <div className="confirmacao-page">
       <main className="confirmacao-content">
@@ -17,8 +30,8 @@ function Confirmacao() {
 
           <div className="linha"></div>
 
-          <InfoLinha rotulo="Número do pedido" valor="#123456789" />
-          <InfoLinha rotulo="Data de envio" valor="01/01/2026" />
+          <InfoLinha rotulo="Número do pedido" valor={envio.pedido} />
+          <InfoLinha rotulo="Data de envio" valor={new Date(envio.enviadoEm).toLocaleDateString('pt-BR')} />
           <InfoLinha rotulo="Status" valor="Em análise" />
 
           <div className="aviso">

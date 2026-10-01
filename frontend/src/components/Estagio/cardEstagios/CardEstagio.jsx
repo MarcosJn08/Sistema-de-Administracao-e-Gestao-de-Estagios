@@ -1,5 +1,8 @@
 import React from 'react';
-import { Building2, CalendarDays, Clock3, ArrowRight } from 'lucide-react';
+import { CalendarDays, Clock3, ArrowRight } from 'lucide-react';
+import StatusBadge from '../../StatusBadge.jsx';
+import Botao from '../../Button.jsx';
+import LogoEmpresa from '../../LogoEmpresa.jsx';
 import './CardEstagio.css';
 
 function CardEstagio({ estagio, aoVerEstagio }) {
@@ -20,18 +23,12 @@ function CardEstagio({ estagio, aoVerEstagio }) {
           {atual ? 'Estágio atual' : 'Estágio anterior'}
         </span>
 
-        <span
-          className={`card-estagio-status ${
-            atual ? 'status-andamento' : 'status-concluido'
-          }`}
-        >
-          {status}
-        </span>
+        <StatusBadge status={status} />
       </div>
 
       <div className="card-estagio-empresa">
         <div className="card-estagio-icone" aria-hidden="true">
-          <Building2 size={22} strokeWidth={1.8} />
+          <LogoEmpresa empresa={estagio.empresa} logoEmpresa={estagio.logoEmpresa} tamanho={30} />
         </div>
 
         <div className="card-estagio-identificacao">
@@ -75,16 +72,14 @@ function CardEstagio({ estagio, aoVerEstagio }) {
         </div>
       </div>
 
-      <button
-        type="button"
-        className={`card-estagio-botao ${
-          atual ? 'card-estagio-botao-atual' : 'card-estagio-botao-outline'
-        }`}
+      <Botao
+        tipo={atual ? 'botao-sage-verde' : 'botao-sem-fundo-verde'}
+        className="card-estagio-botao"
         onClick={() => aoVerEstagio?.(estagio)}
       >
         Ver estágio
         <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
-      </button>
+      </Botao>
     </article>
   );
 }
