@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Bookmark, BriefcaseBusiness, Save, Send, Sparkles, UserRound } from 'lucide-react';
 import Header from '../components/Header.jsx';
@@ -27,6 +27,7 @@ export default function PerfilAluno() {
   const [erroAnexo, setErroAnexo] = useState('');
   const [erro, setErro] = useState('');
   const [salvo, setSalvo] = useState(false);
+  const mensagemSucessoRef = useRef(null);
   const [params] = useSearchParams();
   const { hash } = useLocation();
   const navigate = useNavigate();
@@ -64,7 +65,19 @@ export default function PerfilAluno() {
       setHabilidades(separadas.outras);
       setErro('');
       setSalvo(true);
-      if (vaga) navigate(retorno);
+      if (vaga) {
+        navigate(retorno);
+      } else {
+        requestAnimationFrame(() => {
+          const mensagem = mensagemSucessoRef.current;
+          if (!mensagem) return;
+          mensagem.focus({ preventScroll: true });
+          mensagem.scrollIntoView({
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+            block: 'start',
+          });
+        });
+      }
     } catch (error) {
       setErro(error.name === 'QuotaExceededError' || error.name === 'SecurityError'
         ? 'Não foi possível salvar o perfil. Verifique o armazenamento do navegador e tente novamente.' : error.message);
@@ -100,7 +113,7 @@ export default function PerfilAluno() {
           <Link to="/sage/aluno/estagios"><BriefcaseBusiness size={17} aria-hidden="true" /> Meus estágios</Link>
         </nav>}
         {erro && <div className="alert alert-danger" role="alert">{erro}</div>}
-        {salvo && <div className="alert alert-success" role="status">Perfil atualizado com sucesso.</div>}
+        {salvo && <div ref={mensagemSucessoRef} className="alert alert-success perfil-aluno-sucesso" role="status" tabIndex={-1}>Perfil atualizado com sucesso.</div>}
         <form onSubmit={salvar}>
           <FormacaoAluno id="formacao" formacao={perfil.formacao} acaoCorrecao={<SolicitarCorrecaoAcademica />} />
           <section id="dados-pessoais" className="candidatura-card" aria-labelledby="perfil-pessoais-titulo">

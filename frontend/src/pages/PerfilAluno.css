@@ -2,6 +2,7 @@
 .perfil-aluno-edicao { width: 100%; max-width: 860px; margin: 0 auto; padding: 32px 20px 48px; }
 .perfil-aluno-edicao h1 { margin: 20px 0 8px; font-size: 28px; font-weight: 700; color: #172033; }
 .perfil-aluno-descricao { color: #64748b; font-size: 14px; }
+.perfil-aluno-sucesso { scroll-margin-top: 24px; }
 .perfil-aluno-voltar { display: inline-flex; align-items: center; gap: 8px; color: #198754; font-size: 14px; text-decoration: none; }
 .perfil-aluno-voltar:hover { text-decoration: underline; }
 .perfil-aluno-identidade { display: grid; gap: 6px; padding: 20px 0; margin-bottom: 12px; overflow-wrap: anywhere; }
