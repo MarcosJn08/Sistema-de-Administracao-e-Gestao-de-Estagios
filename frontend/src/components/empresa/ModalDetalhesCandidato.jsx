@@ -119,6 +119,7 @@ function ModalDetalhesCandidato({
 
                 <div className="mb-2">
                   <span className="modal-info-rotulo d-block mb-1">Habilidades:</span>
+                  {candidato.resumo && <p className="experiencia-perfil-texto">{candidato.resumo}</p>}
                   <HabilidadesBadges habilidades={candidato.habilidades} />
                 </div>
 

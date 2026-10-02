@@ -18,6 +18,29 @@ npm run build
 npm run lint
 ```
 
+## Perfil do aluno e correções acadêmicas
+
+O perfil e as candidaturas usam dados locais neste protótipo. Os dados acadêmicos
+são somente leitura e vêm de `src/data/aluno.js`; a instituição é fixa como
+IFNMG – Campus Almenara. Campos acadêmicos antigos no localStorage são ignorados
+ao carregar/salvar o perfil. Inscrições já enviadas preservam seu histórico.
+Na integração real, o servidor deve fornecer esses dados e rejeitar alterações
+acadêmicas pelo aluno; o bloqueio de interface não substitui autorização no backend.
+
+Para habilitar a abertura de e-mail ao Núcleo de Estágio, configure o contato
+oficial em `VITE_NUCLEO_ESTAGIO_EMAIL` no arquivo `.env.local` (veja `.env.example`)
+e reinicie o Vite. O aluno revisa e envia a mensagem no aplicativo de e-mail.
+Sem contato configurado, o modal permite copiar o texto e informa que nada foi
+enviado. Não existe envio de solicitações por backend nesta versão.
+
+Foto (PNG/JPG/WebP de até 500 KB), telefone, endereço, CEP, resumo, habilidades,
+experiência e anexos são editáveis. Endereço e CEP não são copiados para novas
+candidaturas. Testes de persistência e proteção dos dados acadêmicos:
+
+```bash
+node --test tests/perfilAluno.test.mjs
+```
+
 ## Organização
 
 A aplicação exibe somente a landing page, com Hero, perfis, vagas em destaque, etapas, chamada para conhecer o portal e rodapé. A navegação entre as seções usa âncoras na própria página. Ações de funcionalidades futuras, como Entrar, Cadastrar, Ver vaga e envio de documentos, permanecem visíveis como botões sem navegação ou resposta ao clique, identificados com `aria-disabled`.

@@ -6,6 +6,33 @@ const chavePerfil = `${prefixo}:perfil`;
 const chaveCandidatura = (vagaId) => `${prefixo}:candidatura:${vagaId}`;
 const chaveRascunho = (vagaId) => `${prefixo}:carta:${vagaId}`;
 export const eventoCandidaturas = 'sage:candidaturas-atualizadas';
+export const eventoPerfilAluno = 'sage:perfil-aluno-atualizado';
+
+// Fonte acadêmica do protótipo. Na integração, deve vir do registro acadêmico,
+// nunca dos campos editáveis do perfil nem do armazenamento do navegador.
+export function carregarDadosAcademicos() {
+  return {
+    instituicao: 'IFNMG – Campus Almenara',
+    matricula: dados.aluno.matricula,
+    curso: dados.aluno.curso,
+    periodo: dados.aluno.periodo || '',
+    email: dados.aluno.email,
+  };
+}
+
+const texto = (valor) => typeof valor === 'string' ? valor.trim() : '';
+const fotoValida = (valor) => typeof valor === 'string' && valor.length <= 700000
+  && /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(valor);
+
+function dadosPessoais(perfil) {
+  return {
+    foto: fotoValida(perfil?.foto) ? perfil.foto : '',
+    telefone: texto(perfil?.telefone),
+    endereco: texto(perfil?.endereco),
+    cep: texto(perfil?.cep),
+    resumo: texto(perfil?.resumo),
+  };
+}
 
 function lerJson(chave) {
   try {
@@ -17,13 +44,9 @@ function lerJson(chave) {
 
 export function carregarPerfilAluno() {
   const salvo = lerJson(chavePerfil);
-  const formacao = salvo?.formacao || {};
   return {
-    formacao: {
-      curso: typeof formacao.curso === 'string' ? formacao.curso : dados.aluno.curso,
-      instituicao: typeof formacao.instituicao === 'string' ? formacao.instituicao : 'IFNMG — Campus Almenara',
-      periodo: typeof formacao.periodo === 'string' ? formacao.periodo : '',
-    },
+    formacao: carregarDadosAcademicos(),
+    ...dadosPessoais(salvo),
     habilidades: Array.isArray(salvo?.habilidades) ? salvo.habilidades.filter((item) => typeof item === 'string') : [],
     experiencia: typeof salvo?.experiencia === 'string' ? salvo.experiencia : '',
     anexos: Array.isArray(salvo?.anexos) ? salvo.anexos.filter((item) => item && typeof item.id === 'string' && typeof item.nome === 'string') : [],
@@ -31,11 +54,17 @@ export function carregarPerfilAluno() {
 }
 
 export function salvarPerfilAluno(perfil) {
-  const formacao = Object.fromEntries(Object.entries(perfil.formacao).map(([chave, valor]) => [chave, valor.trim()]));
-  if (!formacao.curso || !formacao.instituicao) throw new Error('Preencha o curso e a instituição.');
+  const formacao = carregarDadosAcademicos();
+  const pessoais = dadosPessoais(perfil);
+  if (pessoais.telefone && (!/^\+?[\d\s().-]{8,25}$/.test(pessoais.telefone)
+    || !/^\d{10,15}$/.test(pessoais.telefone.replace(/\D/g, '')))) throw new Error('Informe um telefone válido, com DDD.');
+  if (pessoais.cep && !/^\d{5}-?\d{3}$/.test(pessoais.cep)) throw new Error('Informe um CEP válido com 8 dígitos.');
+  if (pessoais.endereco.length > 300 || pessoais.resumo.length > 1000) throw new Error('O endereço deve ter até 300 caracteres e o resumo até 1.000.');
+  if (perfil.foto && !fotoValida(perfil.foto)) throw new Error('A foto de perfil não é válida. Escolha outra imagem.');
   const habilidades = consolidarHabilidades(perfil.habilidades);
-  const atualizado = { formacao, habilidades, experiencia: (perfil.experiencia || '').trim(), anexos: perfil.anexos || [] };
+  const atualizado = { formacao, ...pessoais, habilidades, experiencia: (perfil.experiencia || '').trim(), anexos: perfil.anexos || [] };
   localStorage.setItem(chavePerfil, JSON.stringify(atualizado));
+  window.dispatchEvent(new Event(eventoPerfilAluno));
   return atualizado;
 }
 
@@ -94,8 +123,12 @@ export function enviarCandidatura(vaga, cartaApresentacao) {
     vagaId: String(vaga.id),
     vaga: vaga.titulo,
     empresa: vaga.empresa,
-    aluno: { ...dados.aluno, curso: perfil.formacao.curso },
-    ...perfil,
+    aluno: { ...dados.aluno, telefone: perfil.telefone, foto: perfil.foto },
+    formacao: perfil.formacao,
+    habilidades: perfil.habilidades,
+    resumo: perfil.resumo,
+    experiencia: perfil.experiencia,
+    anexos: perfil.anexos,
     cartaApresentacao: carta,
     dataInscricao: new Date().toISOString(),
     status: 'Em Análise',

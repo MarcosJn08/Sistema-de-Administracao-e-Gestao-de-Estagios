@@ -6,6 +6,10 @@
 .perfil-aluno-voltar:hover { text-decoration: underline; }
 .perfil-aluno-identidade { display: grid; gap: 6px; padding: 20px 0; margin-bottom: 12px; overflow-wrap: anywhere; }
 .perfil-aluno-identidade span { color: #64748b; font-size: 13px; }
+.perfil-aluno-foto { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+.perfil-aluno-foto > div:last-child { flex: 1; min-width: 0; }
+.perfil-aluno-foto-previa { display: flex; align-items: center; justify-content: center; width: 80px; height: 80px; border-radius: 50%; background: #eaf7ef; color: #198754; overflow: hidden; }
+.perfil-aluno-foto-previa img { width: 100%; height: 100%; object-fit: cover; }
 .perfil-aluno-edicao .candidatura-card { margin-bottom: 20px; scroll-margin-top: 24px; }
 .perfil-aluno-edicao h2 { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; margin: 0 0 20px; }
 .perfil-aluno-edicao h2 svg { color: #198754; }

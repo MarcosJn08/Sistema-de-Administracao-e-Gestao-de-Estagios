@@ -1,0 +1,14 @@
+.formacao-aluno .formacao-aluno-aviso { display: flex; align-items: center; gap: 8px; color: #475569; font-size: 12px; margin-bottom: 16px; }
+.formacao-aluno-aviso svg { flex-shrink: 0; }
+.formacao-aluno-campos { display: grid; gap: 12px; margin: 0 0 16px; }
+.formacao-aluno-campos > div { padding: 12px 14px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f1f5f9; }
+.formacao-aluno-campos dt { font-size: 12px; font-weight: 500; color: #64748b; margin-bottom: 5px; }
+.formacao-aluno-campos dd { font-size: 14px; color: #334155; margin: 0; overflow-wrap: anywhere; }
+.formacao-aluno .formacao-aluno-ajuda { font-size: 12px; }
+.formacao-aluno-correcao { display: inline-flex; align-items: center; gap: 7px; text-align: left; padding: 0; border: 0; background: none; color: #198754; font-size: 12px; text-decoration: underline; text-underline-offset: 3px; }
+.formacao-aluno-correcao svg { flex-shrink: 0; }
+.formacao-aluno-correcao:focus-visible { outline: 2px solid #198754; outline-offset: 4px; }
+.correcao-academica-modal .modal-title { font-size: 19px; }
+.correcao-academica-modal .modal-content { border-radius: 14px; }
+.correcao-academica-modal p { color: #64748b; font-size: 14px; }
+.correcao-academica-modal textarea { min-height: 150px; }

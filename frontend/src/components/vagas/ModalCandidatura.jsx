@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
-import { ArrowLeft, BriefcaseBusiness, CheckCircle2, FilePenLine, GraduationCap, Pencil, Send, Sparkles } from 'lucide-react';
+import { ArrowLeft, BriefcaseBusiness, CheckCircle2, FilePenLine, Pencil, Send, Sparkles, TriangleAlert } from 'lucide-react';
 import Botao from '../Button.jsx';
 import LogoEmpresa from '../LogoEmpresa.jsx';
 import StatusBadge from '../StatusBadge.jsx';
 import HabilidadesBadges from '../aluno/HabilidadesBadges.jsx';
 import ExperienciaPerfil from '../aluno/ExperienciaPerfil.jsx';
+import FormacaoAluno from '../aluno/FormacaoAluno.jsx';
 import { apresentarStatusCandidatura, carregarCandidatura, carregarPerfilAluno, carregarRascunho, enviarCandidatura, salvarRascunho } from '../../utils/candidaturaAluno.js';
 import './ModalDetalhesVaga.css';
 import './ModalCandidatura.css';
@@ -19,7 +20,11 @@ export default function ModalCandidatura({ vaga, aoFechar, aoVoltar, candidatura
   const status = apresentarStatusCandidatura(candidatura?.status);
   const [erro, setErro] = useState('');
   const encerrada = vaga.inscricoes_abertas === false || vaga.status === 'Encerrada';
-  const formacao = candidatura?.formacao || perfil.formacao;
+  const formacao = candidatura ? {
+    ...candidatura.formacao,
+    matricula: candidatura.aluno?.matricula || candidatura.formacao?.matricula,
+    email: candidatura.aluno?.email || candidatura.formacao?.email,
+  } : perfil.formacao;
   const habilidades = candidatura?.habilidades || perfil.habilidades;
 
   function editarCarta(evento) {
@@ -82,21 +87,14 @@ export default function ModalCandidatura({ vaga, aoFechar, aoVoltar, candidatura
             </>}
           </section>
           <div className="candidatura-perfil-grid">
-            <section className="candidatura-card" aria-labelledby="formacao-titulo">
-              <div className="candidatura-card-topo">
-                <h3 id="formacao-titulo"><GraduationCap size={20} aria-hidden="true" /> Formação</h3>
-                {!candidatura && <Link to={editarPerfil('formacao')} className="candidatura-editar" aria-label="Editar formação no perfil"><Pencil size={14} aria-hidden="true" /> Editar</Link>}
-              </div>
-              <p className="candidatura-dado-principal">{formacao.curso}</p>
-              <p>{formacao.instituicao}</p>
-              <p>{formacao.periodo || 'Período não informado'}</p>
-              <small>{candidatura ? 'Formação na data da inscrição' : 'Informações do seu perfil'}</small>
-            </section>
+            <FormacaoAluno formacao={formacao} historico={Boolean(candidatura)} nivel={3} acaoCorrecao={!candidatura &&
+              <Link to={editarPerfil('formacao')} className="formacao-aluno-correcao"><TriangleAlert size={15} aria-hidden="true" /> Dados incorretos? Solicite correção ao Núcleo de Estágio</Link>} />
             <section className="candidatura-card" aria-labelledby="habilidades-titulo">
               <div className="candidatura-card-topo">
                 <h3 id="habilidades-titulo"><Sparkles size={20} aria-hidden="true" /> Habilidades</h3>
                 {!candidatura && <Link to={editarPerfil('habilidades')} className="candidatura-editar" aria-label="Editar habilidades no perfil"><Pencil size={14} aria-hidden="true" /> Editar</Link>}
               </div>
+              {(candidatura || perfil).resumo && <><p className="candidatura-dado-principal">Resumo profissional</p><p className="experiencia-perfil-texto">{(candidatura || perfil).resumo}</p></>}
               {habilidades.length ? <HabilidadesBadges habilidades={habilidades} />
                 : <p>{candidatura ? 'Nenhuma habilidade informada nesta inscrição.' : 'Você ainda não adicionou habilidades. Complete essa seção no seu perfil.'}</p>}
               <small>{candidatura ? 'Habilidades na data da inscrição' : 'Informações do seu perfil'}</small>

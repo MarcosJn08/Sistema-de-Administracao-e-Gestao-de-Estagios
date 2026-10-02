@@ -153,6 +153,7 @@ function PerfilCandidato() {
 
                   <div className="mb-3">
                     <span className="info-label d-block mb-2">Habilidades:</span>
+                    {candidato.resumo && <p className="experiencia-perfil-texto">{candidato.resumo}</p>}
                     <HabilidadesBadges habilidades={candidato.habilidades} />
                   </div>
 

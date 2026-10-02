@@ -2,6 +2,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { Link, useLocation } from 'react-router-dom';
 import { Bookmark, BriefcaseBusiness, ChevronDown, LayoutDashboard, LogOut, Send, UserRound } from 'lucide-react';
 import './MenuAluno.css';
+import usePerfilAluno from '../../hooks/usePerfilAluno.js';
 
 const atalhos = [
   { texto: 'Meu perfil', caminho: '/sage/aluno/perfil', Icone: UserRound },
@@ -13,10 +14,11 @@ const atalhos = [
 
 export default function MenuAluno({ usuario, aoNavegar }) {
   const { pathname } = useLocation();
+  const perfil = usePerfilAluno();
   return (
     <Dropdown className="menu-perfil-aluno" align="end" onSelect={aoNavegar}>
       <Dropdown.Toggle id="menu-perfil-aluno" variant="link" className="perfil-usuario-header menu-perfil-aluno-gatilho" aria-label="Abrir menu do aluno">
-        <span className="avatar-usuario-header">{usuario.foto ? <img src={usuario.foto} alt="" /> : usuario.nome?.charAt(0).toUpperCase() || 'A'}</span>
+        <span className="avatar-usuario-header">{perfil.foto ? <img src={perfil.foto} alt="" /> : usuario.nome?.charAt(0).toUpperCase() || 'A'}</span>
         <span className="nome-usuario-header">{usuario.nome?.split(' ')[0] || 'Aluno'}</span>
         <ChevronDown size={16} aria-hidden="true" />
       </Dropdown.Toggle>
