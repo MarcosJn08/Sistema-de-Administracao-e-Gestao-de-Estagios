@@ -118,7 +118,7 @@ function GestaoCandidatos() {
 
   const linksNavegacaoEmpresa = [
     ['Dashboard', '/sage/empresa'],
-    ['Estagiários', '#estagiarios'],
+    ['Estagiários', '/sage/empresa/estagiarios'],
   ];
 
   return (
