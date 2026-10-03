@@ -1,0 +1,17 @@
+.habilidades-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+.habilidade-badge { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid #dbe4ee; border-radius: 8px; background: #f8fafc; color: #475569; font: inherit; font-size: 13px; font-weight: 600; overflow-wrap: anywhere; max-width: 100%; }
+button.habilidade-badge:hover { border-color: #198754; background: #f0fdf4; }
+.habilidade-badge[aria-pressed="true"], .habilidade-badge-leitura { color: #15803d; border-color: #86d5a3; background: #edf9f1; }
+.habilidade-badge svg { flex-shrink: 0; }
+.habilidade-badge:focus-visible, .anexos-perfil button:focus-visible { outline: 2px solid #198754; outline-offset: 3px; }
+.anexos-perfil ul { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 8px; }
+.anexos-perfil li { display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; min-width: 0; }
+.anexos-perfil li > svg { color: #198754; flex-shrink: 0; }
+.anexo-perfil-nome { display: grid; flex: 1; min-width: 0; }
+.anexo-perfil-nome strong { font-size: 13px; color: #334155; overflow-wrap: anywhere; }
+.anexo-perfil-nome span { color: #64748b; font-size: 11px; }
+.anexos-perfil button { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; flex-shrink: 0; border: 1px solid #dbe4ee; border-radius: 7px; color: #198754; background: #fff; }
+.anexos-perfil button:disabled { opacity: .5; }
+.experiencia-perfil-texto { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; color: #475569; line-height: 1.6; }
+.experiencia-perfil .experiencia-perfil-anexos-titulo { font-size: 14px; font-weight: 600; margin: 20px 0 10px; color: #172033; }
+.perfil-complemento-vazio { color: #64748b; font-size: 13px; margin: 8px 0; }

@@ -4,7 +4,7 @@ import StatusBadge from './StatusBadge.jsx';
 import LogoEmpresa from './LogoEmpresa.jsx';
 import { formatarBolsa, formatarData } from '../utils/formatters.js';
 
-function VagaCard({ vaga, onVerDetalhes, href }) {
+function VagaCard({ vaga, onVerDetalhes, href, acaoExtra }) {
   const navigate = useNavigate();
   const textoBeneficios = Array.isArray(vaga.beneficios)
     ? vaga.beneficios.join(', ')
@@ -29,7 +29,7 @@ function VagaCard({ vaga, onVerDetalhes, href }) {
       <div className="card-body d-flex flex-column">
         <div className="vaga-card-topo">
           <div className="vaga-status">
-            <StatusBadge aberto={vaga.inscricoes_abertas} />
+            {vaga.inscricoes_abertas === false ? <StatusBadge status="Inscrições encerradas" /> : <StatusBadge aberto={vaga.inscricoes_abertas} />}
           </div>
           <div className="vaga-empresa-logo">
             <LogoEmpresa empresa={vaga.empresa} logoEmpresa={vaga.logoEmpresa} tamanho={40} />
@@ -49,9 +49,10 @@ function VagaCard({ vaga, onVerDetalhes, href }) {
         <p className="vaga-prazo">
           Inscrições até <time dateTime={vaga.data_limite}>{formatarData(vaga.data_limite)}</time>
         </p>
+        <div className="d-flex flex-wrap align-items-center justify-content-between gap-3 mt-auto">
         <button
           type="button"
-          className="sage-text-link mt-auto"
+          className="sage-text-link"
           aria-label={`Ver vaga: ${vaga.titulo}`}
           onClick={(e) => {
             e.stopPropagation();
@@ -60,6 +61,8 @@ function VagaCard({ vaga, onVerDetalhes, href }) {
         >
           Ver vaga <ArrowRight size={14} aria-hidden="true" />
         </button>
+        {acaoExtra}
+        </div>
       </div>
     </article>
   );

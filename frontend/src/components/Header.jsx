@@ -4,6 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Button from './Button.jsx';
+import MenuAluno from './aluno/MenuAluno.jsx';
 import LogoBranca from '../assets/LogoBranca.png';
 
 import { Code } from 'lucide-react';
@@ -39,6 +40,7 @@ function Header({
 
   const isDiretor = usuario?.role === 'diretor';
   const isProfessor = usuario?.role === 'professor';
+  const isAluno = isDashboard && !isEmpresa && !isDiretor && !isProfessor;
 
   const diretorLinks = [
     ['Dashboard', '/sage/diretor'],
@@ -46,7 +48,6 @@ function Header({
     ['Orientadores', '/sage/diretor/orientadores'],
     ['Empresas', '/sage/diretor/convenios'],
     ['Documentos', '/sage/diretor/documentos'],
-    ['Relatórios', '#'],
   ];
   const professorLinks = [['Dashboard', '/sage/professor']];
 
@@ -54,8 +55,8 @@ function Header({
     ['Início', '/sage'],
     ['Dashboard', '/sage/aluno'],
     ['Vagas', '/sage/vagas'],
+    ['Candidaturas', '/sage/aluno/candidaturas'],
     ['Estágios', '/sage/aluno/estagios'],
-    ['Documentos', '/sage/documentos'],
   ];
 
   const cadastroLinks = [
@@ -128,7 +129,7 @@ function Header({
               <div className="botao-login">
                 {isDashboard ? (
                   <div className="d-flex align-items-center gap-3">
-                    <div className="perfil-usuario-header">
+                    {isAluno ? <MenuAluno usuario={usuario} aoNavegar={closeMenu} /> : <div className="perfil-usuario-header">
                       <div
                         className="avatar-usuario-header"
                         style={isEmpresa ? { backgroundColor: '#0f172a', borderColor: '#38bdf8' } : {}}
@@ -144,8 +145,8 @@ function Header({
                       <span className="nome-usuario-header">
                         {isEmpresa ? usuario.nome : (nomeExibicao)}
                       </span>
-                    </div>
-                    {exibirBotaoSair && (
+                    </div>}
+                    {exibirBotaoSair && !isAluno && (
                       <Button texto="Sair" tipo="botao-texto-branco" href="/sage/login" />
                     )}
                   </div>

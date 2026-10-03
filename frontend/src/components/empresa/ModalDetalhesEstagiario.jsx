@@ -29,8 +29,8 @@ function ModalDetalhesEstagiario({
     switch (status) {
       case 'Ativo':
         return <span className="badge-estagiario-ativo">Ativo</span>;
-      case 'Em Experiência':
-        return <span className="badge-estagiario-experiencia">Em Experiência</span>;
+      case 'Em Integração':
+        return <span className="badge-estagiario-integracao">Em Integração</span>;
       case 'Encerrado':
         return <span className="badge-estagiario-encerrado">Encerrado</span>;
       default:
@@ -96,10 +96,7 @@ function ModalDetalhesEstagiario({
       <div className="modal-estagiario-container">
         <div className="modal-estagiario-header">
           <div className="modal-estagiario-title-group">
-            <span className="modal-estagiario-breadcrumb">
-              Estagiários &gt; <span className="text-dark">Detalhes do Estagiário</span>
-            </span>
-            <div className="d-flex align-items-center gap-2 mt-1">
+            <div className="d-flex align-items-center gap-2">
               <h2 id="modal-estagiario-titulo" className="modal-estagiario-title">
                 Detalhes do Estagiário
               </h2>

@@ -1,0 +1,28 @@
+.perfil-aluno-pagina { background: #f8fafc; }
+.perfil-aluno-edicao { width: 100%; max-width: 860px; margin: 0 auto; padding: 32px 20px 48px; }
+.perfil-aluno-edicao h1 { margin: 20px 0 8px; font-size: 28px; font-weight: 700; color: #172033; }
+.perfil-aluno-descricao { color: #64748b; font-size: 14px; }
+.perfil-aluno-sucesso { scroll-margin-top: 24px; }
+.perfil-aluno-voltar { display: inline-flex; align-items: center; gap: 8px; color: #198754; font-size: 14px; text-decoration: none; }
+.perfil-aluno-voltar:hover { text-decoration: underline; }
+.perfil-aluno-identidade { display: grid; gap: 6px; padding: 20px 0; margin-bottom: 12px; overflow-wrap: anywhere; }
+.perfil-aluno-identidade span { color: #64748b; font-size: 13px; }
+.perfil-aluno-foto { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+.perfil-aluno-foto > div:last-child { flex: 1; min-width: 0; }
+.perfil-aluno-foto-previa { display: flex; align-items: center; justify-content: center; width: 80px; height: 80px; border-radius: 50%; background: #eaf7ef; color: #198754; overflow: hidden; }
+.perfil-aluno-foto-previa img { width: 100%; height: 100%; object-fit: cover; }
+.perfil-aluno-edicao .candidatura-card { margin-bottom: 20px; scroll-margin-top: 24px; }
+.perfil-aluno-edicao h2 { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; margin: 0 0 20px; }
+.perfil-aluno-edicao h2 svg { color: #198754; }
+.perfil-aluno-edicao label { margin: 16px 0 6px; font-weight: 600; }
+.perfil-aluno-edicao input { font-size: 14px; padding: 10px 12px; }
+.perfil-aluno-edicao :is(input, textarea, a, button):focus-visible { outline: 2px solid #198754; outline-offset: 3px; }
+.perfil-aluno-acoes { display: flex; align-items: center; justify-content: flex-end; gap: 24px; }
+.perfil-aluno-atalhos { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+.perfil-aluno-atalhos a { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid #dce7e0; border-radius: 8px; background: #fff; color: #198754; font-size: 13px; text-decoration: none; }
+.perfil-aluno-atalhos a:hover { background: #eaf7ef; }
+@media (max-width: 575.98px) {
+  .perfil-aluno-edicao { padding: 24px 16px; }
+  .perfil-aluno-acoes { flex-direction: column-reverse; gap: 16px; }
+  .perfil-aluno-acoes button { width: 100%; }
+}
