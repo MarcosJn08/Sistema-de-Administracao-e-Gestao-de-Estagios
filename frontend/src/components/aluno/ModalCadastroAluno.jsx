@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { GraduationCap } from 'lucide-react';
-import Botao from '../Button.jsx';
+import Button from '../Button/Button.jsx';
 import './ModalCadastroAluno.css';
 
 function ModalCadastroAluno({ aberto, cursos, aoCadastrar, aoFechar }) {
@@ -105,7 +105,7 @@ function ModalCadastroAluno({ aberto, cursos, aoCadastrar, aoFechar }) {
         </form>
       </Modal.Body>
       <Modal.Footer>
-        <Botao tipo="botao-acao-contorno" onClick={fechar}>Cancelar</Botao>
+        <Button tipo="botao-acao-contorno" onClick={fechar}>Cancelar</Button>
         <button type="submit" form="cadastro-aluno-form" className="botao-sage-verde">Cadastrar aluno</button>
       </Modal.Footer>
     </Modal>

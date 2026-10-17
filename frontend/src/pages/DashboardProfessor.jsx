@@ -4,7 +4,7 @@ import { BriefcaseBusiness, RotateCcw, Search, TriangleAlert, Users, UserSearch 
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import CardPequeno from '../components/CardPequeno.jsx';
-import Input from '../components/Input.jsx';
+import Input from '../components/Input/Input.jsx';
 import Select from '../components/Select.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
 import Button from "../components/Button/Button.jsx";
@@ -80,7 +80,7 @@ export default function DashboardProfessor() {
                   opcoes={[{ valor: '', rotulo: 'Período: todos' }, ...periodos.map((semestre) => ({ valor: String(semestre), rotulo: `${semestre}º semestre` }))]} />
               </Col>
             </Row>
-            {(busca || curso || periodo) && <Botao tipo="botao-acao-contorno" className="gap-2 mb-3" onClick={limparFiltros}><RotateCcw size={14} aria-hidden="true" /> Limpar filtros</Botao>}
+            {(busca || curso || periodo) && <Button tipo="botao-acao-contorno" className="gap-2 mb-3" onClick={limparFiltros}><RotateCcw size={14} aria-hidden="true" /> Limpar filtros</Button>}
             <p className="d-lg-none small text-secondary">Deslize a tabela para ver todas as informações e ações.</p>
             <div className="tabela-sage-container" tabIndex={0} role="region" aria-label="Tabela de alunos, role horizontalmente para ver todas as colunas">
               <Table className="tabela-sage dashboard-professor-tabela">
@@ -92,7 +92,7 @@ export default function DashboardProfessor() {
                   <td>{aluno.curso}</td>
                   <td>{aluno.estagio?.empresa || 'Sem vínculo'}</td>
                   <td><StatusBadge status={aluno.situacao} /></td>
-                  <td><Botao tipo="botao-sage-verde" className="dashboard-professor-perfil" onClick={() => setSelecionadoId(aluno.id)} aria-label={`Ver perfil de ${aluno.nome}`}>Ver perfil</Botao></td>
+                  <td><Button tipo="botao-sage-verde" className="dashboard-professor-perfil" onClick={() => setSelecionadoId(aluno.id)} aria-label={`Ver perfil de ${aluno.nome}`}>Ver perfil</Button></td>
                 </tr>)}</tbody>
               </Table>
               {filtrados.length === 0 && <p className="text-center text-secondary py-4" role="status">Nenhum aluno encontrado para os filtros selecionados.</p>}

@@ -72,14 +72,14 @@ function CardEstagio({ estagio, aoVerEstagio }) {
         </div>
       </div>
 
-      <Botao
+      <Button
         tipo={atual ? 'botao-sage-verde' : 'botao-sem-fundo-verde'}
         className="card-estagio-botao"
         onClick={() => aoVerEstagio?.(estagio)}
       >
         Ver estágio
         <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
-      </Botao>
+      </Button>
     </article>
   );
 }

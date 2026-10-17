@@ -4,9 +4,9 @@ import "./Dados.css";
 import HeaderCadastro from "../../components/cadastro/HeaderCadastro.jsx";
 import TituloCadastro from "../../components/cadastro/TituloCadastro.jsx";
 import CardCadastro from "../../components/cadastro/CardCadastro.jsx";
-import Input from "../../components/Input.jsx";
+import Input from "../../components/Input/Input.jsx";
 import Select from "../../components/Select.jsx";
-import Botao from "../../components/Button/Button.jsx";
+import Button from "../../components/Button/Button.jsx";
 import Footer from "../../components/Footer.jsx";
 import {
   cadastroEmpresaVazio,
@@ -145,7 +145,7 @@ function Dados() {
           <p className="cadastro-empresa-aviso" role="alert">Revise os campos destacados antes de continuar.</p>
         )}
         <div className="area-botao">
-          <Botao className="btn-proximo" texto="Próximo" onClick={avancar} />
+          <Button className="btn-proximo" texto="Próximo" onClick={avancar} />
         </div>
       </main>
       <Footer />

@@ -4,7 +4,7 @@ import { Users, BriefcaseBusiness, GraduationCap, UserSearch, Search, Eye, Plus,
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import CardPequeno from '../components/CardPequeno.jsx';
-import Input from '../components/Input.jsx';
+import Input from '../components/Input/Input.jsx';
 import Select from '../components/Select.jsx';
 import Button from "../components/Button/Button.jsx";
 import StatusBadge from '../components/StatusBadge.jsx';
