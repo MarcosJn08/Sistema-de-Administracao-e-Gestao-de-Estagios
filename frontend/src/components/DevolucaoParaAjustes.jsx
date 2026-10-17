@@ -1,7 +1,7 @@
 import { useId, useState } from 'react';
 import { Alert, Col, Form, Row } from 'react-bootstrap';
 import { LockKeyhole, Mail, RotateCcw } from 'lucide-react';
-import Botao from './Button.jsx';
+import Button from "./Button/Button.jsx";
 import StatusBadge from './StatusBadge.jsx';
 import { prepararNotificacao } from '../utils/devolucao.js';
 import './DevolucaoParaAjustes.css';

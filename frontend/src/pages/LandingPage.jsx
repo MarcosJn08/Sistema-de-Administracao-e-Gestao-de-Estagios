@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
-import Button from '../components/Button.jsx';
+import Button from "../components/Button/Button.jsx";
 import PerfisSection from '../components/landing/PerfisSection.jsx';
 import VagasSection from '../components/landing/VagasSection.jsx';
 import ComoFuncionaSection from '../components/landing/ComoFuncionaSection.jsx';

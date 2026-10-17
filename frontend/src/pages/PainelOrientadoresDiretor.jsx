@@ -6,7 +6,7 @@ import Footer from '../components/Footer.jsx';
 import CardPequeno from '../components/CardPequeno.jsx';
 import Input from '../components/Input.jsx';
 import Select from '../components/Select.jsx';
-import Botao from '../components/Button.jsx';
+import Button from "../components/Button/Button.jsx";
 import StatusBadge from '../components/StatusBadge.jsx';
 import Paginacao from '../components/Paginacao.jsx';
 import ModalProfessor from '../components/orientador/ModalProfessor.jsx';
@@ -96,9 +96,9 @@ function PainelOrientadoresDiretor() {
               <h1>Gerenciar professores</h1>
               <p>Gerencie os professores e orientadores de estágio do campus</p>
             </div>
-            <Botao tipo="botao-sage-verde" className="gap-2" onClick={() => setCadastroAberto(true)}>
+            <Button tipo="botao-sage-verde" className="gap-2" onClick={() => setCadastroAberto(true)}>
               <Plus size={17} aria-hidden="true" /> Cadastrar professor
-            </Botao>
+            </Button>
           </div>
 
           <Row className="g-4 mb-4">
@@ -136,9 +136,9 @@ function PainelOrientadoresDiretor() {
                 <h2 id="lista-orientadores-titulo" className="cartao-sage-titulo mb-1">Professores do campus</h2>
                 <p className="text-secondary small mb-0" role="status">{filtrados.length} de {orientadores.length} professores encontrados</p>
               </div>
-              {(busca || departamento || status) && <Botao tipo="botao-sage-verde" className="gap-2" onClick={limparFiltros}>
+              {(busca || departamento || status) && <Button tipo="botao-sage-verde" className="gap-2" onClick={limparFiltros}>
                 <RotateCcw size={15} aria-hidden="true" /> Limpar filtros
-              </Botao>}
+              </Button>}
             </div>
 
             <p className="d-lg-none text-secondary small">Deslize a tabela para ver todas as informações e ações.</p>
@@ -158,10 +158,10 @@ function PainelOrientadoresDiretor() {
                     <td><a href={`mailto:${professor.email}`}>{professor.email}</a></td>
                     <td className="text-center fw-bold">{professor.alunosOrientados}</td>
                     <td><StatusBadge status={professor.status} /></td>
-                    <td><Botao tipo="botao-sage-verde" className="gap-2 text-nowrap"
+                    <td><Button tipo="botao-sage-verde" className="gap-2 text-nowrap"
                       onClick={() => setProfessorSelecionadoId(professor.id)} aria-label={`Ver perfil de ${professor.nome}`}>
                       <Eye size={15} aria-hidden="true" /> Ver perfil
-                    </Botao></td>
+                    </Button></td>
                   </tr>)}
                   {filtrados.length === 0 && <tr><td colSpan={7} className="text-center py-5">
                     <UserMinus size={32} className="text-secondary mb-3" aria-hidden="true" />

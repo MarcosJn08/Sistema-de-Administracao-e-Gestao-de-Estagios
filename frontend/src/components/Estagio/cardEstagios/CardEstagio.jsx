@@ -1,7 +1,7 @@
 import React from 'react';
 import { CalendarDays, Clock3, ArrowRight } from 'lucide-react';
 import StatusBadge from '../../StatusBadge.jsx';
-import Botao from '../../Button.jsx';
+import Button from "../../Button/Button.jsx";
 import LogoEmpresa from '../../LogoEmpresa.jsx';
 import './CardEstagio.css';
 

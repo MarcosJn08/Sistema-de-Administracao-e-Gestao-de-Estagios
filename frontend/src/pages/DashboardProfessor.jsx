@@ -7,7 +7,7 @@ import CardPequeno from '../components/CardPequeno.jsx';
 import Input from '../components/Input.jsx';
 import Select from '../components/Select.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
-import Botao from '../components/Button.jsx';
+import Button from "../components/Button/Button.jsx";
 import Paginacao from '../components/Paginacao.jsx';
 import DetalhesAluno from '../components/aluno/DetalhesAluno.jsx';
 import professor from '../data/professor.js';

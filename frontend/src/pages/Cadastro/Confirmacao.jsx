@@ -1,5 +1,5 @@
 import "./Confirmacao.css";
-import Botao from "../../components/Button.jsx";
+import Botao from "../../components/Button/Button.jsx";
 import InfoLinha from "../../components/cadastro/InfoLinha.jsx";
 import Footer from "../../components/Footer.jsx";
 import { Navigate } from 'react-router-dom';

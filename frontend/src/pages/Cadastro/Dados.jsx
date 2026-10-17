@@ -6,7 +6,7 @@ import TituloCadastro from "../../components/cadastro/TituloCadastro.jsx";
 import CardCadastro from "../../components/cadastro/CardCadastro.jsx";
 import Input from "../../components/Input.jsx";
 import Select from "../../components/Select.jsx";
-import Botao from "../../components/Button.jsx";
+import Botao from "../../components/Button/Button.jsx";
 import Footer from "../../components/Footer.jsx";
 import {
   cadastroEmpresaVazio,

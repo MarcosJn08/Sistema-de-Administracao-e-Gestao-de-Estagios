@@ -4,7 +4,7 @@ import { Alert, Col, Container, Row } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
-import Botao from '../components/Button.jsx';
+import Button from "../components/Button/Button.jsx";
 import StatusBadge from '../components/StatusBadge.jsx';
 import CardDadosEstagio from '../components/Estagio/CardDadosEstagio.jsx';
 import CardProgresso from '../components/aluno/CardProgresso.jsx';
@@ -77,9 +77,9 @@ function TelaEstagio() {
               </div>
               <p>{estagio.cargo} na empresa {estagio.empresa}</p>
             </div>
-            <Botao tipo="botao-acao-contorno" onClick={() => navigate('/sage/aluno/estagios')}>
+            <Button tipo="botao-acao-contorno" onClick={() => navigate('/sage/aluno/estagios')}>
               <ArrowLeft size={16} aria-hidden="true" /> Voltar aos estágios
-            </Botao>
+            </Button>
           </div>
 
           <CardDadosEstagio
