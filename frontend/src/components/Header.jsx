@@ -3,7 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import Button from './Button.jsx';
+import Button from "./Button/Button.jsx";
 import LogoBranca from '../assets/LogoBranca.png';
 
 import { Code } from 'lucide-react';

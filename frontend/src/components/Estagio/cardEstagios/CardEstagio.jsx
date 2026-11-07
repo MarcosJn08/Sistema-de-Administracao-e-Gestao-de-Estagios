@@ -1,7 +1,7 @@
 import React from 'react';
 import { CalendarDays, Clock3, ArrowRight } from 'lucide-react';
 import StatusBadge from '../../StatusBadge.jsx';
-import Botao from '../../Button.jsx';
+import Button from "../../Button/Button.jsx";
 import LogoEmpresa from '../../LogoEmpresa.jsx';
 import './CardEstagio.css';
 
@@ -72,14 +72,14 @@ function CardEstagio({ estagio, aoVerEstagio }) {
         </div>
       </div>
 
-      <Botao
+      <Button
         tipo={atual ? 'botao-sage-verde' : 'botao-sem-fundo-verde'}
         className="card-estagio-botao"
         onClick={() => aoVerEstagio?.(estagio)}
       >
         Ver estágio
         <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
-      </Botao>
+      </Button>
     </article>
   );
 }

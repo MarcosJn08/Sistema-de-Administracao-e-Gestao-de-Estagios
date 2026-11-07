@@ -1,5 +1,5 @@
 import "./Confirmacao.css";
-import Botao from "../../components/Button.jsx";
+import Button from "../../components/Button/Button.jsx";
 import InfoLinha from "../../components/cadastro/InfoLinha.jsx";
 import Footer from "../../components/Footer.jsx";
 import { Navigate } from 'react-router-dom';
@@ -44,9 +44,9 @@ function Confirmacao() {
         </section>
 
         <div className="area-login">
-          <Botao texto="Fazer Login" tipo="botao-com-fundo" href="/sage/login">
+          <Button texto="Fazer Login" tipo="botao-com-fundo" href="/sage/login">
             <i className="bi bi-chevron-right"></i>
-          </Botao>
+          </Button>
         </div>
       </main>
       <Footer />

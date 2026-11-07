@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
-import Botao from '../components/Button.jsx';
+import Button from '../components/Button/Button.jsx';
 import CardDadosAluno from '../components/aluno/CardDadosAluno.jsx';
 import CardProgresso from '../components/aluno/CardProgresso.jsx';
 import CardEstagioAtual from '../components/aluno/CardEstagioAtual.jsx';
@@ -71,14 +71,14 @@ function DashboardAluno() {
             <div className="dashboard-estagios-cabecalho">
               <h2 id="titulo-meus-estagios">Meus Estágios</h2>
 
-              <Botao
+              <Button
                 tipo="botao-acao-contorno"
                 className="gap-2 text-nowrap"
                 onClick={() => navigate('/sage/aluno/estagios')}
               >
                 Ver todos
                 <ArrowRight size={16} aria-hidden="true" />
-              </Botao>
+              </Button>
             </div>
 
             <div className="dashboard-estagios-grid">

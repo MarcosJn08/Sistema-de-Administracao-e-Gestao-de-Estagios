@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Modal, ProgressBar } from 'react-bootstrap';
 import { FileText, GraduationCap, UserRound } from 'lucide-react';
 import StatusBadge from '../StatusBadge.jsx';
-import Botao from '../Button.jsx';
+import Button from '../Button/Button.jsx';
 import FormAcaoDiretor from './FormAcaoDiretor.jsx';
 import DocumentoAluno from './DocumentoAluno.jsx';
 import { baixarPreviaCertidao, podeHomologarHoras } from '../../utils/gestaoAluno.js';
@@ -156,7 +156,7 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', orientad
           </section>
         </div>
       </Modal.Body>
-      <Modal.Footer><Botao tipo="botao-sage-verde" onClick={aoFechar}>Fechar</Botao></Modal.Footer>
+      <Modal.Footer><Button tipo="botao-sage-verde" onClick={aoFechar}>Fechar</Button></Modal.Footer>
     </Modal>
   );
 }

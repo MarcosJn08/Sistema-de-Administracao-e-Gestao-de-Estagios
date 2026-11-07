@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../App.css';
 import './CardsDiretor.css';
-import Button from '../Button.jsx';
+import Button from '../Button/Button.jsx';
 
 function CardAcoesRapidas({ titulo = 'Ações rápidas', acoes = [] }) {
   return (

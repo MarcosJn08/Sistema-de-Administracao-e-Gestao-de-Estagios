@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card } from "react-bootstrap";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
-import Button from "../components/Button.jsx";
+import Button from "../components/Button/Button.jsx";
 import Status from "../components/status/status.jsx";
 import Icone from "../components/Icone/Icone.jsx";
 import InfoItem from "../components/Documentos/InfoItem.jsx";

@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../App.css';
 import StatusBadge from '../StatusBadge.jsx';
-import Botao from '../Button.jsx';
+import Button from '../Button/Button.jsx';
 
 function CardEstagioAtual({
   status,
@@ -60,12 +60,12 @@ function CardEstagioAtual({
       </div>
 
       {!somenteLeitura && <div className="d-flex justify-content-end mt-4">
-        <Botao
+        <Button
           tipo="botao-sage-verde"
           onClick={lidarComVerHistorico}
         >
           Ver histórico
-        </Botao>
+        </Button>
       </div>}
     </div>
   );

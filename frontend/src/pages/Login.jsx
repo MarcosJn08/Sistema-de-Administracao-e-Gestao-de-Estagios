@@ -5,7 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../components/InputLogin/Input.jsx";
 import GoogleButton from "../components/GoogleButton.jsx";
-import Button from "../components/Button.jsx";
+import Button from "../components/Button/Button.jsx";
 import ImgLogin from "../assets/LoginHD.png";
 
 function Login() {

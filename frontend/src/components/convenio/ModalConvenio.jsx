@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { Building2 } from 'lucide-react';
-import Botao from '../Button.jsx';
+import Button from '../Button/Button.jsx';
 import { calcularVigenciaCincoAnos } from '../../utils/convenio.js';
 import './ModalConvenio.css';
 
@@ -75,7 +75,7 @@ function ModalConvenio({ aberto, convenio, modo = 'novo', tipos, aoSalvar, aoFec
         </form>
       </Modal.Body>
       <Modal.Footer>
-        <Botao tipo="botao-acao-contorno" onClick={fechar}>Cancelar</Botao>
+        <Button tipo="botao-acao-contorno" onClick={fechar}>Cancelar</Button>
         <button type="submit" form="form-convenio" className="botao-sage-verde">
           {modo === 'novo' ? 'Cadastrar convênio' : modo === 'renovar' ? 'Confirmar renovação' : 'Salvar alterações'}
         </button>
