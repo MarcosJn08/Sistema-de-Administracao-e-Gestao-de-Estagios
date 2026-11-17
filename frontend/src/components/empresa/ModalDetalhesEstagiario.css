@@ -44,12 +44,6 @@
   background-color: #ffffff;
 }
 
-.modal-estagiario-breadcrumb {
-  font-size: 0.8125rem;
-  color: #94a3b8;
-  font-weight: 500;
-}
-
 .modal-estagiario-title {
   font-size: 1.5rem;
   font-weight: 700;
@@ -434,7 +428,7 @@
   display: inline-block;
 }
 
-.badge-estagiario-experiencia {
+.badge-estagiario-integracao {
   background-color: #fef3c7;
   color: #b45309;
   font-size: 0.75rem;

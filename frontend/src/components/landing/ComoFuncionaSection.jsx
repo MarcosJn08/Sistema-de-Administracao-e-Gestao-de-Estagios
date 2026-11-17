@@ -18,9 +18,9 @@ const etapas = [
   {
     titulo: 'Envie os documentos',
     descricao: 'Faça o upload dos arquivos e acompanhe as assinaturas.',
-    acao: 'Central de documentos',
+    acao: 'Acompanhar estágio',
     Icone: FileUp,
-    link: '/sage/documentos',
+    link: '/sage/aluno/estagios',
   },
 ];
 

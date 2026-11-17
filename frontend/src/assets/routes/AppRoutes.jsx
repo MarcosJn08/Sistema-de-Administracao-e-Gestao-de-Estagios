@@ -2,8 +2,10 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from '../../pages/LandingPage.jsx';
 import DashboardAluno from '../../pages/DashboardAluno.jsx';
+import PerfilAluno from '../../pages/PerfilAluno.jsx';
+import VagasSalvasAluno from '../../pages/VagasSalvasAluno.jsx';
+import MinhasCandidaturasAluno from '../../pages/MinhasCandidaturasAluno.jsx';
 import VitrineVagas from '../../pages/VitrineVagas.jsx';
-import CentralDocumentos from '../../pages/CentralDocumentos.jsx';
 import Login from '../../pages/Login.jsx';
 import DadosEmpresa from '../../pages/Cadastro/Dados.jsx';
 import DocumentosEmpresa from '../../pages/Cadastro/Documentos.jsx';
@@ -30,6 +32,10 @@ function AppRoutes() {
         <Route path="/sage" element={<LandingPage />} />
         
         <Route path="/sage/aluno" element={<DashboardAluno />} />
+        <Route path="/sage/aluno/perfil" element={<PerfilAluno />} />
+        <Route path="/sage/aluno/vagas-salvas" element={<VagasSalvasAluno />} />
+        <Route path="/sage/aluno/candidaturas" element={<MinhasCandidaturasAluno />} />
+        <Route path="/sage/aluno/candidaturas/:vagaId" element={<MinhasCandidaturasAluno />} />
         <Route path="/sage/aluno/estagios" element={<MeusEstagiosAluno />} />
         <Route path="/sage/aluno/estagios/:estagioId" element={<TelaEstagio />} />
         <Route path="/sage/professor" element={<DashboardProfessor />} />
@@ -50,7 +56,7 @@ function AppRoutes() {
         <Route path="/sage/diretor/documentos" element={<PainelDocumentosDiretor />} />
         <Route path="/sage/vagas" element={<VitrineVagas />} />
         <Route path="/sage/vagas/:vagaId" element={<VitrineVagas />} />
-        <Route path="/sage/documentos" element={<CentralDocumentos />} />
+        <Route path="/sage/vagas/:vagaId/candidatura" element={<VitrineVagas />} />
         <Route path="/sage/login" element={<Login />} />
 
         <Route path="/sage/cadastro/empresa" element={<DadosEmpresa />} />

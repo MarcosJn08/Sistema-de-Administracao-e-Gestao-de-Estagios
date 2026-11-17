@@ -1,0 +1,7 @@
+.salvar-vaga-controle { min-width: 0; }
+.salvar-vaga-controle .btn-salvar-vaga { justify-content: center; }
+.salvar-vaga-erro { max-width: 280px; margin: 8px 0 0; color: #b91c1c; font-size: 12px; line-height: 1.5; }
+@media (max-width: 575.98px) {
+  .modal-detalhes-acoes-direita .salvar-vaga-controle { flex: 1; }
+  .modal-detalhes-acoes-direita .salvar-vaga-controle button { width: 100%; height: 100%; }
+}

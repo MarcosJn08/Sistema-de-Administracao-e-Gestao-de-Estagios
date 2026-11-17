@@ -1,0 +1,17 @@
+.seletor-habilidades-previa { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.seletor-habilidades-previa > .habilidades-badges { display: contents; }
+.seletor-habilidades-mais { justify-content: center; min-width: 38px; min-height: 36px; padding: 7px; }
+.seletor-habilidades .seletor-habilidades-resumo { margin: 10px 0 0; color: #64748b; font-size: 12px; }
+.seletor-habilidades-modal { --bs-modal-width: 540px; }
+.seletor-habilidades-modal .modal-content { border: 1px solid #dbe4ee; border-radius: 16px; overflow: hidden; }
+.seletor-habilidades-modal .modal-header,
+.seletor-habilidades-modal .modal-footer { padding: 18px 20px; border-color: #edf2f7; }
+.seletor-habilidades-modal .modal-title { color: #172033; font-size: 20px; font-weight: 600; }
+.seletor-habilidades-modal .modal-body { padding: 20px; }
+.seletor-habilidades-instrucao { color: #64748b; font-size: 13px; margin: 0 0 16px; }
+.seletor-habilidades-busca { position: relative; margin-bottom: 20px; }
+.seletor-habilidades-busca > svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #64748b; pointer-events: none; }
+.seletor-habilidades-busca input { padding: 10px 12px 10px 38px; font-size: 14px; border-color: #dbe4ee; border-radius: 8px; }
+.seletor-habilidades-busca input:focus { border-color: #198754; box-shadow: 0 0 0 3px #19875420; }
+.seletor-habilidades-modal .modal-footer { justify-content: space-between; gap: 12px; }
+.seletor-habilidades-modal .seletor-habilidades-resumo { margin: 0; color: #64748b; font-size: 12px; }

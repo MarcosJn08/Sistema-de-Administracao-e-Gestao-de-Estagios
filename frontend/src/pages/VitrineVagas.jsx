@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useMatch, useNavigate, useParams } from 'react-router-dom';
 import { Search, ChevronDown } from 'lucide-react';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import VagaCard from '../components/VagaCard.jsx';
 import ModalDetalhesVaga from '../components/vagas/ModalDetalhesVaga.jsx';
+import ModalCandidatura from '../components/vagas/ModalCandidatura.jsx';
 import LogoBranca from '../assets/LogoBranca.png';
 import vagasIniciais from '../data/vagas.json';
 import dados from '../data/aluno.js';
@@ -13,6 +14,7 @@ import './VitrineVagas.css';
 function VitrineVagas() {
   const navigate = useNavigate();
   const { vagaId } = useParams();
+  const emCandidatura = useMatch('/sage/vagas/:vagaId/candidatura');
   const [busca, setBusca] = useState('');
   const [cursoFiltro, setCursoFiltro] = useState('Todos');
   const vagaSelecionada = useMemo(() => vagasIniciais.find((vaga) => String(vaga.id) === vagaId) || null, [vagaId]);
@@ -108,12 +110,17 @@ function VitrineVagas() {
         </div>
       </main>
 
-      <ModalDetalhesVaga
+      {emCandidatura && vagaSelecionada ? <ModalCandidatura
+        key={vagaSelecionada.id}
+        vaga={vagaSelecionada}
+        aoVoltar={() => navigate(`/sage/vagas/${vagaSelecionada.id}`)}
+        aoFechar={() => navigate('/sage/vagas')}
+      /> : <ModalDetalhesVaga
         key={vagaSelecionada?.id || 'sem-vaga'}
         aberto={Boolean(vagaSelecionada)}
         vaga={vagaSelecionada}
         aoFechar={() => navigate('/sage/vagas')}
-      />
+      />}
 
       <Footer />
     </div>

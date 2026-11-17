@@ -6,7 +6,6 @@ const grupos = [
     links: [
       ['Ver vagas', '/sage/vagas'],
       ['Meu estágio', '/sage/aluno'],
-      ['Documentos', '/sage/documentos'],
       ['Como funciona', '#como-funciona'],
     ],
   },

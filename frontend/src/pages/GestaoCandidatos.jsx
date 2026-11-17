@@ -5,7 +5,7 @@ import {
   Users,
   FileText,
   Handshake,
-  AlertCircle,
+  CircleX,
   Search,
   ChevronDown,
   CheckCircle2,
@@ -118,7 +118,7 @@ function GestaoCandidatos() {
 
   const linksNavegacaoEmpresa = [
     ['Dashboard', '/sage/empresa'],
-    ['Estagiários', '#estagiarios'],
+    ['Estagiários', '/sage/empresa/estagiarios'],
   ];
 
   return (
@@ -176,7 +176,7 @@ function GestaoCandidatos() {
               <CardMetricaEmpresa
                 titulo="Reprovados"
                 valor={metricas.reprovados}
-                icone={AlertCircle}
+                icone={CircleX}
                 corIcone="#dc2626"
                 corFundoIcone="#fee2e2"
               />
