@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert, Form, Modal } from 'react-bootstrap';
 import { Download, ExternalLink, FileText, PenLine } from 'lucide-react';
-import Botao from '../Button.jsx';
+import Button from "../Button/Button.jsx";
 import StatusBadge from '../StatusBadge.jsx';
 import DevolucaoParaAjustes from '../DevolucaoParaAjustes.jsx';
 import { pendenciasDocumento } from '../../utils/devolucao.js';
@@ -40,7 +40,7 @@ export default function ModalAnaliseDocumento({ documento, visualizacao = false,
               <span className="analise-documento-arquivo-icone"><FileText size={42} strokeWidth={1.25} aria-hidden="true" /></span>
               <h3>{documento.arquivoNome}</h3>
               <p>{documento.arquivoUrl ? 'Visualização prévia do PDF integrada ao navegador' : 'O arquivo ainda não está disponível.'}</p>
-              {documento.arquivoUrl && <Botao tipo="botao-acao-contorno" onClick={() => setMostrarPdf(true)}>Visualizar PDF</Botao>}
+              {documento.arquivoUrl && <Button tipo="botao-acao-contorno" onClick={() => setMostrarPdf(true)}>Visualizar PDF</Button>}
             </div>}
             {documento.arquivoUrl && <div className="analise-documento-arquivo-acoes">
               <a href={documento.arquivoUrl} target="_blank" rel="noopener noreferrer">Abrir em nova aba <ExternalLink size={14} aria-hidden="true" /></a>
@@ -89,7 +89,7 @@ export default function ModalAnaliseDocumento({ documento, visualizacao = false,
           </div>
         </div>}
       </Modal.Body>
-      <Modal.Footer><Botao tipo="botao-acao-contorno" onClick={aoFechar}>Fechar</Botao></Modal.Footer>
+      <Modal.Footer><Button tipo="botao-acao-contorno" onClick={aoFechar}>Fechar</Button></Modal.Footer>
     </Modal>
   );
 }

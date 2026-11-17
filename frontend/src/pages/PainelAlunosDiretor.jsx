@@ -4,9 +4,9 @@ import { Users, BriefcaseBusiness, GraduationCap, UserSearch, Search, Eye, Plus,
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import CardPequeno from '../components/CardPequeno.jsx';
-import Input from '../components/Input.jsx';
+import Input from '../components/Input/Input.jsx';
 import Select from '../components/Select.jsx';
-import Botao from '../components/Button.jsx';
+import Button from "../components/Button/Button.jsx";
 import StatusBadge from '../components/StatusBadge.jsx';
 import Paginacao from '../components/Paginacao.jsx';
 import DetalhesAluno from '../components/aluno/DetalhesAluno.jsx';
@@ -102,9 +102,9 @@ function PainelAlunosDiretor() {
               <h1 className="painel-alunos-titulo">Painel geral de alunos</h1>
               <p className="text-secondary mb-0">Visão consolidada de todos os discentes e seus respectivos vínculos de estágio no IFNMG Campus Almenara</p>
             </div>
-            <Botao tipo="botao-sage-verde" className="gap-2" onClick={() => setCadastroAberto(true)}>
+            <Button tipo="botao-sage-verde" className="gap-2" onClick={() => setCadastroAberto(true)}>
               <Plus size={17} aria-hidden="true" /> Cadastrar aluno
-            </Botao>
+            </Button>
           </div>
           <Row className="g-4 mb-4">
             {indicadores.map((indicador) => (
@@ -141,9 +141,9 @@ function PainelAlunosDiretor() {
                 <p className="text-secondary small mb-0" role="status">{filtrados.length} de {alunos.length} alunos encontrados</p>
               </div>
               {(busca || curso || situacao) && (
-                <Botao tipo="botao-sage-verde" onClick={limparFiltros} className="gap-2">
+                <Button tipo="botao-sage-verde" onClick={limparFiltros} className="gap-2">
                   <RotateCcw size={15} aria-hidden="true" /> Limpar filtros
-                </Botao>
+                </Button>
               )}
             </div>
             <p className="d-lg-none text-secondary small">Deslize a tabela para ver todas as informações e ações.</p>
@@ -169,9 +169,9 @@ function PainelAlunosDiretor() {
                           <ProgressBar now={percentual} aria-label={`Carga horária de ${aluno.nome}`} />
                         </td>
                         <td><StatusBadge status={aluno.situacao} /></td>
-                        <td><Botao tipo="botao-sage-verde" className="gap-2 text-nowrap" onClick={() => setAlunoSelecionadoId(aluno.id)} aria-label={`Ver detalhes de ${aluno.nome}`}>
+                        <td><Button tipo="botao-sage-verde" className="gap-2 text-nowrap" onClick={() => setAlunoSelecionadoId(aluno.id)} aria-label={`Ver detalhes de ${aluno.nome}`}>
                           <Eye size={16} aria-hidden="true" /> Ver Detalhes
-                        </Botao></td>
+                        </Button></td>
                       </tr>
                     );
                   })}

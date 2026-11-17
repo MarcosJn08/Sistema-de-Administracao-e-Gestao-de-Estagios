@@ -1,7 +1,7 @@
 import { useId, useState } from 'react';
 import { Alert, Col, Form, Row } from 'react-bootstrap';
 import { LockKeyhole, Mail, RotateCcw } from 'lucide-react';
-import Botao from './Button.jsx';
+import Button from "./Button/Button.jsx";
 import StatusBadge from './StatusBadge.jsx';
 import { prepararNotificacao } from '../utils/devolucao.js';
 import './DevolucaoParaAjustes.css';
@@ -58,7 +58,7 @@ export default function DevolucaoParaAjustes({ resumo, status, opcoes, email, re
           </Col>
         </Row>
         <div className="devolucao-ajustes-acoes">
-          <Botao tipo="botao-acao-contorno" onClick={aoCancelar}>Voltar à análise</Botao>
+          <Button tipo="botao-acao-contorno" onClick={aoCancelar}>Voltar à análise</Button>
           <button type="submit" className="botao-sage-verde gap-2"><RotateCcw size={15} aria-hidden="true" /> Confirmar devolução</button>
         </div>
       </Form>

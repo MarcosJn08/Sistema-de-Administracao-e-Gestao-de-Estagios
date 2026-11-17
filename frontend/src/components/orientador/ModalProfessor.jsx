@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { BookOpenCheck, Pencil, UserRound } from 'lucide-react';
 import StatusBadge from '../StatusBadge.jsx';
-import Botao from '../Button.jsx';
+import Button from '../Button/Button.jsx';
 import './ModalProfessor.css';
 
 function ModalProfessor({ aberto, professor, departamentos, statusDisponiveis, aoSalvar, aoFechar }) {
@@ -139,12 +139,12 @@ function ModalProfessor({ aberto, professor, departamentos, statusDisponiveis, a
 
         <Modal.Footer>
           {!editando && professor ? <>
-            <Botao tipo="botao-sage-verde" className="gap-2" onClick={() => setEditando(true)}>
+            <Button tipo="botao-sage-verde" className="gap-2" onClick={() => setEditando(true)}>
               <Pencil size={15} aria-hidden="true" /> Editar cadastro
-            </Botao>
-            <Botao tipo="botao-acao-contorno" onClick={aoFechar}>Fechar</Botao>
+            </Button>
+            <Button tipo="botao-acao-contorno" onClick={aoFechar}>Fechar</Button>
           </> : <>
-            <Botao tipo="botao-acao-contorno" onClick={cadastro ? aoFechar : () => { setEditando(false); setErro(''); }}>Cancelar</Botao>
+            <Button tipo="botao-acao-contorno" onClick={cadastro ? aoFechar : () => { setEditando(false); setErro(''); }}>Cancelar</Button>
             <button type="submit" className="botao-sage-verde">{cadastro ? 'Cadastrar professor' : 'Salvar alterações'}</button>
           </>}
         </Modal.Footer>

@@ -1,6 +1,6 @@
 import React from 'react';
 import '../../App.css';
-import Botao from '../Button.jsx';
+import Button from '../Button/Button.jsx';
 
 function CardDadosAluno({ nome, curso, email, matricula, aoEditarPerfil, onEditProfile, somenteLeitura = false, children }) {
   const lidarComEdicao = aoEditarPerfil || onEditProfile;
@@ -35,9 +35,9 @@ function CardDadosAluno({ nome, curso, email, matricula, aoEditarPerfil, onEditP
               <span className="fw-bold text-dark">Numero de Matrícula: </span>
               <span className="text-secondary">{matricula}</span>
             </div>
-            {!somenteLeitura && <Botao tipo="botao-sage-verde" onClick={lidarComEdicao}>
+            {!somenteLeitura && <Button tipo="botao-sage-verde" onClick={lidarComEdicao}>
               Editar Perfil
-            </Botao>}
+            </Button>}
           </div>
           {children}
         </div>

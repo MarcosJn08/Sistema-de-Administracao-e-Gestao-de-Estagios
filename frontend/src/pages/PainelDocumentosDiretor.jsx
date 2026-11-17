@@ -4,9 +4,9 @@ import { AlarmClock, CheckCircle2, Download, Eye, FilePenLine, FileSearch, Rotat
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import CardPequeno from '../components/CardPequeno.jsx';
-import Input from '../components/Input.jsx';
+import Input from '../components/Input/Input.jsx';
 import Select from '../components/Select.jsx';
-import Botao from '../components/Button.jsx';
+import Button from "../components/Button/Button.jsx";
 import StatusBadge from '../components/StatusBadge.jsx';
 import Paginacao from '../components/Paginacao.jsx';
 import ModalAnaliseDocumento from '../components/documento/ModalAnaliseDocumento.jsx';
@@ -75,7 +75,7 @@ export default function PainelDocumentosDiretor() {
               <Col xs={12} sm={6} lg={3}><Select id="tipo-documentos" aria-label="Filtrar por tipo de documento" className="mb-0" value={tipo}
                 onChange={(evento) => { setTipo(evento.target.value); setPagina(1); }} opcoes={[{ valor: '', rotulo: 'Tipo: todos' }, ...tiposDocumento]} /></Col>
             </Row>
-            {(busca || status || tipo) && <div className="mb-3"><Botao tipo="botao-acao-contorno" className="gap-2" onClick={limparFiltros}><RotateCcw size={14} aria-hidden="true" /> Limpar filtros</Botao></div>}
+            {(busca || status || tipo) && <div className="mb-3"><Button tipo="botao-acao-contorno" className="gap-2" onClick={limparFiltros}><RotateCcw size={14} aria-hidden="true" /> Limpar filtros</Button></div>}
             <p className="d-lg-none small text-secondary">Deslize a tabela para ver todas as informações e ações.</p>
             <div className="tabela-sage-container" tabIndex={0} role="region" aria-label="Tabela de documentos, role horizontalmente para ver todas as colunas">
               <Table className="tabela-sage painel-documentos-tabela">
@@ -86,7 +86,7 @@ export default function PainelDocumentosDiretor() {
                   <td>{documento.empresa}</td><td className="text-nowrap">{documento.data}</td>
                   <td><StatusBadge status={documento.status} variante={documento.status === 'Expirado' ? 'vermelho' : documento.status === 'Correção solicitada' ? 'ambar' : undefined} /></td>
                   <td><div className="painel-documentos-acoes">
-                    <Botao tipo="botao-sage-verde" onClick={() => setSelecionado({ id: documento.id, visualizacao: false })} aria-label={`Analisar ${documento.nome} de ${documento.aluno}`}>Analisar</Botao>
+                    <Button tipo="botao-sage-verde" onClick={() => setSelecionado({ id: documento.id, visualizacao: false })} aria-label={`Analisar ${documento.nome} de ${documento.aluno}`}>Analisar</Button>
                     <button type="button" className="painel-documentos-icone" title="Visualizar documento" aria-label={`Visualizar ${documento.nome} de ${documento.aluno}`}
                       onClick={() => setSelecionado({ id: documento.id, visualizacao: true })}><Eye size={16} aria-hidden="true" /></button>
                     {documento.arquivoUrl && <a className="painel-documentos-icone" href={documento.arquivoUrl} download={documento.arquivoNome}

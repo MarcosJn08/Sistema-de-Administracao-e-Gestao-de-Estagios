@@ -3,7 +3,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
-import Botao from '../components/Button.jsx';
+import Button from "../components/Button/Button.jsx";
 import CardPequeno from '../components/CardPequeno.jsx';
 import CardEstagio from '../components/Estagio/cardEstagios/CardEstagio.jsx';
 import dados from '../data/aluno.js';
@@ -32,9 +32,9 @@ function MeusEstagiosAluno() {
               <h1>Meus estágios</h1>
               <p>Acompanhe o vínculo atual e consulte o histórico dos estágios já realizados</p>
             </div>
-            <Botao tipo="botao-acao-contorno" onClick={() => navigate('/sage/aluno')}>
+            <Button type="botao-acao-contorno" onClick={() => navigate('/sage/aluno')}>
               <LayoutDashboard size={16} aria-hidden="true" /> Voltar ao dashboard
-            </Botao>
+            </Button>
           </div>
 
           <Row className="g-4 mb-4">

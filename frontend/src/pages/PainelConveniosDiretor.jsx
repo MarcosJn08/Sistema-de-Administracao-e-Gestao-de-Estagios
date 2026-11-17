@@ -4,9 +4,9 @@ import { CircleAlert, Clock3, Handshake, Pencil, Plus, RefreshCw, RotateCcw, Sea
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import CardPequeno from '../components/CardPequeno.jsx';
-import Input from '../components/Input.jsx';
+import Input from '../components/Input/Input.jsx';
 import Select from '../components/Select.jsx';
-import Botao from '../components/Button.jsx';
+import Button from "../components/Button/Button.jsx";
 import StatusBadge from '../components/StatusBadge.jsx';
 import Paginacao from '../components/Paginacao.jsx';
 import ModalConvenio from '../components/convenio/ModalConvenio.jsx';
@@ -97,9 +97,9 @@ function PainelConveniosDiretor() {
         <Container className="px-3 painel-convenios-container">
           <div className="painel-convenios-cabecalho">
             <div><h1>Listagem de convênios</h1><p>Visualize e controle as entidades parceiras concedentes de estágio</p></div>
-            <Botao tipo="botao-sage-verde" className="gap-2" onClick={() => setFormulario({ modo: 'novo' })}>
+            <Button tipo="botao-sage-verde" className="gap-2" onClick={() => setFormulario({ modo: 'novo' })}>
               <Plus size={17} aria-hidden="true" /> Novo convênio
-            </Botao>
+            </Button>
           </div>
 
           <Row className="g-4 mb-4">{indicadores.map((indicador) => <Col key={indicador.titulo} xs={12} md={4}>
@@ -123,7 +123,7 @@ function PainelConveniosDiretor() {
             <div className="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
               <div><h2 id="lista-convenios-titulo" className="cartao-sage-titulo mb-1">Convênios cadastrados</h2>
                 <p className="text-secondary small mb-0" role="status">{filtrados.length} de {convenios.length} convênios encontrados</p></div>
-              {(busca || status) && <Botao tipo="botao-sage-verde" className="gap-2" onClick={limparFiltros}><RotateCcw size={15} /> Limpar filtros</Botao>}
+              {(busca || status) && <Button tipo="botao-sage-verde" className="gap-2" onClick={limparFiltros}><RotateCcw size={15} /> Limpar filtros</Button>}
             </div>
             <p className="d-lg-none text-secondary small">Deslize a tabela para ver todas as informações e ações.</p>
             <div className="tabela-sage-container" tabIndex={0} role="region" aria-label="Tabela de convênios, role horizontalmente para ver todas as colunas">

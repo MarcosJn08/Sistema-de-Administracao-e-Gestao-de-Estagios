@@ -1,3 +1,23 @@
-import Input from '../Input.jsx';
+import Form from 'react-bootstrap/Form';
+import './Input.css';
+
+function Input({ id, titulo, tipo = 'text', textoDeFundo, texto, placeholder, value, onChange, onSubmit, className = '', ...props }) {
+  const ph = textoDeFundo ?? texto ?? placeholder;
+  return (
+    <Form className="w-100" onSubmit={onSubmit}>
+      <Form.Group className={`input-container ${className}`.trim()} controlId={id}>
+        {titulo && <Form.Label>{titulo}</Form.Label>}
+        <Form.Control
+          type={tipo}
+          placeholder={ph}
+          value={value}
+          onChange={onChange}
+          className={className}
+          {...props}
+        />
+      </Form.Group>
+    </Form>
+  );
+}
 
 export default Input;

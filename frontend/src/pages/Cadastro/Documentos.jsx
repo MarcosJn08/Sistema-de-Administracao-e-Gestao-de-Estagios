@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import "./Documento.css";
 import HeaderCadastro from "../../components/cadastro/HeaderCadastro.jsx";
 import TituloCadastro from "../../components/cadastro/TituloCadastro.jsx";
-import Botao from "../../components/Button.jsx";
+import Button from "../../components/Button/Button.jsx";
 import StatusBadge from '../../components/StatusBadge.jsx';
 import Footer from "../../components/Footer.jsx";
 import { formatarTamanhoArquivo, validarDocumentoCadastro } from '../../utils/cadastroEmpresa.js';
@@ -106,16 +106,16 @@ function Documentos() {
               </div>
               <div className="documento-acoes">
                 <div className="botoes-documento">
-                  <Botao tipo="botao-sem-fundo-verde" href={urlArquivo} target="_blank" rel="noopener noreferrer">
+                  <Button tipo="botao-sem-fundo-verde" href={urlArquivo} target="_blank" rel="noopener noreferrer">
                     <Eye size={17} aria-hidden="true" /> Abrir PDF
-                  </Botao>
-                  <Botao tipo="botao-acao-contorno" href={urlArquivo} download={arquivo.name}>
+                  </Button>
+                  <Button tipo="botao-acao-contorno" href={urlArquivo} download={arquivo.name}>
                     <Download size={17} aria-hidden="true" /> Baixar
-                  </Botao>
+                  </Button>
                 </div>
-                <Botao tipo="botao-acao-contorno" onClick={() => inputArquivo.current?.click()}>
+                <Button tipo="botao-acao-contorno" onClick={() => inputArquivo.current?.click()}>
                   <RotateCcw size={16} aria-hidden="true" /> Substituir arquivo
-                </Botao>
+                </Button>
                 <input ref={inputArquivo} type="file" accept="application/pdf,.pdf" className="visually-hidden"
                   onChange={(evento) => selecionarArquivo(evento.target.files?.[0])} />
               </div>
@@ -132,8 +132,8 @@ function Documentos() {
         </section>
 
         <div className="area-botao-documento">
-          <Botao tipo="botao-acao-contorno" onClick={() => navigate('/sage/cadastro/empresa')}>Voltar</Botao>
-          <Botao tipo="botao-com-fundo" onClick={concluir}><CheckCircle2 size={17} aria-hidden="true" /> Concluir cadastro</Botao>
+          <Button tipo="botao-acao-contorno" onClick={() => navigate('/sage/cadastro/empresa')}>Voltar</Button>
+          <Button tipo="botao-com-fundo" onClick={concluir}><CheckCircle2 size={17} aria-hidden="true" /> Concluir cadastro</Button>
         </div>
       </main>
       <Footer />

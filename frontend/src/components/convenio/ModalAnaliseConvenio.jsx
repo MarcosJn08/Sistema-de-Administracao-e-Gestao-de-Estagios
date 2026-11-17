@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { Building2, CalendarDays, Check, CheckCircle2, FileText, Info, Mail, RotateCcw, ShieldAlert, SquarePen, X, XCircle } from 'lucide-react';
 import StatusBadge from '../StatusBadge.jsx';
-import Botao from '../Button.jsx';
+import Button from '../Button/Button.jsx';
 import DevolucaoParaAjustes from '../DevolucaoParaAjustes.jsx';
 import { pendenciasConvenio } from '../../utils/devolucao.js';
 import { calcularVigenciaCincoAnos } from '../../utils/convenio.js';
@@ -119,7 +119,7 @@ function ModalAnaliseConvenio({ aberto, convenio, aoDecidir, aoFechar }) {
           aoConfirmar={(dados) => { aoDecidir('devolver', dados); aoFechar(); }}
         /></div>}
       </Modal.Body>
-      <Modal.Footer><Botao tipo="botao-acao-contorno" onClick={aoFechar}>Fechar</Botao></Modal.Footer>
+      <Modal.Footer><Button tipo="botao-acao-contorno" onClick={aoFechar}>Fechar</Button></Modal.Footer>
     </Modal>
   );
 }

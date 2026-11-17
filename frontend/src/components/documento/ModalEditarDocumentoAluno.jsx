@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert, Form, Modal } from 'react-bootstrap';
 import { FilePenLine, FileText, Upload } from 'lucide-react';
-import Botao from '../Button.jsx';
+import Button from "../Button/Button.jsx";
 import StatusBadge from '../StatusBadge.jsx';
 import './ModalEditarDocumentoAluno.css';
 
@@ -50,7 +50,7 @@ function ModalEditarDocumentoAluno({ documento, aoFechar, aoSalvar }) {
           <p className="editar-documento-aviso">Ao substituir o arquivo, o documento voltará para análise.</p>
         </Modal.Body>
         <Modal.Footer>
-          <Botao tipo="botao-acao-contorno" onClick={aoFechar}>Cancelar</Botao>
+          <Button tipo="botao-acao-contorno" onClick={aoFechar}>Cancelar</Button>
           <button type="submit" className="botao-sage-verde"><Upload size={15} aria-hidden="true" /> Salvar novo PDF</button>
         </Modal.Footer>
       </form>
