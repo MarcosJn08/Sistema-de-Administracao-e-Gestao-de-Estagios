@@ -5,6 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Button from "./Button/Button.jsx";
 import LogoBranca from '../assets/LogoBranca.png';
+import MenuAluno from './aluno/MenuAluno.jsx';
 
 import { Code } from 'lucide-react';
 

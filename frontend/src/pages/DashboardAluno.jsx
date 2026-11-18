@@ -100,9 +100,9 @@ function DashboardAluno() {
           <section className="cartao-sage" aria-labelledby="titulo-minhas-candidaturas">
             <div className="candidaturas-aluno-topo">
               <div><h2 id="titulo-minhas-candidaturas" className="cartao-sage-titulo mb-1">Minhas candidaturas</h2><p>Suas inscrições mais recentes</p></div>
-              <Botao tipo="botao-acao-contorno" className="gap-2 text-nowrap" onClick={() => navigate('/sage/aluno/candidaturas')}>
+              <Button tipo="botao-acao-contorno" className="gap-2 text-nowrap" onClick={() => navigate('/sage/aluno/candidaturas')}>
                 Ver todas <ArrowRight size={16} aria-hidden="true" />
-              </Botao>
+              </Button>
             </div>
             <ListaCandidaturasAluno candidaturas={candidaturas.slice(0, 3)} />
           </section>

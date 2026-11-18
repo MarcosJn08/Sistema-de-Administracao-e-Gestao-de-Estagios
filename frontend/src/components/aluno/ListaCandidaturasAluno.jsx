@@ -1,6 +1,6 @@
 import { CalendarDays, Eye, Send } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Botao from '../Button.jsx';
+import Botao from "../Button/Button.jsx";
 import LogoEmpresa from '../LogoEmpresa.jsx';
 import StatusBadge from '../StatusBadge.jsx';
 import { apresentarStatusCandidatura } from '../../utils/candidaturaAluno.js';

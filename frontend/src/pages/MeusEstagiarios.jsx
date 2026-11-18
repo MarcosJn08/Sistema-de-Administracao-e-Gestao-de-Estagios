@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
-import Botao from '../components/Button.jsx';
+import Botao from "../components/Button/Button.jsx";
 import CardMetricaEmpresa from '../components/empresa/CardMetricaEmpresa.jsx';
 import ModalDetalhesEstagiario from '../components/empresa/ModalDetalhesEstagiario.jsx';
 import Paginacao from '../components/Paginacao.jsx';

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import { ArrowLeft, BriefcaseBusiness, CheckCircle2, FilePenLine, Pencil, Send, Sparkles, TriangleAlert } from 'lucide-react';
-import Botao from '../Button.jsx';
+import Botao from "../Button/Button.jsx";
 import LogoEmpresa from '../LogoEmpresa.jsx';
 import StatusBadge from '../StatusBadge.jsx';
 import HabilidadesBadges from '../aluno/HabilidadesBadges.jsx';
