@@ -1,7 +1,7 @@
 import { useId, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { Ellipsis, Search } from 'lucide-react';
-import Botao from '../Button.jsx';
+import Botao from '../Button/Button.jsx';
 import HabilidadesBadges from './HabilidadesBadges.jsx';
 import { normalizarHabilidade } from '../../data/habilidades.js';
 import './SeletorHabilidades.css';

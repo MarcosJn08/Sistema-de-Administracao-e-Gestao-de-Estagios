@@ -6,6 +6,16 @@ use Illuminate\Http\JsonResponse;
 
 trait ApiResponse
 {
+    protected function success(mixed $data, string $message, int $code = 200): JsonResponse
+    {
+        return $this->successResponse($data, $message, $code);
+    }
+
+    protected function error(string $message, int $code = 400, array $errors = []): JsonResponse
+    {
+        return $this->errorResponse($message, $code, $errors);
+    }
+
     protected function successResponse(
         mixed $data = null,
         string $message = 'Operação realizada com sucesso.',

@@ -4,7 +4,7 @@ import { Search } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
-import Botao from '../components/Button.jsx';
+import Botao from "../components/Button/Button.jsx";
 import Paginacao from '../components/Paginacao.jsx';
 import ListaCandidaturasAluno from '../components/aluno/ListaCandidaturasAluno.jsx';
 import ModalCandidatura from '../components/vagas/ModalCandidatura.jsx';

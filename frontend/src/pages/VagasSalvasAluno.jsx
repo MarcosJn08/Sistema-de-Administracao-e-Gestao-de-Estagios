@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
-import Botao from '../components/Button.jsx';
+import Botao from "../components/Button/Button.jsx";
 import VagaCard from '../components/VagaCard.jsx';
 import BotaoSalvarVaga from '../components/vagas/BotaoSalvarVaga.jsx';
 import ModalDetalhesVaga from '../components/vagas/ModalDetalhesVaga.jsx';

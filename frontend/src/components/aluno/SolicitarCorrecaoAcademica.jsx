@@ -1,7 +1,7 @@
 import { useId, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { Copy, Mail, TriangleAlert } from 'lucide-react';
-import Botao from '../Button.jsx';
+import Botao from '../Button/Button.jsx';
 import dados from '../../data/aluno.js';
 
 const contato = (import.meta.env.VITE_NUCLEO_ESTAGIO_EMAIL || '').trim();

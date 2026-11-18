@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-do
 import { ArrowLeft, Bookmark, BriefcaseBusiness, Save, Send, Sparkles, UserRound } from 'lucide-react';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
-import Botao from '../components/Button.jsx';
+import Botao from "../components/Button/Button.jsx";
 import SeletorHabilidades from '../components/aluno/SeletorHabilidades.jsx';
 import AnexosPerfil from '../components/aluno/AnexosPerfil.jsx';
 import FormacaoAluno from '../components/aluno/FormacaoAluno.jsx';
