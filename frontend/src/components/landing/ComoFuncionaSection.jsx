@@ -1,4 +1,5 @@
 import { ArrowRight, FilePlus2, FileUp, Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const etapas = [
   {
@@ -57,12 +58,12 @@ export default function ComoFuncionaSection() {
                   </span>
                   <h3>{titulo}</h3>
                   <p>{descricao}</p>
-                  <a
-                    href={link}
+                  <Link
+                    to={link}
                     className="sage-text-link mt-auto"
                   >
                     {acao} <ArrowRight size={15} aria-hidden="true" />
-                  </a>
+                  </Link>
                 </div>
               </article>
             </div>

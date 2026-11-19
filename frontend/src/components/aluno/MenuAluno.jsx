@@ -12,7 +12,7 @@ const atalhos = [
   { texto: 'Dashboard', caminho: '/sage/aluno', Icone: LayoutDashboard },
 ];
 
-export default function MenuAluno({ usuario, aoNavegar }) {
+export default function MenuAluno({ usuario, aoNavegar, aoSair, saindo }) {
   const { pathname } = useLocation();
   const perfil = usePerfilAluno();
   return (
@@ -32,7 +32,7 @@ export default function MenuAluno({ usuario, aoNavegar }) {
           </Dropdown.Item>;
         })}
         <Dropdown.Divider />
-        <Dropdown.Item as={Link} to="/sage/login" eventKey="sair" role="menuitem"><LogOut size={17} aria-hidden="true" /> Sair</Dropdown.Item>
+        <Dropdown.Item as="button" type="button" onClick={aoSair} disabled={saindo} eventKey="sair" role="menuitem"><LogOut size={17} aria-hidden="true" /> {saindo ? 'Saindo…' : 'Sair'}</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

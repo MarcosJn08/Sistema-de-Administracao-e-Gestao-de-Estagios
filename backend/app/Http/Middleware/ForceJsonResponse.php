@@ -14,6 +14,12 @@ class ForceJsonResponse
             $request->headers->set('Accept', 'application/json');
         }
 
-        return $next($request);
+        $response = $next($request);
+
+        if ($request->is('api/auth/*')) {
+            $response->headers->set('Cache-Control', 'no-store, private');
+        }
+
+        return $response;
     }
 }
