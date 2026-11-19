@@ -1,7 +1,12 @@
 <?php
 
+use App\Http\Controllers\PasswordResetController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
+
+Route::prefix('auth')->middleware('throttle:10,1')->group(function (): void {
+    Route::post('/esqueci-senha', [PasswordResetController::class, 'esqueciSenha'])->name('auth.password.forgot');
+    Route::post('/redefinir-senha', [PasswordResetController::class, 'redefinirSenha'])->name('auth.password.reset');
+});
 
 Route::get('/status', function () {
     return response()->json([
