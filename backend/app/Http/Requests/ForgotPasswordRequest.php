@@ -29,17 +29,16 @@ class ForgotPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email:rfc', 'max:254', 'regex:/\A[^@\s]+@(?:aluno\.)?ifnmg\.edu\.br\z/i'],
+            'email' => ['required', 'email:rfc', 'max:254'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'email.required' => 'Informe o e-mail institucional cadastrado.',
+            'email.required' => 'Informe o e-mail cadastrado.',
             'email.email' => 'Informe um e-mail válido.',
             'email.max' => 'O e-mail deve ter no máximo 254 caracteres.',
-            'email.regex' => 'Use um e-mail @aluno.ifnmg.edu.br ou @ifnmg.edu.br.',
         ];
     }
 }

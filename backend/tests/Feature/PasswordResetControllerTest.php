@@ -28,6 +28,8 @@ class PasswordResetControllerTest extends TestCase
     #[TestWith(['aluna@aluno.ifnmg.edu.br', 'aluna@aluno.ifnmg.edu.br'])]
     #[TestWith(['docente@ifnmg.edu.br', 'docente@ifnmg.edu.br'])]
     #[TestWith(['Pessoa+ads@ALUNO.IFNMG.EDU.BR', '  pessoa+ads@aluno.ifnmg.edu.br  '])]
+    #[TestWith(['usuario@gmail.com', 'usuario@gmail.com'])]
+    #[TestWith(['empresa@techsolutions.com.br', '  empresa@techsolutions.com.br '])]
     public function test_solicitacao_publica_guarda_token_com_hash_e_encaminha_job(string $cadastrado, string $informado): void
     {
         Queue::fake();
@@ -61,12 +63,11 @@ class PasswordResetControllerTest extends TestCase
         $this->assertDatabaseCount('password_reset_tokens', 0);
     }
 
-    #[TestWith(['pessoa@gmail.com'])]
-    #[TestWith(['pessoa@ifnmg.edu.br.evil.com'])]
-    #[TestWith(['pessoa@outro.ifnmg.edu.br'])]
     #[TestWith(['email-invalido'])]
     #[TestWith([''])]
-    public function test_retorna_422_para_email_fora_da_regra_institucional(string $email): void
+    #[TestWith(['@dominio.com'])]
+    #[TestWith(['sem-arroba.com'])]
+    public function test_retorna_422_para_email_invalido(string $email): void
     {
         Queue::fake();
 
@@ -218,7 +219,7 @@ class PasswordResetControllerTest extends TestCase
             'senha longa' => [['password' => str_repeat('a', 73), 'password_confirmation' => str_repeat('a', 73)], 'password'],
             'senha multibyte longa' => [['password' => str_repeat('á', 37), 'password_confirmation' => str_repeat('á', 37)], 'password'],
             'senha com caractere nulo' => [['password' => "Senha\0Nova123!", 'password_confirmation' => "Senha\0Nova123!"], 'password'],
-            'email externo' => [['email' => 'conta@gmail.com'], 'email'],
+            'email invalido' => [['email' => 'formato-invalido'], 'email'],
             'token ausente' => [['token' => ''], 'token'],
             'token como lista' => [['token' => ['invalido']], 'token'],
         ];

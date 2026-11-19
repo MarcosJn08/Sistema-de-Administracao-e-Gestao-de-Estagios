@@ -56,14 +56,14 @@ export default function ModalRecuperacaoSenha({ token, emailInicial, aoFechar })
           {sucesso ? <Alert variant="success" role="status">{sucesso}</Alert> : <>
             <p>{redefinindo
               ? 'Escolha uma nova senha para sua conta.'
-              : 'Informe o e-mail institucional cadastrado para receber o link de recuperação.'}</p>
+              : 'Informe o e-mail cadastrado para receber o link de recuperação.'}</p>
             {erro && <Alert variant="danger" role="alert">{erro}</Alert>}
             <Form.Group className="mb-3" controlId="recuperacao-email">
-              <Form.Label>E-mail institucional</Form.Label>
+              <Form.Label>E-mail</Form.Label>
               <Form.Control type="email" autoComplete="email" required maxLength={254}
                 value={email} onChange={(evento) => setEmail(evento.target.value)}
                 disabled={enviando} isInvalid={Boolean(errosCampos.email)}
-                placeholder="nome@aluno.ifnmg.edu.br" />
+                placeholder="seuemail@exemplo.com" />
               <Form.Control.Feedback type="invalid">{errosCampos.email?.[0]}</Form.Control.Feedback>
             </Form.Group>
             {redefinindo && <>
