@@ -2,23 +2,26 @@
 
 namespace App\Providers;
 
+use App\Services\AuthService;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
-    public function register(): void
-    {
-        //
-    }
+    public function register(): void {}
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        //
+        RateLimiter::for('auth-login', function (Request $request): array {
+            $identifier = $request->input('identifier');
+            $identifier = is_string($identifier) ? AuthService::normalizeIdentifier($identifier) : '';
+
+            return [
+                Limit::perMinute(30)->by('login-ip:'.$request->ip()),
+                Limit::perMinute(5)->by('login:'.hash('sha256', $identifier.'|'.$request->ip())),
+            ];
+        });
     }
 }
