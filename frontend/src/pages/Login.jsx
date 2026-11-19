@@ -1,15 +1,27 @@
-import React from "react";
+import { useState } from "react";
 import Image from "react-bootstrap/Image";
 import "../App.css";
 import Nav from "react-bootstrap/Nav";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Input from "../components/InputLogin/Input.jsx";
 import GoogleButton from "../components/GoogleButton.jsx";
 import Button from "../components/Button/Button.jsx";
 import ImgLogin from "../assets/LoginHD.png";
+import ModalRecuperacaoSenha from "../components/auth/ModalRecuperacaoSenha.jsx";
 
 function Login() {
   const navigate = useNavigate();
+  const [parametros, setParametros] = useSearchParams();
+  const [recuperacaoAberta, setRecuperacaoAberta] = useState(false);
+  const token = parametros.get('token') || '';
+
+  const fecharRecuperacao = () => {
+    setRecuperacaoAberta(false);
+    const restantes = new URLSearchParams(parametros);
+    restantes.delete('token');
+    restantes.delete('email');
+    setParametros(restantes, { replace: true });
+  };
 
   const lidarComLogin = (e) => {
     if (e && e.preventDefault) e.preventDefault();
@@ -40,7 +52,8 @@ function Login() {
           texto="Digite sua senha"
         />
 
-        <Nav.Link href="#mudarSenha" style={{ fontSize: '14px', color: '#2e7d32', padding: 0, marginBottom: '8px' }}>
+        <Nav.Link as="button" type="button" onClick={() => setRecuperacaoAberta(true)}
+          style={{ fontSize: '14px', color: '#2e7d32', padding: 0, marginBottom: '8px' }}>
           Esqueceu a senha?
         </Nav.Link>
 
@@ -55,6 +68,8 @@ function Login() {
           </Link>
         </p>
       </div>
+      {(recuperacaoAberta || token) && <ModalRecuperacaoSenha key={token || 'solicitar-link'} token={token}
+        emailInicial={parametros.get('email') || ''} aoFechar={fecharRecuperacao} />}
     </div>
   );
 }

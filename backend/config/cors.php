@@ -1,4 +1,3 @@
-
 <?php
 
 $origins = array_filter(array_map(
