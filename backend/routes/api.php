@@ -1,19 +1,15 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 
-Route::get('/status', function () {
-    return response()->json([
-        'success' => true,
-        'message' => 'API funcionando corretamente.',
-        'data' => [
-            'version' => '1.0.0',
-        ],
-        'errors' => [],
-    ]);
-});
+Route::prefix('auth')->name('auth.')->group(function (): void {
+    Route::post('/login', [AuthController::class, 'login'])
+        ->middleware('throttle:auth-login')->name('login');
 
-Route::get('/teste-erro', function () {
-    abort(404);
+    Route::middleware('auth:sanctum')->group(function (): void {
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+        Route::get('/me', [AuthController::class, 'me'])
+            ->middleware('account.active')->name('me');
+    });
 });

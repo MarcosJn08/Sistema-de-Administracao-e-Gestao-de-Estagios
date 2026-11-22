@@ -3,13 +3,20 @@ import { useMatch, useNavigate, useParams } from 'react-router-dom';
 import { Search, ChevronDown } from 'lucide-react';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
+import PaginaNaoEncontrada from './PaginaNaoEncontrada.jsx';
 import VagaCard from '../components/VagaCard.jsx';
 import ModalDetalhesVaga from '../components/vagas/ModalDetalhesVaga.jsx';
 import ModalCandidatura from '../components/vagas/ModalCandidatura.jsx';
 import LogoBranca from '../assets/LogoBranca.png';
 import vagasIniciais from '../data/vagas.json';
-import dados from '../data/aluno.js';
 import './VitrineVagas.css';
+
+const publicLinks = [
+  ['Início', '/sage'],
+  ['Vagas', '/sage/vagas'],
+  ['Para empresas', '/sage#empresas'],
+  ['Contato', '#contato'],
+];
 
 function VitrineVagas() {
   const navigate = useNavigate();
@@ -37,14 +44,11 @@ function VitrineVagas() {
     });
   }, [busca, cursoFiltro]);
 
+  if (vagaId && !vagaSelecionada) return <PaginaNaoEncontrada />;
+
   return (
     <div className="vitrine-vagas-wrapper">
-      <Header
-        pagina01="Dashboard"
-        pagina02="Vagas"
-        paginaAtiva="Vagas"
-        usuario={dados.aluno}
-      />
+      <Header paginaAtiva="Vagas" publicLinks={publicLinks} />
 
       <section className="vitrine-hero">
         <div className="vitrine-hero-container">

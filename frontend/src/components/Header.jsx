@@ -6,6 +6,8 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import Button from "./Button/Button.jsx";
 import LogoBranca from '../assets/LogoBranca.png';
 import MenuAluno from './aluno/MenuAluno.jsx';
+import useAuth from '../hooks/useAuth.js';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Code } from 'lucide-react';
 
@@ -17,17 +19,33 @@ function Header({
   pagina05 = 'Contato',
   pagina06 = '',
   paginaAtiva,
-  usuario,
   customLinks,
+  publicLinks,
   somenteInicio = false,
-  mostrarBotaoSair,
 }) {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
+  const [saindo, setSaindo] = useState(false);
+  const [erroSaida, setErroSaida] = useState('');
+  const usuario = user ? { nome: user.name, role: user.role, tipo: user.role } : null;
   const closeMenu = () => setExpanded(false);
+  const sair = async () => {
+    setSaindo(true);
+    setErroSaida('');
+    try {
+      await logout();
+      closeMenu();
+      navigate('/sage/login', { replace: true });
+    } catch (error) {
+      setErroSaida(error.message);
+    } finally {
+      setSaindo(false);
+    }
+  };
 
   const isDashboard = Boolean(usuario);
   const isEmpresa = usuario?.tipo === 'empresa';
-  const exibirBotaoSair = mostrarBotaoSair === true;
 
   const landingLinks = [
     [pagina01, '#inicio'],
@@ -50,6 +68,11 @@ function Header({
     ['Documentos', '/sage/diretor/documentos'],
   ];
   const professorLinks = [['Dashboard', '/sage/professor']];
+  const empresaLinks = [
+    ['Dashboard', '/sage/empresa'],
+    ['Candidatos', '/sage/empresa/candidatos'],
+    ['Estagiários', '/sage/empresa/estagiarios'],
+  ];
 
   const dashboardAlunoLinks = [
     ['Início', '/sage'],
@@ -71,9 +94,11 @@ function Header({
       ? diretorLinks
       : isProfessor
       ? professorLinks
+      : isEmpresa
+      ? empresaLinks
       : isDashboard
       ? dashboardAlunoLinks
-      : landingLinks);
+      : publicLinks ?? landingLinks);
 
   const nomeExibicao = usuario?.nome ? usuario.nome.split(' ')[0] : 'Usuário';
   const letraAvatar = usuario?.nome ? usuario.nome.charAt(0).toUpperCase() : 'U';
@@ -88,7 +113,7 @@ function Header({
       aria-label="Navegação principal"
     >
       <Container fluid className="sage-edge-container">
-        <Navbar.Brand href="/sage" onClick={closeMenu}>
+        <Navbar.Brand as={Link} to="/sage" onClick={closeMenu}>
           <img src={LogoBranca} className="logo" alt="SAGE — início" width="60" height="60" />
         </Navbar.Brand>
         <Navbar.Toggle
@@ -111,8 +136,8 @@ function Header({
             <Nav className="menu-central">
               {links.map(([label, href]) => (
                 <Nav.Link
-                  key={label}
-                  href={href}
+                  key={`${label}-${href}`}
+                  {...(href?.startsWith('/sage') ? { as: Link, to: href } : { href })}
                   onClick={(e) => {
                     closeMenu();
                     if (href === '#' || !href) {
@@ -129,7 +154,7 @@ function Header({
               <div className="botao-login">
                 {isDashboard ? (
                   <div className="d-flex align-items-center gap-3">
-                    {isAluno ? <MenuAluno usuario={usuario} aoNavegar={closeMenu} /> : <div className="perfil-usuario-header">
+                    {isAluno ? <MenuAluno usuario={usuario} aoNavegar={closeMenu} aoSair={sair} saindo={saindo} /> : <div className="perfil-usuario-header">
                       <div
                         className="avatar-usuario-header"
                         style={isEmpresa ? { backgroundColor: '#0f172a', borderColor: '#38bdf8' } : {}}
@@ -146,18 +171,19 @@ function Header({
                         {isEmpresa ? usuario.nome : (nomeExibicao)}
                       </span>
                     </div>}
-                    {exibirBotaoSair && !isAluno && (
-                      <Button texto="Sair" tipo="botao-texto-branco" href="/sage/login" />
+                    {!isAluno && (
+                      <Button texto={saindo ? 'Saindo…' : 'Sair'} tipo="botao-texto-branco" onClick={sair} disabled={saindo} />
                     )}
                   </div>
                 ) : (
                   <>
                     <Button texto="Entrar" tipo="botao-texto-branco" href="/sage/login" />
-                    <Button texto="Portal do Aluno" href="/sage/aluno" />
+                    <Button texto="Acessar portal" href="/sage/login" />
                   </>
                 )}
               </div>
             )}
+            {erroSaida && <div className="alert alert-danger mt-2" role="alert">{erroSaida}</div>}
           </Offcanvas.Body>
         </Navbar.Offcanvas>
       </Container>
