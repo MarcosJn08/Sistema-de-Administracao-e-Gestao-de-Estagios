@@ -1,15 +1,16 @@
 <?php
 
-use Illuminate\Foundation\Application;
-use Illuminate\Foundation\Configuration\Exceptions;
-use Illuminate\Foundation\Configuration\Middleware;
-
+use App\Http\Middleware\EnsureAccountIsActive;
+use App\Http\Middleware\EnsureUserHasRole;
 use App\Http\Middleware\ForceJsonResponse;
-
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -23,76 +24,93 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->prepend(ForceJsonResponse::class);
+        $middleware->alias([
+            'account.active' => EnsureAccountIsActive::class,
+            'role' => EnsureUserHasRole::class,
+        ]);
     })
 
     ->withExceptions(function (Exceptions $exceptions): void {
 
-    $exceptions->render(function (
-        ValidationException $e,
-        $request
-    ) {
-        if ($request->is('api/*')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Os dados informados são inválidos.',
-                'errors' => $e->errors(),
-            ], 422);
-        }
-    });
+        $exceptions->render(function (
+            ValidationException $e,
+            $request
+        ) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Os dados informados são inválidos.',
+                    'errors' => $e->errors(),
+                ], 422);
+            }
+        });
 
-    $exceptions->render(function (
-        ModelNotFoundException $e,
-        $request
-    ) {
-        if ($request->is('api/*')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Registro não encontrado.',
-                'errors' => [],
-            ], 404);
-        }
-    });
+        $exceptions->render(function (
+            ModelNotFoundException $e,
+            $request
+        ) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Registro não encontrado.',
+                    'errors' => [],
+                ], 404);
+            }
+        });
 
-    $exceptions->render(function (
-        AuthenticationException $e,
-        $request
-    ) {
-        if ($request->is('api/*')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Não autenticado.',
-                'errors' => [],
-            ], 401);
-        }
-    });
+        $exceptions->render(function (
+            AuthenticationException $e,
+            $request
+        ) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $request->routeIs('auth.login')
+                        ? 'Identificador ou senha inválidos.'
+                        : 'Não autenticado.',
+                    'errors' => [],
+                ], 401);
+            }
+        });
 
-    $exceptions->render(function (
-        AuthorizationException $e,
-        $request
-    ) {
-        if ($request->is('api/*')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Você não tem permissão para realizar esta ação.',
-                'errors' => [],
-            ], 403);
-        }
-    });
+        $exceptions->render(function (
+            AuthorizationException $e,
+            $request
+        ) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Você não tem permissão para realizar esta ação.',
+                    'errors' => [],
+                ], 403);
+            }
+        });
 
-    $exceptions->render(function (
-        NotFoundHttpException $e,
-        $request
-    ) {
-        if ($request->is('api/*')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Rota ou recurso não encontrado.',
-                'errors' => [],
-            ], 404);
-        }
-    });
+        $exceptions->render(function (
+            NotFoundHttpException $e,
+            $request
+        ) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Rota ou recurso não encontrado.',
+                    'errors' => [],
+                ], 404);
+            }
+        });
 
-})
+        $exceptions->render(function (HttpException $e, $request) {
+            if ($request->is('api/*') && in_array($e->getStatusCode(), [403, 429], true)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => match ($e->getStatusCode()) {
+                        403 => 'Você não tem permissão para realizar esta ação.',
+                        429 => 'Muitas tentativas. Aguarde um minuto antes de tentar novamente.',
+                    },
+                    'errors' => [],
+                ], $e->getStatusCode(), $e->getHeaders());
+            }
+        });
 
-->create();
-
+    })
+    ->create();

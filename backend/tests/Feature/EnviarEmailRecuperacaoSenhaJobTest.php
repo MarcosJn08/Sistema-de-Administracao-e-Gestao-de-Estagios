@@ -37,7 +37,7 @@ class EnviarEmailRecuperacaoSenhaJobTest extends TestCase
             parse_str(parse_url($mail->url, PHP_URL_QUERY), $parametros);
 
             return $mail->hasTo($usuario->email)
-                && str_starts_with($mail->url, 'http://frontend.local:5173/sage/login?')
+                && str_starts_with($mail->url, 'http://frontend.local:5173/sage/redefinir-senha?')
                 && $parametros['token'] === $token && $parametros['email'] === $usuario->email;
         });
     }
@@ -67,6 +67,18 @@ class EnviarEmailRecuperacaoSenhaJobTest extends TestCase
         Mail::assertNothingSent();
     }
 
+    public function test_job_nao_envia_email_se_a_conta_foi_desativada(): void
+    {
+        Mail::fake();
+        $usuario = User::factory()->create();
+        $token = Password::broker('users')->createToken($usuario);
+        $usuario->forceFill(['is_active' => false])->save();
+
+        (new EnviarEmailRecuperacaoSenhaJob($usuario, $token))->handle();
+
+        Mail::assertNothingSent();
+    }
+
     public function test_fila_database_protege_token_e_executa_envio(): void
     {
         Mail::fake();
@@ -86,7 +98,7 @@ class EnviarEmailRecuperacaoSenhaJobTest extends TestCase
 
     public function test_email_renderiza_instrucao_link_e_prazo_em_html_e_texto(): void
     {
-        $email = new RecuperacaoSenhaMail('http://frontend.local:5173/sage/login?token=teste&email=aluna%40aluno.ifnmg.edu.br');
+        $email = new RecuperacaoSenhaMail('http://frontend.local:5173/sage/redefinir-senha?token=teste&email=aluna%40aluno.ifnmg.edu.br');
 
         $email->assertSeeInHtml('Redefinir senha');
         $email->assertSeeInText('60 minutos');

@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Closure;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ResetPasswordRequest extends FormRequest
@@ -22,15 +21,10 @@ class ResetPasswordRequest extends FormRequest
         }
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email:rfc', 'max:254'],
+            'email' => ['bail', 'required', 'string', 'email:rfc', 'max:254'],
             'token' => ['required', 'string', 'max:255'],
             'password' => [
                 'required',
@@ -52,6 +46,7 @@ class ResetPasswordRequest extends FormRequest
     {
         return [
             'email.required' => 'Informe o e-mail cadastrado.',
+            'email.string' => 'Informe um e-mail válido.',
             'email.email' => 'Informe um e-mail válido.',
             'email.max' => 'O e-mail deve ter no máximo 254 caracteres.',
             'token.required' => 'O link de recuperação é inválido. Solicite um novo link.',

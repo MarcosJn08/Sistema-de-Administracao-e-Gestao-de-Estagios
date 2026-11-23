@@ -24,7 +24,8 @@ class EnviarEmailRecuperacaoSenhaJob implements ShouldBeEncrypted, ShouldQueue
 
     public function handle(): void
     {
-        if (! Password::broker('users')->tokenExists($this->usuario, $this->token)) {
+        if (! $this->usuario->canAuthenticate()
+            || ! Password::broker('users')->tokenExists($this->usuario, $this->token)) {
             return;
         }
 
@@ -32,7 +33,7 @@ class EnviarEmailRecuperacaoSenhaJob implements ShouldBeEncrypted, ShouldQueue
             'token' => $this->token,
             'email' => $this->usuario->getEmailForPasswordReset(),
         ], '', '&', PHP_QUERY_RFC3986);
-        $url = rtrim(config('app.frontend_url'), '/').'/sage/login?'.$parametros;
+        $url = rtrim(config('app.frontend_url'), '/').'/sage/redefinir-senha?'.$parametros;
 
         Mail::to($this->usuario->getEmailForPasswordReset())->send(new RecuperacaoSenhaMail($url));
     }

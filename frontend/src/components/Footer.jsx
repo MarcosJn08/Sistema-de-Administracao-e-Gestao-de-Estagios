@@ -1,4 +1,5 @@
 import LogoBranca from '../assets/LogoBranca.png';
+import { Link } from 'react-router-dom';
 
 const grupos = [
   {
@@ -34,9 +35,9 @@ export default function Footer() {
       <div className="container sage-container">
         <div className="row g-4">
           <div className="col-12 col-md-3 footer-brand">
-            <a href="/sage">
+            <Link to="/sage">
               <img src={LogoBranca} alt="SAGE — início" className="logo" width="84" height="64" />
-            </a>
+            </Link>
             <p>Sistema de gestão de estágios do IFNMG, Campus Almenara.</p>
           </div>
           {grupos.map(({ titulo, links }) => (
@@ -46,7 +47,9 @@ export default function Footer() {
                 {links.map(([label, href]) => (
                   <li key={label}>
                     {href ? (
-                      <a href={href}>{label}</a>
+                      href.startsWith('/sage')
+                        ? <Link to={href}>{label}</Link>
+                        : <a href={href}>{label}</a>
                     ) : (
                       <button type="button" className="footer-link" aria-disabled="true">
                         {label}

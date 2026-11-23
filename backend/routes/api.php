@@ -1,24 +1,21 @@
 <?php
 
-use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PasswordResetController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('auth')->middleware('throttle:10,1')->group(function (): void {
-    Route::post('/esqueci-senha', [PasswordResetController::class, 'esqueciSenha'])->name('auth.password.forgot');
-    Route::post('/redefinir-senha', [PasswordResetController::class, 'redefinirSenha'])->name('auth.password.reset');
-});
+Route::prefix('auth')->name('auth.')->group(function (): void {
+    Route::post('/login', [AuthController::class, 'login'])
+        ->middleware('throttle:auth-login')->name('login');
 
-Route::get('/status', function () {
-    return response()->json([
-        'success' => true,
-        'message' => 'API funcionando corretamente.',
-        'data' => [
-            'version' => '1.0.0',
-        ],
-        'errors' => [],
-    ]);
-});
+    Route::middleware('throttle:10,1')->name('password.')->group(function (): void {
+        Route::post('/esqueci-senha', [PasswordResetController::class, 'esqueciSenha'])->name('forgot');
+        Route::post('/redefinir-senha', [PasswordResetController::class, 'redefinirSenha'])->name('reset');
+    });
 
-Route::get('/teste-erro', function () {
-    abort(404);
+    Route::middleware('auth:sanctum')->group(function (): void {
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+        Route::get('/me', [AuthController::class, 'me'])
+            ->middleware('account.active')->name('me');
+    });
 });

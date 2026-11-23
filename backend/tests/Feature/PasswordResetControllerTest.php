@@ -6,6 +6,7 @@ use App\Jobs\EnviarEmailRecuperacaoSenhaJob;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
@@ -25,15 +26,15 @@ class PasswordResetControllerTest extends TestCase
         config(['app.key' => 'base64:'.base64_encode(str_repeat('a', 32))]);
     }
 
-    #[TestWith(['aluna@aluno.ifnmg.edu.br', 'aluna@aluno.ifnmg.edu.br'])]
-    #[TestWith(['docente@ifnmg.edu.br', 'docente@ifnmg.edu.br'])]
-    #[TestWith(['Pessoa+ads@ALUNO.IFNMG.EDU.BR', '  pessoa+ads@aluno.ifnmg.edu.br  '])]
-    #[TestWith(['usuario@gmail.com', 'usuario@gmail.com'])]
-    #[TestWith(['empresa@techsolutions.com.br', '  empresa@techsolutions.com.br '])]
-    public function test_solicitacao_publica_guarda_token_com_hash_e_encaminha_job(string $cadastrado, string $informado): void
+    #[TestWith(['aluno', 'aluna@aluno.ifnmg.edu.br', 'aluna@aluno.ifnmg.edu.br'])]
+    #[TestWith(['professor', 'docente@ifnmg.edu.br', 'docente@ifnmg.edu.br'])]
+    #[TestWith(['diretor', 'Pessoa+ads@IFNMG.EDU.BR', '  pessoa+ads@ifnmg.edu.br  '])]
+    #[TestWith(['empresa', 'contato@empresa.example', '  CONTATO@empresa.example  '])]
+    public function test_solicitacao_publica_guarda_token_com_hash_e_encaminha_job(string $perfil, string $cadastrado, string $informado): void
     {
         Queue::fake();
-        $usuario = $this->usuario(['email' => $cadastrado]);
+        $factory = User::factory();
+        $usuario = ($perfil === 'aluno' ? $factory : $factory->{$perfil}())->create(['email' => $cadastrado]);
 
         $resposta = $this->postJson('/api/auth/esqueci-senha', ['email' => $informado]);
 
@@ -51,11 +52,13 @@ class PasswordResetControllerTest extends TestCase
         $this->assertDatabaseCount('password_reset_tokens', 1);
     }
 
-    public function test_email_institucional_nao_cadastrado_recebe_resposta_generica(): void
+    #[TestWith(['ausente@ifnmg.edu.br'])]
+    #[TestWith(['ausente@empresa.example'])]
+    public function test_email_nao_cadastrado_recebe_resposta_generica(string $email): void
     {
         Queue::fake();
 
-        $this->postJson('/api/auth/esqueci-senha', ['email' => 'ausente@ifnmg.edu.br'])
+        $this->postJson('/api/auth/esqueci-senha', ['email' => $email])
             ->assertOk()
             ->assertJsonPath('message', 'Se houver uma conta com esse e-mail, você receberá um link para redefinir a senha.');
 
@@ -76,6 +79,27 @@ class PasswordResetControllerTest extends TestCase
 
         Queue::assertNothingPushed();
         $this->assertDatabaseCount('password_reset_tokens', 0);
+    }
+
+    #[TestWith([['is_active' => false]])]
+    #[TestWith([['role' => null]])]
+    #[TestWith([['email' => 'aluna@ifnmg.edu.br']])]
+    #[TestWith([['email' => 'aluna@ifnmg.edu.br.example.com']])]
+    public function test_conta_inelegivel_nao_recebe_link_nem_pode_redefinir(array $atributos): void
+    {
+        Queue::fake();
+        $usuario = $this->usuario($atributos);
+
+        $this->postJson('/api/auth/esqueci-senha', ['email' => $usuario->email])
+            ->assertOk()
+            ->assertJsonPath('message', 'Se houver uma conta com esse e-mail, você receberá um link para redefinir a senha.');
+        Queue::assertNothingPushed();
+        $this->assertDatabaseCount('password_reset_tokens', 0);
+
+        $token = Password::broker('users')->createToken($usuario);
+        $this->postJson('/api/auth/redefinir-senha', $this->dadosReset($usuario, $token))
+            ->assertUnprocessable()->assertJsonValidationErrors('token');
+        $this->assertTrue(Hash::check('SenhaAntiga123!', $usuario->fresh()->password));
     }
 
     public function test_solicitacao_repetida_preserva_token_recente_e_envia_um_job(): void
@@ -163,7 +187,7 @@ class PasswordResetControllerTest extends TestCase
     public function test_token_de_um_usuario_nao_redefine_a_senha_de_outro(): void
     {
         $usuario = $this->usuario();
-        $outro = $this->usuario(['email' => 'outro@ifnmg.edu.br']);
+        $outro = $this->usuario(['email' => 'outro@aluno.ifnmg.edu.br']);
         $token = Password::broker('users')->createToken($usuario);
 
         $this->postJson('/api/auth/redefinir-senha', $this->dadosReset($outro, $token))
@@ -171,6 +195,35 @@ class PasswordResetControllerTest extends TestCase
 
         $this->assertTrue(Hash::check('SenhaAntiga123!', $outro->fresh()->password));
         $this->assertTrue(Password::broker('users')->tokenExists($usuario, $token));
+    }
+
+    #[TestWith(['aluno'])]
+    #[TestWith(['empresa'])]
+    public function test_redefinir_revoga_todos_os_bearers_da_conta_e_permite_login_com_nova_senha(string $perfil): void
+    {
+        $usuario = $perfil === 'empresa'
+            ? User::factory()->empresa()->create(['email' => 'contato@empresa.example', 'password' => 'SenhaAntiga123!'])
+            : $this->usuario();
+        $outro = User::factory()->create();
+        $tokenAnterior = $usuario->createToken('sessao atual')->plainTextToken;
+        $usuario->createToken('outra sessao');
+        $tokenOutro = $outro->createToken('outra conta')->plainTextToken;
+        $tokenReset = Password::broker('users')->createToken($usuario);
+
+        $this->postJson('/api/auth/redefinir-senha', $this->dadosReset($usuario, $tokenReset))->assertOk();
+        $this->assertDatabaseCount('personal_access_tokens', 1);
+        $this->withToken($tokenAnterior)->getJson('/api/auth/me')->assertUnauthorized();
+        Auth::forgetGuards();
+        $this->withToken($tokenOutro)->getJson('/api/auth/me')->assertOk()->assertJsonPath('data.id', $outro->id);
+        Auth::forgetGuards();
+        $this->postJson('/api/auth/login', [
+            'identifier' => $usuario->email,
+            'password' => 'SenhaAntiga123!',
+        ])->assertUnauthorized();
+        $this->postJson('/api/auth/login', [
+            'identifier' => $usuario->email,
+            'password' => 'NovaSenha123!',
+        ])->assertOk()->assertJsonPath('data.id', $usuario->id);
     }
 
     public function test_token_so_pode_ser_utilizado_uma_vez(): void

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Alert, Form, Modal } from 'react-bootstrap';
 import api from '../../services/api.js';
 
-export default function ModalRecuperacaoSenha({ token, emailInicial, aoFechar }) {
+export default function ModalRecuperacaoSenha({ token, emailInicial, aoFechar, aoRedefinir }) {
   const redefinindo = Boolean(token);
   const [email, setEmail] = useState(emailInicial);
   const [senha, setSenha] = useState('');
@@ -15,6 +15,7 @@ export default function ModalRecuperacaoSenha({ token, emailInicial, aoFechar })
 
   const enviar = async (evento) => {
     evento.preventDefault();
+    if (enviando) return;
     setEnviando(true);
     setErro('');
     setErrosCampos({});
@@ -24,19 +25,18 @@ export default function ModalRecuperacaoSenha({ token, emailInicial, aoFechar })
       const dados = redefinindo
         ? { email, token, password: senha, password_confirmation: confirmacao }
         : { email };
-      const resposta = await api.post(caminho, dados, { timeout: 15000 });
+      const resposta = await api.post(caminho, dados, { skipAuth: true, notifyUnauthorized: false });
       setSucesso(resposta.data.message);
       setSenha('');
       setConfirmacao('');
+      if (redefinindo) aoRedefinir(email);
     } catch (error) {
-      if (error.response?.status === 422) {
-        const campos = error.response.data.errors || {};
+      if (error.status === 422) {
+        const campos = error.errors || {};
         setErrosCampos(campos);
-        setErro(campos.token?.[0] || error.response.data.message);
-      } else if (error.response?.status === 429) {
-        setErro('Aguarde um minuto antes de tentar novamente.');
+        setErro(campos.token?.[0] || error.message);
       } else {
-        setErro('Não foi possível concluir a solicitação. Tente novamente.');
+        setErro(error.message || 'Não foi possível concluir a solicitação. Tente novamente.');
       }
     } finally {
       setEnviando(false);
@@ -56,14 +56,14 @@ export default function ModalRecuperacaoSenha({ token, emailInicial, aoFechar })
           {sucesso ? <Alert variant="success" role="status">{sucesso}</Alert> : <>
             <p>{redefinindo
               ? 'Escolha uma nova senha para sua conta.'
-              : 'Informe o e-mail cadastrado para receber o link de recuperação.'}</p>
+              : 'Informe o e-mail cadastrado na sua conta para receber o link de recuperação.'}</p>
             {erro && <Alert variant="danger" role="alert">{erro}</Alert>}
             <Form.Group className="mb-3" controlId="recuperacao-email">
-              <Form.Label>E-mail</Form.Label>
+              <Form.Label>E-mail cadastrado</Form.Label>
               <Form.Control type="email" autoComplete="email" required maxLength={254}
                 value={email} onChange={(evento) => setEmail(evento.target.value)}
                 disabled={enviando} isInvalid={Boolean(errosCampos.email)}
-                placeholder="seuemail@exemplo.com" />
+                placeholder="nome@exemplo.com" />
               <Form.Control.Feedback type="invalid">{errosCampos.email?.[0]}</Form.Control.Feedback>
             </Form.Group>
             {redefinindo && <>

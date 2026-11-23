@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Http\Docs\Auth\PasswordResetDocs;
 use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Services\PasswordResetService;
@@ -9,6 +11,8 @@ use Illuminate\Http\JsonResponse;
 
 class PasswordResetController extends Controller
 {
+    use PasswordResetDocs;
+
     public function __construct(private readonly PasswordResetService $passwordResetService) {}
 
     public function esqueciSenha(ForgotPasswordRequest $request): JsonResponse
