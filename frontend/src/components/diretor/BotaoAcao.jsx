@@ -1,6 +1,5 @@
-import React from 'react';
 import { ArrowRight, Eye, FileSearch } from 'lucide-react';
-import '../../App.css';
+import BotaoAcaoBase from '../BotaoAcao.jsx';
 
 const VARIANTES = ['azul', 'ambar', 'verde', 'roxo', 'primario', 'contorno'];
 
@@ -20,28 +19,16 @@ function BotaoAcao({
 
   const textoNormalizado = textoBotao.toLowerCase().trim();
 
-  let classeVariante = 'botao-acao-azul';
+  let varianteBotao;
 
   if (variante && VARIANTES.includes(variante)) {
-    classeVariante = `botao-acao-${variante}`;
+    varianteBotao = variante;
   } else if (textoNormalizado === 'analisar') {
-    classeVariante = 'botao-acao-primario';
+    varianteBotao = 'primario';
   } else if (textoNormalizado === 'ver') {
-    classeVariante = 'botao-acao-contorno';
-  } else if (textoNormalizado.includes('pdf')) {
-    classeVariante = 'botao-acao-ambar';
-  } else if (textoNormalizado.includes('preencher')) {
-    classeVariante = 'botao-acao-verde';
-  } else if (textoNormalizado.includes('enviar')) {
-    classeVariante = 'botao-acao-roxo';
-  } else if (
-    textoNormalizado.includes('visualizar') ||
-    textoNormalizado.includes('ver')
-  ) {
-    classeVariante = 'botao-acao-azul';
+    varianteBotao = 'contorno';
   }
 
-  const lidarComClique = aoClicar || onClick;
   const IconeBotao = Icone || (textoNormalizado === 'analisar'
     ? FileSearch
     : textoNormalizado === 'ver'
@@ -51,15 +38,15 @@ function BotaoAcao({
         : null);
 
   return (
-    <button
-      type="button"
-      className={`botao-acao-pilula ${classeVariante} ${className}`.trim()}
-      onClick={lidarComClique}
+    <BotaoAcaoBase
+      texto={textoBotao}
+      variante={varianteBotao}
+      icone={IconeBotao}
+      tamanhoIcone={15}
+      className={className}
+      onClick={aoClicar || onClick}
       {...props}
-    >
-      {IconeBotao && <IconeBotao size={15} aria-hidden="true" />}
-      {textoBotao}
-    </button>
+    />
   );
 }
 

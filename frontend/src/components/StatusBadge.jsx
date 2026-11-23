@@ -1,7 +1,10 @@
 import React from 'react';
 import '../App.css';
+import './StatusBadge.css';
 
-function StatusBadge({ status, aberto, variante, variant, children }) {
+function StatusBadge({ status, aberto, variante, variant, children, className }) {
+  if (className) return <span className={className}>{children ?? status}</span>;
+
   if (aberto !== undefined) {
     if (!aberto) return null;
     return <span className="sage-status">{children ?? 'Inscrições abertas'}</span>;
