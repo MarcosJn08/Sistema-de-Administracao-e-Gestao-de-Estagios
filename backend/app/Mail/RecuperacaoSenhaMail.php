@@ -30,7 +30,8 @@ class RecuperacaoSenhaMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.recuperacao-senha',
+            view: 'emails.recuperacao-senha',
+            text: 'emails.recuperacao-senha-texto',
         );
     }
 }
