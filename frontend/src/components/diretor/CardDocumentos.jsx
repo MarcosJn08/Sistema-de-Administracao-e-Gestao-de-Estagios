@@ -1,5 +1,4 @@
-import React from 'react';
-import '../../App.css';
+import TabelaDocumentos from '../TabelaDocumentos.jsx';
 import StatusBadge from '../StatusBadge.jsx';
 import BotaoAcao from './BotaoAcao.jsx';
 
@@ -20,47 +19,44 @@ function CardDocumentos({
         {textoVerTodos && <BotaoAcao texto={textoVerTodos} variante="contorno" aoClicar={aoVerTodos} />}
       </div>
 
-      <div className="tabela-sage-container" tabIndex={0} role="region" aria-label="Pendências documentais, role horizontalmente para ver todas as colunas">
-        <table className="tabela-sage">
-          <caption className="visually-hidden">Documentos pendentes de conferência pelo diretor</caption>
-          <thead>
-            <tr>
-              <th scope="col" style={{ width: '18%' }}>Aluno</th>
-              <th scope="col" style={{ width: '22%' }}>Pendência</th>
-              <th scope="col" style={{ width: '20%' }}>Empresa</th>
-              <th scope="col" style={{ width: '14%' }}>Data</th>
-              <th scope="col" style={{ width: '14%' }}>Status</th>
-              <th scope="col" style={{ width: '12%', textAlign: 'center' }}>Ação</th>
+      <TabelaDocumentos rotulo="Pendências documentais, role horizontalmente para ver todas as colunas" legenda="Documentos pendentes de conferência pelo diretor">
+        <thead>
+          <tr>
+            <th scope="col" style={{ width: '18%' }}>Aluno</th>
+            <th scope="col" style={{ width: '22%' }}>Pendência</th>
+            <th scope="col" style={{ width: '20%' }}>Empresa</th>
+            <th scope="col" style={{ width: '14%' }}>Data</th>
+            <th scope="col" style={{ width: '14%' }}>Status</th>
+            <th scope="col" style={{ width: '12%', textAlign: 'center' }}>Ação</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {documentos.map((doc) => (
+            <tr key={doc.id}>
+              <td className="fw-bold text-dark">{doc.nome}</td>
+              <td>{doc.descricao}</td>
+              <td style={{ color: '#475569' }}>{doc.empresa}</td>
+              <td style={{ color: '#475569' }}>{doc.data}</td>
+              <td><StatusBadge status={doc.status} /></td>
+              <td className="text-center">
+                <div className="d-flex justify-content-center gap-2 align-items-center">
+                  {doc.acoes?.map((acao, index) => <BotaoAcao
+                    key={`${doc.id}-${acao}-${index}`}
+                    tipo={acao}
+                    aria-label={`${acao} ${doc.descricao} de ${doc.nome}`}
+                    aoClicar={() => lidarComAcao && lidarComAcao(doc, acao)}
+                  />)}
+                </div>
+              </td>
             </tr>
-          </thead>
+          ))}
 
-          <tbody>
-            {documentos.map((doc) => (
-              <tr key={doc.id}>
-                <td className="fw-bold text-dark">{doc.nome}</td>
-                <td>{doc.descricao}</td>
-                <td style={{ color: '#475569' }}>{doc.empresa}</td>
-                <td style={{ color: '#475569' }}>{doc.data}</td>
-                <td><StatusBadge status={doc.status} /></td>
-                <td className="text-center">
-                  <div className="d-flex justify-content-center gap-2 align-items-center">
-                    {doc.acoes?.map((acao, index) => <BotaoAcao
-                      key={`${doc.id}-${acao}-${index}`}
-                      tipo={acao}
-                      aria-label={`${acao} ${doc.descricao} de ${doc.nome}`}
-                      aoClicar={() => lidarComAcao && lidarComAcao(doc, acao)}
-                    />)}
-                  </div>
-                </td>
-              </tr>
-            ))}
-
-            {documentos.length === 0 && <tr>
-              <td colSpan="6" className="text-center py-4 text-muted">Nenhuma pendência encontrada.</td>
-            </tr>}
-          </tbody>
-        </table>
-      </div>
+          {documentos.length === 0 && <tr>
+            <td colSpan="6" className="text-center py-4 text-muted">Nenhuma pendência encontrada.</td>
+          </tr>}
+        </tbody>
+      </TabelaDocumentos>
     </div>
   );
 }

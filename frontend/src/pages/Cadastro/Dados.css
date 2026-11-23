@@ -140,21 +140,6 @@
   border-color: #1b5e20 !important;
 }
 
-.input-container .form-select {
-  height: 50px;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  font-size: 16px;
-  color: #1e293b;
-  padding: 11px 16px;
-  box-shadow: none;
-}
-
-.input-container .form-select:focus {
-  border-color: #2db04f;
-  box-shadow: 0 0 0 3px rgba(45, 176, 79, 0.12);
-}
-
 @media (max-width: 700px) {
   .dados-content {
     width: 92%;

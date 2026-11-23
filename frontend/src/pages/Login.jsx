@@ -3,7 +3,7 @@ import Image from "react-bootstrap/Image";
 import "../App.css";
 import Nav from "react-bootstrap/Nav";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
-import Input from "../components/InputLogin/Input.jsx";
+import Input from "../components/Input/Input.jsx";
 import Button from "../components/Button/Button.jsx";
 import GoogleButton from "../components/GoogleButton.jsx";
 import ImgLogin from "../assets/LoginHD.png";
@@ -132,6 +132,7 @@ function Login() {
         {notice && <div id="login-feature-notice" className="alert alert-info" role="status">{notice}</div>}
         <form onSubmit={lidarComLogin} aria-busy={sending}>
         <Input
+          semFormulario
           id="identifier"
           name="identifier"
           titulo="E-mail, matrícula, SIAPE ou CNPJ"
@@ -147,6 +148,7 @@ function Login() {
         />
 
         <Input
+          semFormulario
           id="senha"
           titulo="Senha"
           tipo="password"
