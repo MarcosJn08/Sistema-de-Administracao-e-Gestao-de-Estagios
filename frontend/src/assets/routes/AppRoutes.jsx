@@ -10,6 +10,7 @@ import VagasSalvasAluno from '../../pages/VagasSalvasAluno.jsx';
 import MinhasCandidaturasAluno from '../../pages/MinhasCandidaturasAluno.jsx';
 import VitrineVagas from '../../pages/VitrineVagas.jsx';
 import Login from '../../pages/Login.jsx';
+import RedefinirSenha from '../../pages/RedefinirSenha.jsx';
 import DadosEmpresa from '../../pages/Cadastro/Dados.jsx';
 import DocumentosEmpresa from '../../pages/Cadastro/Documentos.jsx';
 import ConfirmacaoEmpresa from '../../pages/Cadastro/Confirmacao.jsx';
@@ -77,6 +78,7 @@ function AppRoutes() {
           <Route path="/sage/vagas" element={<VitrineVagas />} />
           <Route path="/sage/vagas/:vagaId" element={<VitrineVagas />} />
           <Route path="/sage/login" element={<Login />} />
+          <Route path="/sage/redefinir-senha" element={<RedefinirSenha />} />
           <Route path="/sage/cadastro/empresa" element={<DadosEmpresa />} />
           <Route path="/sage/cadastro/documento" element={<DocumentosEmpresa />} />
           <Route path="/sage/cadastro/confirmacao" element={<ConfirmacaoEmpresa />} />

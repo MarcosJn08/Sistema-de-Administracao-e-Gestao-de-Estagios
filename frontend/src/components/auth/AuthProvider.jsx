@@ -45,6 +45,7 @@ export default function AuthProvider({ children }) {
 
   const expireSession = useCallback(() => {
     updateSession(expiredSession);
+    if (location.pathname === '/sage/redefinir-senha') return;
     navigate('/sage/login', {
       replace: true,
       state: { from: location.pathname + location.search },
@@ -75,6 +76,12 @@ export default function AuthProvider({ children }) {
         else setRestoreError('Não foi possível verificar sua sessão. Tente novamente.');
       });
     return () => controller.abort();
+  }, [updateSession]);
+
+  const clearResetAccountSession = useCallback((email) => {
+    if (sessionRef.current.user?.email?.toLowerCase() === email.trim().toLowerCase()) {
+      updateSession(initialSession);
+    }
   }, [updateSession]);
 
   useEffect(() => {
@@ -112,7 +119,8 @@ export default function AuthProvider({ children }) {
     hasRole,
     login,
     logout,
-  }), [session, hasRole, login, logout]);
+    clearResetAccountSession,
+  }), [session, hasRole, login, logout, clearResetAccountSession]);
 
   if (session.token && !session.user) {
     return (
