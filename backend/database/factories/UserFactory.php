@@ -17,6 +17,7 @@ class UserFactory extends Factory
             'email' => fake()->unique()->userName().'@aluno.ifnmg.edu.br',
             'role' => 'aluno',
             'matricula' => fake()->unique()->numerify('2026########'),
+            'cpf' => fake()->unique()->numerify('###########'),
             'is_active' => true,
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),

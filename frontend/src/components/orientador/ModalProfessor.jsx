@@ -9,8 +9,9 @@ function ModalProfessor({ aberto, professor, departamentos, statusDisponiveis, a
   const cadastro = !professor;
   const [editando, setEditando] = useState(cadastro);
   const [erro, setErro] = useState('');
+  const [carregando, setCarregando] = useState(false);
 
-  const salvar = (evento) => {
+  const salvar = async (evento) => {
     evento.preventDefault();
     const formulario = new FormData(evento.currentTarget);
     const dados = {
@@ -31,12 +32,30 @@ function ModalProfessor({ aberto, professor, departamentos, statusDisponiveis, a
       alunosOrientados: professor?.alunosOrientados || 0,
     };
 
+    setCarregando(true);
+    setErro('');
+
+    const emailTrimmed = dados.email.toLowerCase();
+    if (!emailTrimmed.endsWith('@ifnmg.edu.br')) {
+      setErro('O e-mail deve ser institucional do IFNMG (@ifnmg.edu.br).');
+      setCarregando(false);
+      return;
+    }
+
     try {
-      aoSalvar(dados);
-      setErro('');
+      await aoSalvar(dados);
       aoFechar();
     } catch (error) {
-      setErro(error.message);
+      let msg = error.message;
+      if (error.errors && typeof error.errors === 'object') {
+        const detalhes = Object.values(error.errors).flat().filter(Boolean);
+        if (detalhes.length > 0) {
+          msg = detalhes.join(' ');
+        }
+      }
+      setErro(msg || 'Erro ao salvar professor.');
+    } finally {
+      setCarregando(false);
     }
   };
 
@@ -94,7 +113,7 @@ function ModalProfessor({ aberto, professor, departamentos, statusDisponiveis, a
                 <input name="telefone" type="tel" defaultValue={professor?.telefone || ''} required maxLength={30} placeholder="(00) 00000-0000" />
               </label>
               <label className="modal-professor-campo-largo">E-mail institucional
-                <input name="email" type="email" defaultValue={professor?.email || ''} required maxLength={160} />
+                <input name="email" type="email" defaultValue={professor?.email || ''} required maxLength={160} placeholder="nome.sobrenome@ifnmg.edu.br" />
               </label>
               <label>Titulação
                 <input name="titulacao" defaultValue={professor?.titulacao || ''} required maxLength={60} placeholder="Ex.: Doutora" />

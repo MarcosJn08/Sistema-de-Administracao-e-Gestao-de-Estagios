@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PasswordResetController;
+use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\CadastroController;
 use App\Http\Controllers\ComplementoEstagioController;
 use App\Http\Controllers\DocumentoController;
@@ -28,6 +29,10 @@ Route::prefix('auth')->name('auth.')->group(function (): void {
 });
 
 Route::middleware(['auth:sanctum', 'ativo', 'throttle:api'])->group(function () {
+    Route::apiResource('usuarios', UsuarioController::class)->except(['index', 'store']);
+    Route::get('/usuarios', [UsuarioController::class, 'index']);
+    Route::post('/usuarios', [UsuarioController::class, 'store']);
+
     Route::get('/estagios', [EstagioController::class, 'index']);
     Route::post('/estagios', [EstagioController::class, 'store']);
     Route::get('/estagios/{estagio}', [EstagioController::class, 'show']);
@@ -45,7 +50,7 @@ Route::middleware(['auth:sanctum', 'ativo', 'throttle:api'])->group(function () 
     Route::post('/estagios/{estagio}/relatorio/aprovacao', [ComplementoEstagioController::class, 'approveReport']);
     Route::put('/estagios/{estagio}/avaliacao', [ComplementoEstagioController::class, 'avaliacao']);
     Route::middleware('perfil:DIRETOR')->group(function () {
-        $recursos = ['usuarios', 'cursos', 'turmas', 'alunos', 'empresas', 'professores', 'supervisores'];
+        $recursos = ['cursos', 'turmas', 'alunos', 'empresas', 'professores', 'supervisores'];
         Route::get('/{recurso}', [CadastroController::class, 'index'])->whereIn('recurso', $recursos);
         Route::post('/{recurso}', [CadastroController::class, 'store'])->whereIn('recurso', $recursos);
         Route::get('/{recurso}/{id}', [CadastroController::class, 'show'])->whereIn('recurso', $recursos)->whereNumber('id');

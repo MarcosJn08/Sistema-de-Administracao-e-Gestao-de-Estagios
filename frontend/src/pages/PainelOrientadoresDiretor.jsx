@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Col, Container, Row, Table } from 'react-bootstrap';
 import { BookOpenCheck, Eye, Plus, RotateCcw, Search, Sparkles, UserMinus, UsersRound } from 'lucide-react';
 import Header from '../components/Header.jsx';
@@ -10,8 +10,10 @@ import Button from "../components/Button/Button.jsx";
 import StatusBadge from '../components/StatusBadge.jsx';
 import Paginacao from '../components/Paginacao.jsx';
 import ModalProfessor from '../components/orientador/ModalProfessor.jsx';
+import ToastAlerta from '../components/ToastAlerta.jsx';
 import dadosDiretor from '../data/diretor.js';
 import orientadoresIniciais, { departamentos, statusOrientador } from '../data/orientadores.js';
+import api from '../services/api.js';
 import '../App.css';
 import './PainelOrientadoresDiretor.css';
 
@@ -19,13 +21,44 @@ const ITENS_POR_PAGINA = 10;
 const normalizar = (valor) => String(valor ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 
 function PainelOrientadoresDiretor() {
-  const [orientadores, setOrientadores] = useState(orientadoresIniciais);
+  const [orientadores, setOrientadores] = useState([]);
   const [busca, setBusca] = useState('');
   const [departamento, setDepartamento] = useState('');
   const [status, setStatus] = useState('');
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [professorSelecionadoId, setProfessorSelecionadoId] = useState(null);
   const [cadastroAberto, setCadastroAberto] = useState(false);
+  const [toast, setToast] = useState({ mensagem: '', tipo: 'sucesso' });
+
+  useEffect(() => {
+    let ativo = true;
+    api.get('/usuarios', { params: { perfil: 'PROFESSOR', per_page: 100 } })
+      .then((resposta) => {
+        if (!ativo) return;
+        const usuariosApi = resposta?.data?.data || [];
+        const novos = usuariosApi.map((u) => ({
+          id: u.id,
+          nome: u.nome,
+          siape: u.siape || '---',
+          cpf: u.cpf || 'Não informado',
+          email: u.email,
+          telefone: u.telefone || '(38) 99999-0000',
+          titulacao: u.titulacao || 'Não informada',
+          departamento: u.departamento || 'Informática',
+          areaAtuacao: u.area_atuacao || u.departamento || 'Geral',
+          regimeTrabalho: u.regime_trabalho || 'Dedicação exclusiva',
+          maximoOrientandos: u.max_orientados || 5,
+          alunosOrientados: 0,
+          disponivelOrientacao: u.status === 'ativo',
+          status: u.status === 'inativo' ? 'Inativo' : 'Ativo',
+          novoNesteSemestre: true,
+        }));
+        setOrientadores(novos);
+      })
+      .catch((err) => console.warn('Erro ao carregar orientadores da API:', err));
+
+    return () => { ativo = false; };
+  }, []);
 
   const professorSelecionado = orientadores.find((professor) => professor.id === professorSelecionadoId);
   const termo = normalizar(busca);
@@ -56,7 +89,7 @@ function PainelOrientadoresDiretor() {
     setPaginaAtual(1);
   };
 
-  const salvarProfessor = (dados) => {
+  const salvarProfessor = async (dados) => {
     if (!dados.nome || !dados.siape || !dados.cpf || !dados.departamento || !dados.titulacao || !dados.email
       || !dados.telefone || !dados.areaAtuacao || !dados.regimeTrabalho || !dados.maximoOrientandos) {
       throw new Error('Preencha os campos obrigatórios.');
@@ -77,10 +110,39 @@ function PainelOrientadoresDiretor() {
       throw new Error('O limite não pode ser menor que o número atual de alunos orientados.');
     }
 
-    if (dados.id) {
+    if (dados.id && !String(dados.id).startsWith('professor-')) {
+      await api.put(`/usuarios/${dados.id}`, {
+        nome: dados.nome,
+        email: dados.email,
+        siape: dados.siape,
+        cpf: dados.cpf,
+        titulacao: dados.titulacao,
+        departamento: dados.departamento,
+        areaAtuacao: dados.areaAtuacao,
+        regimeTrabalho: dados.regimeTrabalho,
+        telefone: dados.telefone,
+        maximoOrientandos: dados.maximoOrientandos,
+      });
       setOrientadores((atuais) => atuais.map((item) => item.id === dados.id ? dados : item));
+      setToast({ mensagem: 'Orientador atualizado com sucesso!', tipo: 'sucesso' });
     } else {
-      setOrientadores((atuais) => [{ ...dados, id: `professor-${Date.now()}` }, ...atuais]);
+      const { data: resultado } = await api.post('/usuarios', {
+        nome: dados.nome,
+        email: dados.email,
+        password: dados.siape + '@Sage',
+        perfil: 'PROFESSOR',
+        siape: dados.siape,
+        cpf: dados.cpf,
+        titulacao: dados.titulacao,
+        departamento: dados.departamento,
+        areaAtuacao: dados.areaAtuacao,
+        regimeTrabalho: dados.regimeTrabalho,
+        telefone: dados.telefone,
+        maximoOrientandos: dados.maximoOrientandos,
+      });
+      const criado = resultado?.data;
+      setOrientadores((atuais) => [{ ...dados, id: criado?.id ?? `professor-${Date.now()}` }, ...atuais]);
+      setToast({ mensagem: 'Orientador cadastrado com sucesso!', tipo: 'sucesso' });
       setPaginaAtual(1);
     }
   };
@@ -184,6 +246,7 @@ function PainelOrientadoresDiretor() {
       <ModalProfessor key={professorSelecionadoId || 'perfil-fechado'} aberto={Boolean(professorSelecionado)}
         professor={professorSelecionado} departamentos={departamentos} statusDisponiveis={statusOrientador}
         aoSalvar={salvarProfessor} aoFechar={() => setProfessorSelecionadoId(null)} />
+      <ToastAlerta mensagem={toast.mensagem} tipo={toast.tipo} aoFechar={() => setToast({ mensagem: '', tipo: 'sucesso' })} />
       <Footer />
     </div>
   );

@@ -6,22 +6,41 @@ import './ModalCadastroAluno.css';
 
 function ModalCadastroAluno({ aberto, cursos, aoCadastrar, aoFechar }) {
   const [erro, setErro] = useState('');
+  const [carregando, setCarregando] = useState(false);
 
-  const cadastrar = (evento) => {
+  const cadastrar = async (evento) => {
     evento.preventDefault();
     const formulario = new FormData(evento.currentTarget);
     const dados = Object.fromEntries(formulario.entries());
+    setCarregando(true);
+    setErro('');
+
+    const emailTrimmed = String(dados.email || '').toLowerCase().trim();
+    if (!emailTrimmed.endsWith('@aluno.ifnmg.edu.br')) {
+      setErro('O e-mail do aluno deve ser institucional (@aluno.ifnmg.edu.br).');
+      setCarregando(false);
+      return;
+    }
 
     try {
-      aoCadastrar({ ...dados, semestre: Number(dados.semestre) });
-      setErro('');
+      await aoCadastrar({ ...dados, semestre: Number(dados.semestre) });
       aoFechar();
     } catch (error) {
-      setErro(error.message);
+      let msg = error.message;
+      if (error.errors && typeof error.errors === 'object') {
+        const detalhes = Object.values(error.errors).flat().filter(Boolean);
+        if (detalhes.length > 0) {
+          msg = detalhes.join(' ');
+        }
+      }
+      setErro(msg || 'Erro ao cadastrar aluno.');
+    } finally {
+      setCarregando(false);
     }
   };
 
   const fechar = () => {
+    if (carregando) return;
     setErro('');
     aoFechar();
   };
@@ -52,8 +71,8 @@ function ModalCadastroAluno({ aberto, cursos, aoCadastrar, aoFechar }) {
             <label>Data de nascimento
               <input name="dataNascimento" type="date" required />
             </label>
-            <label>E-mail
-              <input name="email" type="email" required maxLength={160} />
+            <label>E-mail institucional
+              <input name="email" type="email" required maxLength={160} placeholder="nome@aluno.ifnmg.edu.br" />
             </label>
             <label>Telefone
               <input name="telefone" type="tel" maxLength={30} placeholder="(00) 00000-0000" />
@@ -106,7 +125,9 @@ function ModalCadastroAluno({ aberto, cursos, aoCadastrar, aoFechar }) {
       </Modal.Body>
       <Modal.Footer>
         <Button tipo="botao-acao-contorno" onClick={fechar}>Cancelar</Button>
-        <button type="submit" form="cadastro-aluno-form" className="botao-sage-verde">Cadastrar aluno</button>
+        <button type="submit" form="cadastro-aluno-form" className="botao-sage-verde" disabled={carregando}>
+          {carregando ? 'Cadastrando...' : 'Cadastrar aluno'}
+        </button>
       </Modal.Footer>
     </Modal>
   );

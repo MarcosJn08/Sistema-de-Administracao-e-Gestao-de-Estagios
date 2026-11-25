@@ -13,6 +13,10 @@ return new class extends Migration
             $table->foreignId('usuario_id')->constrained('usuarios')->cascadeOnDelete();
             $table->string('siape_matricula')->unique();
             $table->string('departamento_area');
+            $table->string('titulacao')->nullable();
+            $table->string('telefone')->nullable();
+            $table->string('area_atuacao')->nullable();
+            $table->string('regime_trabalho')->nullable();
             $table->unsignedInteger('max_orientados')->default(5);
             $table->timestamps();
         });
