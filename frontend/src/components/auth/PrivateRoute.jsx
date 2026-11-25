@@ -8,6 +8,4 @@ export default function PrivateRoute() {
   if (!isAuthenticated) return <Navigate to="/sage/login" state={{ from: location.pathname + location.search }} replace />;
 
   return <Outlet />;
-
-  
 }

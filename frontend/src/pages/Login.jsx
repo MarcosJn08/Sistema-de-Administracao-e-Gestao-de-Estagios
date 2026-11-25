@@ -7,6 +7,7 @@ import Input from "../components/Input/Input.jsx";
 import Button from "../components/Button/Button.jsx";
 import GoogleButton from "../components/GoogleButton.jsx";
 import ImgLogin from "../assets/LoginHD.png";
+import ModalRecuperacaoSenha from "../components/auth/ModalRecuperacaoSenha.jsx";
 import useAuth, { getPostLoginPath } from "../hooks/useAuth.js";
 
 function Login() {
@@ -19,6 +20,7 @@ function Login() {
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [notice, setNotice] = useState('');
+  const [recuperacaoAberta, setRecuperacaoAberta] = useState(false);
 
   const lidarComLogin = async (event) => {
     event.preventDefault();
@@ -87,7 +89,8 @@ function Login() {
           erro={fieldErrors.password?.[0]}
         />
 
-        <Nav.Link href="#mudarSenha" style={{ fontSize: '14px', color: '#2e7d32', padding: 0, marginBottom: '8px' }}>
+        <Nav.Link as="button" type="button" onClick={() => setRecuperacaoAberta(true)} disabled={sending}
+          style={{ fontSize: '14px', color: '#2e7d32', padding: 0, marginBottom: '8px' }}>
           Esqueceu a senha?
         </Nav.Link>
         <Button type="submit" texto={sending ? 'Entrando…' : 'Fazer Login'} tipo="botao-com-fundo" disabled={sending} className="w-100" />
@@ -105,6 +108,10 @@ function Login() {
           </Link>
         </p>
       </div>
+      {recuperacaoAberta && <ModalRecuperacaoSenha
+        emailInicial={identifier.includes('@') ? identifier : ''}
+        aoFechar={() => setRecuperacaoAberta(false)}
+      />}
     </div>
   );
 }
