@@ -1,6 +1,6 @@
 import TabelaDocumentos from '../TabelaDocumentos.jsx';
 import StatusBadge from '../StatusBadge.jsx';
-import BotaoAcao from './BotaoAcao.jsx';
+import BotaoAcao from '../BotaoAcao.jsx';
 
 function CardDocumentos({
   titulo = 'Pendências para análise',
@@ -16,7 +16,7 @@ function CardDocumentos({
     <div className="cartao-sage mb-0">
       <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
         <h2 className="cartao-sage-titulo mb-0">{titulo}</h2>
-        {textoVerTodos && <BotaoAcao texto={textoVerTodos} variante="contorno" aoClicar={aoVerTodos} />}
+        {textoVerTodos && <BotaoAcao texto={textoVerTodos} variante="contorno" tamanhoIcone={15} onClick={aoVerTodos} />}
       </div>
 
       <TabelaDocumentos rotulo="Pendências documentais, role horizontalmente para ver todas as colunas" legenda="Documentos pendentes de conferência pelo diretor">
@@ -43,9 +43,10 @@ function CardDocumentos({
                 <div className="d-flex justify-content-center gap-2 align-items-center">
                   {doc.acoes?.map((acao, index) => <BotaoAcao
                     key={`${doc.id}-${acao}-${index}`}
-                    tipo={acao}
+                    texto={acao}
+                    tamanhoIcone={15}
                     aria-label={`${acao} ${doc.descricao} de ${doc.nome}`}
-                    aoClicar={() => lidarComAcao && lidarComAcao(doc, acao)}
+                    onClick={() => lidarComAcao && lidarComAcao(doc, acao)}
                   />)}
                 </div>
               </td>

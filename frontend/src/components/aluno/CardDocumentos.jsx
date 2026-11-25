@@ -1,6 +1,6 @@
 import TabelaDocumentos from '../TabelaDocumentos.jsx';
 import StatusBadge from '../StatusBadge.jsx';
-import BotaoAcao from './BotaoAcao.jsx';
+import BotaoAcao from '../BotaoAcao.jsx';
 
 function CardDocumentos({
   documentos = [],
@@ -41,9 +41,9 @@ function CardDocumentos({
             {exibirData && <td className="text-nowrap">{doc.data || 'Não informada'}</td>}
             {!somenteLeitura && <td>
               <div className={`d-flex flex-nowrap gap-2 align-items-center ${acoesSomenteIcones ? 'justify-content-center' : ''}`}>
-                {doc.acoes?.map((acao) => <BotaoAcao key={`${doc.id}-${acao}`} tipo={acao}
-                  somenteIcone={acoesSomenteIcones} ariaLabel={`${acao}: ${doc.nome}`}
-                  aoClicar={() => lidarComAcao && lidarComAcao(doc, acao)} />)}
+                {doc.acoes?.map((acao) => <BotaoAcao key={`${doc.id}-${acao}`} texto={acao}
+                  somenteIcone={acoesSomenteIcones} aria-label={`${acao}: ${doc.nome}`}
+                  onClick={() => lidarComAcao && lidarComAcao(doc, acao)} />)}
               </div>
             </td>}
           </tr>)}
