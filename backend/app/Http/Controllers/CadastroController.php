@@ -106,7 +106,8 @@ class CadastroController extends Controller
         return DB::transaction(function () use ($request, $recurso, $model, $data) {
             $model = $model->newQuery()->whereKey($model->id)->lockForUpdate()->firstOrFail();
             if ($recurso === 'usuarios') {
-                if (isset($data['perfil']) && $data['perfil'] !== $model->perfil->value) {
+                $perfilVal = $model->perfil instanceof \BackedEnum ? $model->perfil->value : (string) $model->perfil;
+                if (isset($data['perfil']) && $data['perfil'] !== $perfilVal) {
                     throw ValidationException::withMessages(['perfil' => 'O perfil de uma conta existente não pode ser alterado.']);
                 }
                 if ($model->id === $request->user()->id && ($data['status'] ?? 'ativo') !== 'ativo') {

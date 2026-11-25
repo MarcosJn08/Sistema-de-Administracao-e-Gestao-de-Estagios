@@ -1,6 +1,6 @@
 # SAGE — API de gestão de estágios
 
-Backend Laravel 13 / PHP 8.5 (versão usada na validação e na CI) com autenticação Sanctum por Bearer token. Os endpoints ficam em `/api/v1`. Não é necessário executar npm para usar esta API.
+Backend Laravel 13 / PHP 8.5 (versão usada na validação e na CI) com autenticação Sanctum por Bearer token. Os endpoints ficam em `/api`. Não é necessário executar npm para usar esta API.
 
 ## Instalação local
 
@@ -153,7 +153,7 @@ O arquivo `backend-ci.yml` está preparado para executar testes em SQLite/MySQL 
 4. Execute `composer install --no-dev --optimize-autoloader`, `php artisan migrate --force`, `php artisan config:cache` e `php artisan route:cache` na versão preparada para implantação.
 5. Crie o diretor interativamente, se ainda não existir. Não há necessidade de seed em produção.
 6. Garanta escrita em `storage` e `bootstrap/cache`. Configure o scheduler com `php artisan schedule:run` a cada minuto. Agende em uma única instância ou use cache compartilhado/coordenação do ambiente.
-7. Verifique `/up`, `/api/v1/status`, login e um fluxo autorizado. Monitore erros 5xx, falhas de backup e espaço em disco.
+7. Verifique `/up`, `/api/status`, login e um fluxo autorizado. Monitore erros 5xx, falhas de backup e espaço em disco.
 
 Nenhum servidor, domínio, certificado, cron do sistema ou serviço externo é provisionado por estes arquivos. A implantação precisa das configurações do ambiente de destino. Não execute `migrate:fresh` no banco real.
 

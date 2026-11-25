@@ -18,10 +18,14 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request): UserResource
     {
+        $isLegacyEmailLogin = (bool) $request->attributes->get('_legacy_email');
         $authentication = $this->authService->login(
             $request->validated('identifier'),
             $request->validated('password'),
+            $isLegacyEmailLogin,
         );
+
+        $request->attributes->set('_token_plain', $authentication['token']);
 
         return (new UserResource($authentication['user']))->additional([
             'success' => true,

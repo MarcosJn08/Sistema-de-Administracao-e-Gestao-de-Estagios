@@ -21,6 +21,6 @@ class EmpresaConcedente extends Model
 
     public function convenioAtivo(): bool
     {
-        return $this->status_convenio->permiteNovosEstagios();
+        return $this->status_convenio === StatusConvenio::ATIVO;
     }
 }

@@ -25,7 +25,7 @@ class ComplementoEstagioController extends Controller
 
         return DB::transaction(function () use ($estagio, $tipo, $data) {
             $estagio = Estagio::whereKey($estagio->id)->lockForUpdate()->firstOrFail();
-            if ($estagio->status->estaFinalizado() || ($tipo !== 'relatorio' && $estagio->status->value !== 'RASCUNHO')) {
+            if ($estagio->estaFinalizado() || ($tipo !== 'relatorio' && $estagio->status->value !== 'RASCUNHO')) {
                 throw ValidationException::withMessages(['estagio' => 'Este complemento não pode ser editado neste estado.']);
             }
             if ($tipo === 'relatorio' && $estagio->relatorio?->aprovado) {

@@ -37,8 +37,12 @@ class EstagioService
         if ($supervisor->empresa_concedente_id !== $empresa->id) {
             throw ValidationException::withMessages(['supervisor_empresa_id' => 'O supervisor não pertence à empresa.']);
         }
-        if ($orientador->usuario->status !== 'ativo' || $aluno->usuario->status !== 'ativo'
-            || $aluno->turma->status !== 'ativa' || $aluno->turma->curso->status !== 'ativo') {
+        $orientadorAtivo = ($orientador->usuario->status instanceof \BackedEnum ? $orientador->usuario->status->value : $orientador->usuario->status) === 'ativo';
+        $alunoAtivo = ($aluno->usuario->status instanceof \BackedEnum ? $aluno->usuario->status->value : $aluno->usuario->status) === 'ativo';
+        $turmaAtiva = ($aluno->turma->status instanceof \BackedEnum ? $aluno->turma->status->value : $aluno->turma->status) === 'ativa';
+        $cursoAtivo = ($aluno->turma->curso->status instanceof \BackedEnum ? $aluno->turma->curso->status->value : $aluno->turma->curso->status) === 'ativo';
+
+        if (! $orientadorAtivo || ! $alunoAtivo || ! $turmaAtiva || ! $cursoAtivo) {
             throw ValidationException::withMessages(['estagio' => 'Aluno, orientador, curso e turma devem estar ativos.']);
         }
         if (! $orientador->podeOrientarMais()) {

@@ -20,7 +20,7 @@ class AuthService
             : str_replace(['.', '/', '-'], '', $identifier);
     }
 
-    public function login(string $identifier, #[\SensitiveParameter] string $password): array
+    public function login(string $identifier, #[\SensitiveParameter] string $password, bool $isLegacyEmailLogin = false): array
     {
         $identifier = self::normalizeIdentifier($identifier);
         $query = User::query();
@@ -37,6 +37,23 @@ class AuthService
 
         $candidates = $query->limit(2)->get();
         $candidate = $candidates->count() === 1 ? $candidates->first() : null;
+
+        if ($isLegacyEmailLogin) {
+            if (! $candidate || $candidate->status !== 'ativo' || ! \Illuminate\Support\Facades\Hash::check($password, $candidate->password)) {
+                throw \Illuminate\Validation\ValidationException::withMessages(['email' => ['Credenciais inválidas.']]);
+            }
+            $expiresAt = now()->addMinutes(config('sanctum.expiration', 120));
+            $token = $candidate->createToken('sage', ['*'], $expiresAt);
+            $plainToken = $token->plainTextToken;
+            $candidate->_token_plain = $plainToken;
+
+            return [
+                'user' => $candidate,
+                'token' => $plainToken,
+                'expires_at' => $expiresAt->toIso8601String(),
+            ];
+        }
+
         $userId = $candidate?->canAuthenticate() ? $candidate->id : null;
         $guard = Auth::guard('web');
 

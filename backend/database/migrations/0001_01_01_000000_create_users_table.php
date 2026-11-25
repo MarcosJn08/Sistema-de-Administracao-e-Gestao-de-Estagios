@@ -6,16 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('usuarios', function (Blueprint $table) {
             $table->id();
-            $table->string('nome');
+            $table->string('nome')->nullable();
+            $table->string('name')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('perfil', 20);               // App\Enums\UserRole
+            $table->string('perfil', 20)->default('ALUNO');
+            $table->string('role', 20)->nullable()->index();
             $table->enum('status', ['ativo', 'inativo'])->default('ativo');
+            $table->boolean('is_active')->default(true);
+            $table->string('matricula', 32)->nullable()->unique();
+            $table->string('siape', 32)->nullable()->unique();
+            $table->string('cnpj', 14)->nullable()->unique();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -36,6 +45,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('usuarios');

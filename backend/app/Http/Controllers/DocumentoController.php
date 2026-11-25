@@ -35,7 +35,7 @@ class DocumentoController extends Controller
         try {
             $documento = DB::transaction(function () use ($estagio, $data, $request, $file, $path) {
                 $estagio = Estagio::whereKey($estagio->id)->lockForUpdate()->firstOrFail();
-                if ($estagio->status->estaFinalizado()) {
+                if ($estagio->estaFinalizado()) {
                     throw ValidationException::withMessages(['estagio' => 'Estágio finalizado não aceita documentos.']);
                 }
                 if ($estagio->documentos()->where('tipo', $data['tipo'])->whereIn('status', ['EM_ANALISE', 'DEFERIDO'])->exists()) {
@@ -65,7 +65,7 @@ class DocumentoController extends Controller
         return DB::transaction(function () use ($request, $estagio, $documento, $data) {
             $estagio = Estagio::whereKey($estagio->id)->lockForUpdate()->firstOrFail();
             $documento = Documento::whereKey($documento->id)->lockForUpdate()->firstOrFail();
-            if ($estagio->status->estaFinalizado() || $documento->status !== StatusDocumento::EM_ANALISE || ! $documento->arquivo_path) {
+            if ($estagio->estaFinalizado() || $documento->status !== StatusDocumento::EM_ANALISE || ! $documento->arquivo_path) {
                 throw ValidationException::withMessages(['status' => 'Documento não pode ser analisado neste estado.']);
             }
             $documento->forceFill($data + ['analisado_por' => $request->user()->id, 'analisado_em' => now()])->save();

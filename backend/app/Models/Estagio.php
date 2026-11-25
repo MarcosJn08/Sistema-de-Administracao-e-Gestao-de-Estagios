@@ -37,4 +37,13 @@ class Estagio extends Model
     {
         return (float) $this->frequencias()->where('assinado_supervisor', true)->sum('horas_diarias');
     }
+
+    public function estaFinalizado(): bool
+    {
+        return in_array($this->status, [
+            StatusEstagio::CONCLUIDO,
+            StatusEstagio::ENCERRADO,
+            StatusEstagio::CANCELADO_DESVIO_FUNCAO,
+        ], true);
+    }
 }

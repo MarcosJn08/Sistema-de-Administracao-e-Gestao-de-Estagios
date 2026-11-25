@@ -246,7 +246,7 @@ class PasswordResetControllerTest extends TestCase
             'password' => 'NovaSenha123!', 'password_confirmation' => 'NovaSenha123!',
         ])->assertUnprocessable()->assertJsonValidationErrors('token');
 
-        $this->assertDatabaseCount('users', 0);
+        $this->assertDatabaseCount('usuarios', 0);
     }
 
     #[DataProvider('dadosInvalidos')]

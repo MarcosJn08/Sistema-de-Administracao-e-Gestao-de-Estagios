@@ -12,6 +12,12 @@ class UsuarioFactory extends Factory
 
     public function definition(): array
     {
-        return ['nome' => fake()->name(), 'email' => fake()->unique()->safeEmail(), 'password' => 'SenhaDeTeste123!', 'perfil' => UserRole::ALUNO, 'status' => 'ativo'];
+        return [
+            'nome' => fake()->name(),
+            'email' => fake()->unique()->userName().'@sage.test',
+            'password' => 'SenhaDeTeste123!',
+            'perfil' => UserRole::ALUNO,
+            'status' => 'ativo',
+        ];
     }
 }

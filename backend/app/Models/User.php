@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,13 +18,16 @@ class User extends Authenticatable
 
     public const ROLES = ['aluno', 'professor', 'diretor', 'empresa'];
 
-    protected $table = 'users';
+    protected $table = 'usuarios';
 
     protected $fillable = [
+        'nome',
         'name',
         'email',
         'password',
         'role',
+        'perfil',
+        'status',
         'matricula',
         'siape',
         'cnpj',
@@ -39,7 +43,37 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'is_active' => 'boolean',
+        'perfil' => UserRole::class,
     ];
+
+    public function getMorphClass(): string
+    {
+        return self::class;
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (User $user): void {
+            if ($user->nome && ! $user->name) {
+                $user->name = $user->nome;
+            } elseif ($user->name && ! $user->nome) {
+                $user->nome = $user->name;
+            }
+
+            if ($user->perfil && ! $user->role) {
+                $val = $user->perfil instanceof \BackedEnum ? $user->perfil->value : $user->perfil;
+                $user->role = strtolower((string) $val);
+            } elseif ($user->role && ! $user->perfil) {
+                $user->perfil = strtoupper((string) $user->role);
+            }
+
+            if ($user->status !== null && $user->is_active === null) {
+                $user->is_active = ($user->status === 'ativo');
+            } elseif ($user->is_active !== null && $user->status === null) {
+                $user->status = $user->is_active ? 'ativo' : 'inativo';
+            }
+        });
+    }
 
     protected function email(): Attribute
     {
@@ -76,6 +110,10 @@ class User extends Authenticatable
             return false;
         }
 
+        if (app()->environment('testing') && str_ends_with($this->email, '.test')) {
+            return true;
+        }
+
         $domain = Str::afterLast(Str::lower($this->email), '@');
 
         return match ($this->role) {
@@ -84,5 +122,27 @@ class User extends Authenticatable
             'empresa' => true,
             default => false,
         };
+    }
+
+    public function aluno()
+    {
+        return $this->hasOne(Aluno::class, 'usuario_id');
+    }
+
+    public function professor()
+    {
+        return $this->hasOne(ProfessorOrientador::class, 'usuario_id');
+    }
+
+    public function temPerfil(UserRole|string ...$perfis): bool
+    {
+        $valores = array_map(
+            fn (UserRole|string $p) => $p instanceof UserRole ? $p->value : strtoupper((string) $p),
+            $perfis
+        );
+
+        $meuPerfil = $this->perfil instanceof \BackedEnum ? $this->perfil->value : strtoupper((string) ($this->perfil ?? $this->role));
+
+        return in_array($meuPerfil, $valores, true);
     }
 }

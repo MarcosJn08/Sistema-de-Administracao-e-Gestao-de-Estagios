@@ -32,22 +32,22 @@ class DomainIntegrityTest extends TestCase
 
     public function test_audit_response_has_generated_request_id(): void
     {
-        $this->getJson('/api/v1/status')->assertOk()->assertHeader('X-Request-ID');
+        $this->getJson('/api/status')->assertOk()->assertHeader('X-Request-ID');
     }
 
     public function test_api_hides_internal_errors(): void
     {
-        Route::get('/api/v1/internal-test', function () {
+        Route::get('/api/internal-test', function () {
             throw new \RuntimeException('sensitive database details');
         });
-        $this->getJson('/api/v1/internal-test')->assertStatus(500)->assertJsonPath('message', 'Ocorreu um erro interno.')->assertDontSee('sensitive database details');
+        $this->getJson('/api/internal-test')->assertStatus(500)->assertJsonPath('message', 'Ocorreu um erro interno.')->assertDontSee('sensitive database details');
     }
 
     public function test_duplicate_course_returns_validation_error(): void
     {
         $this->actingAs(Usuario::factory()->create(['perfil' => UserRole::DIRETOR]), 'sanctum');
         $data = ['nome' => 'Curso único', 'codigo' => 'UN', 'carga_horaria_estagio' => 400];
-        $this->postJson('/api/v1/cursos', $data)->assertCreated();
-        $this->postJson('/api/v1/cursos', $data)->assertUnprocessable();
+        $this->postJson('/api/cursos', $data)->assertCreated();
+        $this->postJson('/api/cursos', $data)->assertUnprocessable();
     }
 }

@@ -50,14 +50,14 @@ class ApiWorkflowTest extends TestCase
 
     private function stage(): Estagio
     {
-        $id = $this->actingAs($this->diretor, 'sanctum')->postJson('/api/v1/estagios', $this->payload)->assertCreated()->json('data.id');
+        $id = $this->actingAs($this->diretor, 'sanctum')->postJson('/api/estagios', $this->payload)->assertCreated()->json('data.id');
 
         return Estagio::findOrFail($id);
     }
 
     private function prepare(Estagio $estagio): void
     {
-        $base = '/api/v1/estagios/'.$estagio->id;
+        $base = '/api/estagios/'.$estagio->id;
         $this->actingAs($this->alunoUser, 'sanctum')->putJson($base.'/complementos/apolice', ['numero_apolice' => '123', 'nome_seguradora' => 'Seguro'])->assertOk();
         $this->putJson($base.'/complementos/plano', ['objetivos' => 'Aprender', 'atividades_previstas' => 'Programar', 'cronograma' => 'Semanal'])->assertOk();
         foreach (['TCE', 'PLANO_ATIVIDADES', 'FICHA_MATRICULA'] as $tipo) {
@@ -69,7 +69,7 @@ class ApiWorkflowTest extends TestCase
     public function test_complete_workflow_preserves_fractional_hours_and_audit(): void
     {
         $stage = $this->stage();
-        $base = '/api/v1/estagios/'.$stage->id;
+        $base = '/api/estagios/'.$stage->id;
         $this->assertSame(StatusEstagio::RASCUNHO, $stage->status);
         $this->prepare($stage);
         $this->actingAs($this->diretor, 'sanctum')->patchJson($base.'/status', ['status' => 'EM_ANDAMENTO'])->assertOk();
@@ -91,36 +91,36 @@ class ApiWorkflowTest extends TestCase
 
     public function test_login_logout_and_revoked_token(): void
     {
-        $login = $this->postJson('/api/v1/auth/login', ['email' => $this->diretor->email, 'password' => 'SenhaDeTeste123!'])->assertOk()->assertJsonMissingPath('data.usuario.password');
+        $login = $this->postJson('/api/auth/login', ['email' => $this->diretor->email, 'password' => 'SenhaDeTeste123!'])->assertOk()->assertJsonMissingPath('data.usuario.password');
         $token = $login->json('data.token');
-        $this->withToken($token)->getJson('/api/v1/auth/me')->assertOk();
-        $this->withToken($token)->postJson('/api/v1/auth/logout')->assertOk();
+        $this->withToken($token)->getJson('/api/auth/me')->assertOk();
+        $this->withToken($token)->postJson('/api/auth/logout')->assertNoContent();
         $this->assertDatabaseCount('personal_access_tokens', 0);
         $this->app['auth']->forgetGuards();
-        $this->withToken($token)->getJson('/api/v1/auth/me')->assertUnauthorized();
+        $this->withToken($token)->getJson('/api/auth/me')->assertUnauthorized();
     }
 
     public function test_inactive_user_cannot_login_or_use_an_existing_token(): void
     {
         $token = $this->alunoUser->createToken('test')->plainTextToken;
         $this->alunoUser->update(['status' => 'inativo']);
-        $this->postJson('/api/v1/auth/login', ['email' => $this->alunoUser->email, 'password' => 'SenhaDeTeste123!'])->assertUnprocessable();
-        $this->withToken($token)->getJson('/api/v1/auth/me')->assertForbidden();
+        $this->postJson('/api/auth/login', ['email' => $this->alunoUser->email, 'password' => 'SenhaDeTeste123!'])->assertUnprocessable();
+        $this->withToken($token)->getJson('/api/auth/me')->assertForbidden();
     }
 
     public function test_login_is_rate_limited(): void
     {
         for ($i = 0; $i < 5; $i++) {
-            $this->postJson('/api/v1/auth/login', ['email' => 'missing@example.test', 'password' => 'invalid'])->assertUnprocessable();
+            $this->postJson('/api/auth/login', ['email' => 'missing@example.test', 'password' => 'invalid'])->assertUnprocessable();
         }
-        $this->postJson('/api/v1/auth/login', ['email' => 'missing@example.test', 'password' => 'invalid'])->assertStatus(429)->assertJsonPath('success', false);
+        $this->postJson('/api/auth/login', ['email' => 'missing@example.test', 'password' => 'invalid'])->assertStatus(429)->assertJsonPath('success', false);
     }
 
     public function test_anonymous_and_wrong_role_cannot_access_administration(): void
     {
-        $this->getJson('/api/v1/usuarios')->assertUnauthorized()->assertJsonPath('success', false);
-        $this->actingAs($this->alunoUser, 'sanctum')->getJson('/api/v1/usuarios')->assertForbidden();
-        $this->postJson('/api/v1/estagios', $this->payload)->assertForbidden();
+        $this->getJson('/api/usuarios')->assertUnauthorized()->assertJsonPath('success', false);
+        $this->actingAs($this->alunoUser, 'sanctum')->getJson('/api/usuarios')->assertForbidden();
+        $this->postJson('/api/estagios', $this->payload)->assertForbidden();
     }
 
     public function test_unrelated_users_cannot_read_or_mutate_another_stage(): void
@@ -128,40 +128,40 @@ class ApiWorkflowTest extends TestCase
         $stage = $this->stage();
         foreach ([UserRole::ALUNO, UserRole::PROFESSOR, UserRole::EMPRESA] as $role) {
             $outsider = Usuario::factory()->create(['perfil' => $role]);
-            $this->actingAs($outsider, 'sanctum')->getJson('/api/v1/estagios/'.$stage->id)->assertForbidden();
-            $this->getJson('/api/v1/estagios')->assertOk()->assertJsonPath('data.total', 0);
-            $this->postJson('/api/v1/estagios/'.$stage->id.'/documentos', [])->assertForbidden();
+            $this->actingAs($outsider, 'sanctum')->getJson('/api/estagios/'.$stage->id)->assertForbidden();
+            $this->getJson('/api/estagios')->assertOk()->assertJsonPath('data.total', 0);
+            $this->postJson('/api/estagios/'.$stage->id.'/documentos', [])->assertForbidden();
         }
     }
 
     public function test_creation_rejects_invalid_company_supervisor_dates_and_status(): void
     {
         $this->actingAs($this->diretor, 'sanctum');
-        $this->postJson('/api/v1/estagios', $this->payload + ['status' => 'CONCLUIDO'])->assertUnprocessable();
-        $this->postJson('/api/v1/estagios', array_replace($this->payload, ['data_termino' => '2000-01-01']))->assertUnprocessable();
+        $this->postJson('/api/estagios', $this->payload + ['status' => 'CONCLUIDO'])->assertUnprocessable();
+        $this->postJson('/api/estagios', array_replace($this->payload, ['data_termino' => '2000-01-01']))->assertUnprocessable();
         EmpresaConcedente::first()->update(['status_convenio' => 'EXPIRADO']);
-        $this->postJson('/api/v1/estagios', $this->payload)->assertUnprocessable();
+        $this->postJson('/api/estagios', $this->payload)->assertUnprocessable();
         EmpresaConcedente::first()->update(['status_convenio' => 'ATIVO']);
         $other = EmpresaConcedente::create(['cnpj' => '99999999000199', 'razao_social' => 'Outra', 'endereco_completo' => 'Rua', 'representante_legal' => 'Outro', 'status_convenio' => 'ATIVO']);
-        $this->postJson('/api/v1/estagios', array_replace($this->payload, ['empresa_concedente_id' => $other->id]))->assertUnprocessable();
+        $this->postJson('/api/estagios', array_replace($this->payload, ['empresa_concedente_id' => $other->id]))->assertUnprocessable();
     }
 
     public function test_activation_requires_documents_and_rechecks_professor_capacity(): void
     {
         $first = $this->stage();
         $second = $this->stage();
-        $this->patchJson('/api/v1/estagios/'.$first->id.'/status', ['status' => 'EM_ANDAMENTO'])->assertUnprocessable();
+        $this->patchJson('/api/estagios/'.$first->id.'/status', ['status' => 'EM_ANDAMENTO'])->assertUnprocessable();
         $this->prepare($first);
         $this->prepare($second);
-        $this->actingAs($this->diretor, 'sanctum')->patchJson('/api/v1/estagios/'.$first->id.'/status', ['status' => 'EM_ANDAMENTO'])->assertOk();
-        $this->patchJson('/api/v1/estagios/'.$second->id.'/status', ['status' => 'EM_ANDAMENTO'])->assertUnprocessable();
-        $this->patchJson('/api/v1/estagios/'.$first->id.'/status', ['status' => 'CONCLUIDO'])->assertUnprocessable();
+        $this->actingAs($this->diretor, 'sanctum')->patchJson('/api/estagios/'.$first->id.'/status', ['status' => 'EM_ANDAMENTO'])->assertOk();
+        $this->patchJson('/api/estagios/'.$second->id.'/status', ['status' => 'EM_ANDAMENTO'])->assertUnprocessable();
+        $this->patchJson('/api/estagios/'.$first->id.'/status', ['status' => 'CONCLUIDO'])->assertUnprocessable();
     }
 
     public function test_document_adjustments_create_new_version_and_download_is_private(): void
     {
         $stage = $this->stage();
-        $base = '/api/v1/estagios/'.$stage->id;
+        $base = '/api/estagios/'.$stage->id;
         $id = $this->actingAs($this->alunoUser, 'sanctum')->postJson($base.'/documentos', ['tipo' => 'TCE', 'arquivo' => UploadedFile::fake()->create('tce.pdf', 5, 'application/pdf')])->assertCreated()->json('data.id');
         $this->patchJson($base.'/documentos/'.$id.'/analise', ['status' => 'DEFERIDO'])->assertForbidden();
         $this->actingAs($this->professorUser, 'sanctum')->patchJson($base.'/documentos/'.$id.'/analise', ['status' => 'NECESSITA_AJUSTES'])->assertUnprocessable();
@@ -176,7 +176,7 @@ class ApiWorkflowTest extends TestCase
     public function test_invalid_upload_and_duplicate_pending_document_leave_no_orphan_file(): void
     {
         $stage = $this->stage();
-        $base = '/api/v1/estagios/'.$stage->id.'/documentos';
+        $base = '/api/estagios/'.$stage->id.'/documentos';
         $this->actingAs($this->alunoUser, 'sanctum')->postJson($base, ['tipo' => 'TCE', 'arquivo' => UploadedFile::fake()->create('malware.exe', 5, 'application/octet-stream')])->assertUnprocessable();
         $this->postJson($base, ['tipo' => 'TCE', 'arquivo' => UploadedFile::fake()->create('tce.pdf', 5, 'application/pdf')])->assertCreated();
         $this->postJson($base, ['tipo' => 'TCE', 'arquivo' => UploadedFile::fake()->create('tce.pdf', 5, 'application/pdf')])->assertUnprocessable();
@@ -187,7 +187,7 @@ class ApiWorkflowTest extends TestCase
     {
         $stage = $this->stage();
         $this->prepare($stage);
-        $base = '/api/v1/estagios/'.$stage->id;
+        $base = '/api/estagios/'.$stage->id;
         $this->actingAs($this->diretor, 'sanctum')->patchJson($base.'/status', ['status' => 'EM_ANDAMENTO'])->assertOk();
         $this->actingAs($this->alunoUser, 'sanctum');
         $data = ['data' => now()->toDateString(), 'hora_entrada' => '08:00', 'hora_saida' => '10:00'];
@@ -202,22 +202,22 @@ class ApiWorkflowTest extends TestCase
     public function test_admin_crud_validation_and_token_revocation(): void
     {
         $this->actingAs($this->diretor, 'sanctum');
-        $id = $this->postJson('/api/v1/usuarios', ['nome' => 'Novo', 'email' => 'novo@example.test', 'password' => 'SenhaSegura1234', 'perfil' => 'ALUNO'])->assertCreated()->assertJsonMissingPath('data.password')->json('data.id');
+        $id = $this->postJson('/api/usuarios', ['nome' => 'Novo', 'email' => 'novo@example.test', 'password' => 'SenhaSegura1234', 'perfil' => 'ALUNO'])->assertCreated()->assertJsonMissingPath('data.password')->json('data.id');
         $user = Usuario::find($id);
         $user->createToken('test');
-        $this->patchJson('/api/v1/usuarios/'.$id, ['status' => 'inativo'])->assertOk();
+        $this->patchJson('/api/usuarios/'.$id, ['status' => 'inativo'])->assertOk();
         $this->assertSame(0, $user->tokens()->count());
-        $this->patchJson('/api/v1/usuarios/'.$this->diretor->id, ['status' => 'inativo'])->assertUnprocessable();
-        $this->patchJson('/api/v1/usuarios/'.$id, ['perfil' => 'DIRETOR'])->assertUnprocessable();
-        $this->getJson('/api/v1/cursos?per_page=101')->assertUnprocessable();
-        $this->postJson('/api/v1/alunos', ['usuario_id' => $this->diretor->id, 'turma_id' => Turma::first()->id, 'matricula' => 'X', 'cpf' => '00000000000'])->assertUnprocessable();
-        $this->getJson('/api/v1/cursos')->assertOk();
+        $this->patchJson('/api/usuarios/'.$this->diretor->id, ['status' => 'inativo'])->assertUnprocessable();
+        $this->patchJson('/api/usuarios/'.$id, ['perfil' => 'DIRETOR'])->assertUnprocessable();
+        $this->getJson('/api/cursos?per_page=101')->assertUnprocessable();
+        $this->postJson('/api/alunos', ['usuario_id' => $this->diretor->id, 'turma_id' => Turma::first()->id, 'matricula' => 'X', 'cpf' => '00000000000'])->assertUnprocessable();
+        $this->getJson('/api/cursos')->assertOk();
     }
 
     public function test_terminal_stage_requires_reason_and_prevents_mutation(): void
     {
         $stage = $this->stage();
-        $base = '/api/v1/estagios/'.$stage->id;
+        $base = '/api/estagios/'.$stage->id;
         $this->patchJson($base.'/status', ['status' => 'ENCERRADO'])->assertUnprocessable();
         $this->patchJson($base.'/status', ['status' => 'ENCERRADO', 'motivo' => 'Desistência'])->assertOk();
         $this->actingAs($this->alunoUser, 'sanctum')->putJson($base.'/complementos/apolice', ['numero_apolice' => 'x', 'nome_seguradora' => 'y'])->assertUnprocessable();
@@ -227,8 +227,8 @@ class ApiWorkflowTest extends TestCase
 
     public function test_error_envelope_for_missing_route_and_method(): void
     {
-        $this->getJson('/api/v1/nao-existe')->assertNotFound()->assertJsonPath('success', false);
-        $this->postJson('/api/v1/status')->assertStatus(405)->assertJsonPath('success', false);
+        $this->getJson('/api/nao-existe')->assertNotFound()->assertJsonPath('success', false);
+        $this->postJson('/api/status')->assertStatus(405)->assertJsonPath('success', false);
     }
 
     public function test_seeder_is_idempotent_and_does_not_create_default_admin(): void
@@ -242,27 +242,27 @@ class ApiWorkflowTest extends TestCase
     {
         $first = $this->stage();
         $second = $this->stage();
-        $id = $this->actingAs($this->alunoUser, 'sanctum')->postJson('/api/v1/estagios/'.$first->id.'/documentos', ['tipo' => 'TCE', 'arquivo' => UploadedFile::fake()->create('tce.pdf', 5, 'application/pdf')])->assertCreated()->json('data.id');
-        $this->getJson('/api/v1/estagios/'.$second->id.'/documentos/'.$id.'/download')->assertNotFound();
-        $this->actingAs($this->professorUser, 'sanctum')->patchJson('/api/v1/estagios/'.$second->id.'/documentos/'.$id.'/analise', ['status' => 'DEFERIDO'])->assertNotFound();
-        $this->getJson('/api/v1/estagios/'.$first->id.'/documentos/'.$id.'/historico')->assertOk()->assertJsonPath('data.total', 1);
+        $id = $this->actingAs($this->alunoUser, 'sanctum')->postJson('/api/estagios/'.$first->id.'/documentos', ['tipo' => 'TCE', 'arquivo' => UploadedFile::fake()->create('tce.pdf', 5, 'application/pdf')])->assertCreated()->json('data.id');
+        $this->getJson('/api/estagios/'.$second->id.'/documentos/'.$id.'/download')->assertNotFound();
+        $this->actingAs($this->professorUser, 'sanctum')->patchJson('/api/estagios/'.$second->id.'/documentos/'.$id.'/analise', ['status' => 'DEFERIDO'])->assertNotFound();
+        $this->getJson('/api/estagios/'.$first->id.'/documentos/'.$id.'/historico')->assertOk()->assertJsonPath('data.total', 1);
     }
 
     public function test_administrative_registrations_and_immutable_relationships(): void
     {
         $this->actingAs($this->diretor, 'sanctum');
-        $course = $this->postJson('/api/v1/cursos', ['nome' => 'Novo curso', 'carga_horaria_estagio' => 300])->assertCreated()->json('data.id');
-        $class = $this->postJson('/api/v1/turmas', ['curso_id' => $course, 'nome' => 'Nova turma', 'ano' => 2026, 'semestre' => 2])->assertCreated()->json('data.id');
+        $course = $this->postJson('/api/cursos', ['nome' => 'Novo curso', 'carga_horaria_estagio' => 300])->assertCreated()->json('data.id');
+        $class = $this->postJson('/api/turmas', ['curso_id' => $course, 'nome' => 'Nova turma', 'ano' => 2026, 'semestre' => 2])->assertCreated()->json('data.id');
         $user = Usuario::factory()->create();
-        $student = $this->postJson('/api/v1/alunos', ['usuario_id' => $user->id, 'turma_id' => $class, 'matricula' => 'NOVO', 'cpf' => '529.982.247-25'])->assertCreated()->assertJsonPath('data.cpf', '52998224725')->json('data.id');
-        $this->patchJson('/api/v1/alunos/'.$student, ['turma_id' => Turma::first()->id])->assertUnprocessable();
-        $company = $this->postJson('/api/v1/empresas', ['cnpj' => '12.abc.345/01de-35', 'razao_social' => 'Nova empresa', 'endereco_completo' => 'Rua', 'representante_legal' => 'Representante'])->assertCreated()->assertJsonPath('data.cnpj', '12ABC34501DE35')->json('data.id');
-        $this->patchJson('/api/v1/empresas/'.$company, ['status_convenio' => 'ATIVO'])->assertOk();
+        $student = $this->postJson('/api/alunos', ['usuario_id' => $user->id, 'turma_id' => $class, 'matricula' => 'NOVO', 'cpf' => '529.982.247-25'])->assertCreated()->assertJsonPath('data.cpf', '52998224725')->json('data.id');
+        $this->patchJson('/api/alunos/'.$student, ['turma_id' => Turma::first()->id])->assertUnprocessable();
+        $company = $this->postJson('/api/empresas', ['cnpj' => '12.abc.345/01de-35', 'razao_social' => 'Nova empresa', 'endereco_completo' => 'Rua', 'representante_legal' => 'Representante'])->assertCreated()->assertJsonPath('data.cnpj', '12ABC34501DE35')->json('data.id');
+        $this->patchJson('/api/empresas/'.$company, ['status_convenio' => 'ATIVO'])->assertOk();
         $prof = Usuario::factory()->create(['perfil' => UserRole::PROFESSOR]);
-        $this->postJson('/api/v1/professores', ['usuario_id' => $prof->id, 'siape_matricula' => 'P2', 'departamento_area' => 'TI', 'max_orientados' => 2])->assertCreated();
-        $supervisor = $this->postJson('/api/v1/supervisores', ['empresa_concedente_id' => $company, 'nome' => 'Novo supervisor', 'cargo' => 'Supervisor', 'formacao' => 'TI', 'telefone' => '123', 'email' => 'novo@example.test'])->assertCreated()->json('data.id');
-        $this->patchJson('/api/v1/supervisores/'.$supervisor, ['usuario_id' => $this->supervisorUser->id])->assertOk();
-        $this->getJson('/api/v1/alunos/'.$student)->assertOk();
+        $this->postJson('/api/professores', ['usuario_id' => $prof->id, 'siape_matricula' => 'P2', 'departamento_area' => 'TI', 'max_orientados' => 2])->assertCreated();
+        $supervisor = $this->postJson('/api/supervisores', ['empresa_concedente_id' => $company, 'nome' => 'Novo supervisor', 'cargo' => 'Supervisor', 'formacao' => 'TI', 'telefone' => '123', 'email' => 'novo@example.test'])->assertCreated()->json('data.id');
+        $this->patchJson('/api/supervisores/'.$supervisor, ['usuario_id' => $this->supervisorUser->id])->assertOk();
+        $this->getJson('/api/alunos/'.$student)->assertOk();
     }
 
     public function test_expired_stage_and_inactive_academic_records_are_rejected(): void
@@ -270,16 +270,16 @@ class ApiWorkflowTest extends TestCase
         $stage = $this->stage();
         $this->prepare($stage);
         $stage->update(['data_termino' => now()->subDay()]);
-        $this->actingAs($this->diretor, 'sanctum')->patchJson('/api/v1/estagios/'.$stage->id.'/status', ['status' => 'EM_ANDAMENTO'])->assertUnprocessable();
+        $this->actingAs($this->diretor, 'sanctum')->patchJson('/api/estagios/'.$stage->id.'/status', ['status' => 'EM_ANDAMENTO'])->assertUnprocessable();
         Turma::first()->update(['status' => 'encerrada']);
-        $this->postJson('/api/v1/estagios', $this->payload)->assertUnprocessable();
+        $this->postJson('/api/estagios', $this->payload)->assertUnprocessable();
     }
 
     public function test_report_approval_and_evaluations_follow_roles_and_lock_after_approval(): void
     {
         $stage = $this->stage();
         $this->prepare($stage);
-        $base = '/api/v1/estagios/'.$stage->id;
+        $base = '/api/estagios/'.$stage->id;
         $this->actingAs($this->diretor, 'sanctum')->patchJson($base.'/status', ['status' => 'EM_ANDAMENTO'])->assertOk();
         $this->actingAs($this->alunoUser, 'sanctum')->putJson($base.'/avaliacao', ['auto_avaliacao' => 'Aprendi'])->assertOk();
         $report = ['resumo_atividades' => 'Atividades', 'relacao_teoria_pratica' => 'Aplicação'];
@@ -296,7 +296,7 @@ class ApiWorkflowTest extends TestCase
     {
         $stage = $this->stage();
         $this->prepare($stage);
-        $base = '/api/v1/estagios/'.$stage->id;
+        $base = '/api/estagios/'.$stage->id;
         $this->actingAs($this->diretor, 'sanctum')->patchJson($base.'/status', ['status' => 'EM_ANDAMENTO'])->assertOk();
         $id = $this->actingAs($this->alunoUser, 'sanctum')->postJson($base.'/frequencias', ['data' => now()->toDateString(), 'hora_entrada' => '08:00', 'hora_saida' => '10:30'])->assertCreated()->json('data.id');
         $this->actingAs($this->supervisorUser, 'sanctum')->postJson($base.'/frequencias/'.$id.'/assinatura')->assertOk();

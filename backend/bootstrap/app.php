@@ -24,11 +24,15 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withRouting(web: __DIR__.'/../routes/web.php', api: __DIR__.'/../routes/api.php', apiPrefix: 'api/v1', commands: __DIR__.'/../routes/console.php', health: '/up')
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->prepend(ForceJsonResponse::class);
         $middleware->append(RequestAudit::class);
-        $middleware->alias(['ativo' => UsuarioAtivo::class, 'perfil' => VerificaPerfil::class]);
+        $middleware->alias([
+            'ativo'          => UsuarioAtivo::class,
+            'perfil'         => VerificaPerfil::class,
+            'account.active' => EnsureAccountIsActive::class,
+            'role'           => \App\Http\Middleware\EnsureUserHasRole::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (ValidationException $e, Request $request) {
@@ -47,7 +51,8 @@ return Application::configure(basePath: dirname(__DIR__))
             }
             $status = $response->getStatusCode();
             $message = match ($status) {
-                401 => 'Não autenticado.', 403 => 'Você não tem permissão para realizar esta ação.',
+                401 => $request->routeIs('auth.login') ? 'Identificador ou senha inválidos.' : 'Não autenticado.',
+                403 => 'Você não tem permissão para realizar esta ação.',
                 404 => 'Rota ou recurso não encontrado.', 405 => 'Método não permitido.',
                 409 => 'A operação conflita com um registro existente ou vínculo obrigatório.',
                 413 => 'Arquivo muito grande.', 429 => 'Muitas tentativas. Tente novamente mais tarde.',
