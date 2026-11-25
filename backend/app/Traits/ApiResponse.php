@@ -36,6 +36,7 @@ trait ApiResponse
     ): JsonResponse {
         return response()->json([
             'success' => false,
+            'data' => null,
             'message' => $message,
             'errors' => $errors,
         ], $code);

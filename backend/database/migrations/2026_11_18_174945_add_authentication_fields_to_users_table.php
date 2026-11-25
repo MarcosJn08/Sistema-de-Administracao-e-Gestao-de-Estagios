@@ -8,18 +8,28 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('role', 20)->nullable()->index();
-            $table->string('matricula', 32)->nullable()->unique();
-            $table->string('siape', 32)->nullable()->unique();
-            $table->string('cnpj', 14)->nullable()->unique();
-            $table->boolean('is_active')->default(true);
+        Schema::table('usuarios', function (Blueprint $table) {
+            if (! Schema::hasColumn('usuarios', 'role')) {
+                $table->string('role', 20)->nullable()->index();
+            }
+            if (! Schema::hasColumn('usuarios', 'matricula')) {
+                $table->string('matricula', 32)->nullable()->unique();
+            }
+            if (! Schema::hasColumn('usuarios', 'siape')) {
+                $table->string('siape', 32)->nullable()->unique();
+            }
+            if (! Schema::hasColumn('usuarios', 'cnpj')) {
+                $table->string('cnpj', 14)->nullable()->unique();
+            }
+            if (! Schema::hasColumn('usuarios', 'is_active')) {
+                $table->boolean('is_active')->default(true);
+            }
         });
     }
 
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('usuarios', function (Blueprint $table) {
             $table->dropUnique(['matricula']);
             $table->dropUnique(['siape']);
             $table->dropUnique(['cnpj']);

@@ -2,24 +2,20 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Enums\StatusConvenio;
+use App\Models\Curso;
+use App\Models\EmpresaConcedente;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        if (! app()->environment(['local', 'testing'])) {
+            return;
+        }
+        $curso = Curso::firstOrCreate(['codigo' => 'SI'], ['nome' => 'Sistemas de Informação', 'carga_horaria_estagio' => 400]);
+        $curso->turmas()->firstOrCreate(['nome' => 'SI 2026.1', 'ano' => 2026, 'semestre' => 1], ['turno' => 'noturno']);
+        EmpresaConcedente::firstOrCreate(['cnpj' => '12345678000190'], ['razao_social' => 'Empresa de demonstração', 'endereco_completo' => 'Endereço de demonstração', 'representante_legal' => 'Representante de demonstração', 'status_convenio' => StatusConvenio::ATIVO]);
     }
 }

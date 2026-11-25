@@ -15,8 +15,13 @@ class LoginRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        if (is_string($this->input('identifier'))) {
-            $this->merge(['identifier' => Str::lower(trim($this->input('identifier')))]);
+        if ($this->has('email') && ! $this->has('identifier')) {
+            $this->attributes->set('_legacy_email', true);
+        }
+
+        $identifier = $this->input('identifier') ?? $this->input('email');
+        if (is_string($identifier)) {
+            $this->merge(['identifier' => Str::lower(trim($identifier))]);
         }
     }
 
