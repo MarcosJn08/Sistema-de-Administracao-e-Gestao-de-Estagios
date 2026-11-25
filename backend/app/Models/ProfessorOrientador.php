@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Enums\StatusEstagio;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ProfessorOrientador extends Model
 {
+    use HasFactory;
+
     protected $table = 'professores_orientadores';
     protected $fillable = [
         'usuario_id',
