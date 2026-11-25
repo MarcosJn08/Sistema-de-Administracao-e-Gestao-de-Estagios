@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Table, ProgressBar } from 'react-bootstrap';
 import { Users, BriefcaseBusiness, GraduationCap, UserSearch, Search, Eye, Plus, RotateCcw } from 'lucide-react';
 import Header from '../components/Header.jsx';
@@ -11,9 +11,11 @@ import StatusBadge from '../components/StatusBadge.jsx';
 import Paginacao from '../components/Paginacao.jsx';
 import DetalhesAluno from '../components/aluno/DetalhesAluno.jsx';
 import ModalCadastroAluno from '../components/aluno/ModalCadastroAluno.jsx';
+import ToastAlerta from '../components/ToastAlerta.jsx';
 import dadosDiretor from '../data/diretor.js';
 import alunosIniciais, { cursos, situacoesEstagio, orientadores } from '../data/alunos.js';
 import { aplicarAcaoAluno } from '../utils/gestaoAluno.js';
+import api from '../services/api.js';
 import '../App.css';
 import './PainelAlunosDiretor.css';
 
@@ -21,13 +23,41 @@ const normalizar = (valor) => String(valor ?? '').normalize('NFD').replace(/[\u0
 const ITENS_POR_PAGINA = 10;
 
 function PainelAlunosDiretor() {
-  const [alunos, setAlunos] = useState(alunosIniciais);
+  const [alunos, setAlunos] = useState([]);
   const [busca, setBusca] = useState('');
   const [curso, setCurso] = useState('');
   const [situacao, setSituacao] = useState('');
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [cadastroAberto, setCadastroAberto] = useState(false);
   const [alunoSelecionadoId, setAlunoSelecionadoId] = useState(null);
+  const [toast, setToast] = useState({ mensagem: '', tipo: 'sucesso' });
+
+  useEffect(() => {
+    let ativo = true;
+    api.get('/usuarios', { params: { perfil: 'ALUNO', per_page: 100 } })
+      .then((resposta) => {
+        if (!ativo) return;
+        const usuariosApi = resposta?.data?.data || [];
+        const novos = usuariosApi.map((u) => ({
+          id: u.id,
+          nome: u.nome,
+          matricula: u.matricula || '---',
+          cpf: u.cpf || 'Não informado',
+          email: u.email,
+          telefone: u.telefone || '(38) 99999-0000',
+          curso: u.curso || cursos[0],
+          semestre: 1,
+          situacao: 'Sem estágio',
+          progresso: { horasConcluidas: 0, metaHoras: 200, horasEstagio: 0, horasProjeto: 0 },
+          estagio: null,
+          documentos: [],
+        }));
+        setAlunos(novos);
+      })
+      .catch((err) => console.warn('Erro ao carregar alunos da API:', err));
+
+    return () => { ativo = false; };
+  }, []);
   const alunoSelecionado = alunos.find((aluno) => aluno.id === alunoSelecionadoId);
   const atualizarAluno = (acao) => {
     const atualizado = aplicarAcaoAluno(alunoSelecionado, acao, { perfil: dadosDiretor.diretor.role, orientadores, alunos });
@@ -57,7 +87,7 @@ function PainelAlunosDiretor() {
     { titulo: 'Sem vínculo / em busca de vaga', valor: contar('Sem estágio'), texto: 'Disponíveis para novas vagas', icone: <UserSearch size={23} />, variante: 'cinza' },
   ];
   const limparFiltros = () => { setBusca(''); setCurso(''); setSituacao(''); setPaginaAtual(1); };
-  const cadastrarAluno = (dados) => {
+  const cadastrarAluno = async (dados) => {
     if (!dados.nome || !dados.matricula || !dados.cpf || !dados.dataNascimento || !dados.email || !dados.telefone
       || !dados.curso || !dados.semestre || !dados.periodoAno || !dados.turno || !dados.cep || !dados.logradouro
       || !dados.numero || !dados.bairro || !dados.cidade || !dados.estado) {
@@ -72,14 +102,29 @@ function PainelAlunosDiretor() {
     if (alunos.some((aluno) => aluno.cpf === dados.cpf)) {
       throw new Error('Já existe um aluno com este CPF.');
     }
+
+    const { data: resultado } = await api.post('/usuarios', {
+      nome: dados.nome,
+      email: dados.email,
+      password: dados.matricula + '@Sage',
+      perfil: 'ALUNO',
+      matricula: dados.matricula,
+      cpf: dados.cpf,
+      curso: dados.curso,
+      telefone: dados.telefone,
+    });
+
+    const usuarioCriado = resultado?.data;
+
     setAlunos((atuais) => [{
       ...dados,
-      id: `aluno-${Date.now()}`,
+      id: usuarioCriado?.id ?? `aluno-${Date.now()}`,
       situacao: 'Sem estágio',
       progresso: { horasConcluidas: 0, metaHoras: 200, horasEstagio: 0, horasProjeto: 0 },
       estagio: null,
       documentos: [],
     }, ...atuais]);
+    setToast({ mensagem: 'Aluno cadastrado com sucesso!', tipo: 'sucesso' });
     setPaginaAtual(1);
   };
 
@@ -193,6 +238,7 @@ function PainelAlunosDiretor() {
         aoFechar={() => setAlunoSelecionadoId(null)} />
       <ModalCadastroAluno key={cadastroAberto ? 'cadastro-aberto' : 'cadastro-fechado'} aberto={cadastroAberto}
         cursos={cursos} aoCadastrar={cadastrarAluno} aoFechar={() => setCadastroAberto(false)} />
+      <ToastAlerta mensagem={toast.mensagem} tipo={toast.tipo} aoFechar={() => setToast({ mensagem: '', tipo: 'sucesso' })} />
       <Footer />
     </div>
   );

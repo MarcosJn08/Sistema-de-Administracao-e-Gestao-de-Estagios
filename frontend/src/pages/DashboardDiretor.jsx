@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Alert, Col, Container, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header.jsx';
@@ -12,11 +12,13 @@ import CardProximosVencimentos from '../components/diretor/CardProximosVenciment
 import ModalAnaliseDocumento from '../components/documento/ModalAnaliseDocumento.jsx';
 import ModalCadastroAluno from '../components/aluno/ModalCadastroAluno.jsx';
 import ModalProfessor from '../components/orientador/ModalProfessor.jsx';
+import ToastAlerta from '../components/ToastAlerta.jsx';
 import dados from '../data/diretor.js';
 import documentosIniciais from '../data/documentos.js';
 import alunosIniciais, { cursos } from '../data/alunos.js';
 import orientadoresIniciais, { departamentos, statusOrientador } from '../data/orientadores.js';
 import { avaliarDocumento } from '../utils/gestaoDocumento.js';
+import api from '../services/api.js';
 import '../App.css';
 
 const normalizar = (valor) => String(valor ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
@@ -24,12 +26,64 @@ const normalizar = (valor) => String(valor ?? '').normalize('NFD').replace(/[\u0
 function DashboardDiretor() {
   const navigate = useNavigate();
   const [documentos, setDocumentos] = useState(documentosIniciais);
-  const [alunos, setAlunos] = useState(alunosIniciais);
-  const [orientadores, setOrientadores] = useState(orientadoresIniciais);
+  const [alunos, setAlunos] = useState([]);
+  const [orientadores, setOrientadores] = useState([]);
   const [documentoSelecionado, setDocumentoSelecionado] = useState(null);
   const [cadastroAlunoAberto, setCadastroAlunoAberto] = useState(false);
   const [cadastroProfessorAberto, setCadastroProfessorAberto] = useState(false);
   const [mensagem, setMensagem] = useState('');
+
+  useEffect(() => {
+    let ativo = true;
+    api.get('/usuarios', { params: { perfil: 'ALUNO', per_page: 100 } })
+      .then((res) => {
+        if (!ativo) return;
+        const usuariosApi = res?.data?.data || [];
+        const novos = usuariosApi.map((u) => ({
+          id: u.id,
+          nome: u.nome,
+          matricula: u.matricula || '---',
+          cpf: u.cpf || 'Não informado',
+          email: u.email,
+          telefone: u.telefone || '(38) 99999-0000',
+          curso: u.curso || cursos[0],
+          semestre: 1,
+          situacao: 'Sem estágio',
+          progresso: { horasConcluidas: 0, metaHoras: 200, horasEstagio: 0, horasProjeto: 0 },
+          estagio: null,
+          documentos: [],
+        }));
+        setAlunos(novos);
+      })
+      .catch((err) => console.warn('Erro ao carregar alunos:', err));
+
+    api.get('/usuarios', { params: { perfil: 'PROFESSOR', per_page: 100 } })
+      .then((res) => {
+        if (!ativo) return;
+        const usuariosApi = res?.data?.data || [];
+        const novos = usuariosApi.map((u) => ({
+          id: u.id,
+          nome: u.nome,
+          siape: u.siape || '---',
+          cpf: u.cpf || 'Não informado',
+          email: u.email,
+          telefone: u.telefone || '(38) 99999-0000',
+          titulacao: u.titulacao || 'Não informada',
+          departamento: u.departamento || 'Informática',
+          areaAtuacao: u.area_atuacao || u.departamento || 'Geral',
+          regimeTrabalho: u.regime_trabalho || 'Dedicação exclusiva',
+          maximoOrientandos: u.max_orientados || 5,
+          alunosOrientados: 0,
+          disponivelOrientacao: u.status === 'ativo',
+          status: u.status === 'inativo' ? 'Inativo' : 'Ativo',
+          novoNesteSemestre: true,
+        }));
+        setOrientadores(novos);
+      })
+      .catch((err) => console.warn('Erro ao carregar professores:', err));
+
+    return () => { ativo = false; };
+  }, []);
 
   const pendencias = useMemo(() => documentos
     .filter((documento) => documento.status !== 'Deferido')
@@ -53,37 +107,74 @@ function DashboardDiretor() {
     setMensagem(`${documento.nome} de ${documento.aluno}: ${atualizado.status.toLowerCase()}.`);
   };
 
-  const cadastrarAluno = (novoAluno) => {
-    if (!novoAluno.nome || !novoAluno.matricula || !novoAluno.cpf || !novoAluno.dataNascimento || !novoAluno.email || !novoAluno.telefone
-      || !novoAluno.curso || !novoAluno.semestre || !novoAluno.periodoAno || !novoAluno.turno || !novoAluno.cep || !novoAluno.logradouro
-      || !novoAluno.numero || !novoAluno.bairro || !novoAluno.cidade || !novoAluno.estado) {
+  const cadastrarAluno = async (novoAluno) => {
+    if (!novoAluno.nome || !novoAluno.matricula || !novoAluno.email) {
       throw new Error('Preencha os campos obrigatórios.');
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(novoAluno.email)) throw new Error('Informe um e-mail válido.');
-    if (alunos.some((aluno) => aluno.matricula === novoAluno.matricula)) throw new Error('Já existe um aluno com esta matrícula.');
-    if (alunos.some((aluno) => aluno.cpf === novoAluno.cpf)) throw new Error('Já existe um aluno com este CPF.');
+
+    const { data: resultado } = await api.post('/usuarios', {
+      nome: novoAluno.nome,
+      email: novoAluno.email,
+      password: novoAluno.matricula + '@Sage',
+      perfil: 'ALUNO',
+      matricula: novoAluno.matricula,
+      cpf: novoAluno.cpf,
+      curso: novoAluno.curso,
+      telefone: novoAluno.telefone,
+    });
+
+    const usuarioCriado = resultado?.data;
+
     setAlunos((atuais) => [{
       ...novoAluno,
-      id: `aluno-${Date.now()}`,
+      id: usuarioCriado?.id ?? `aluno-${Date.now()}`,
       situacao: 'Sem estágio',
       progresso: { horasConcluidas: 0, metaHoras: 200, horasEstagio: 0, horasProjeto: 0 },
       estagio: null,
       documentos: [],
     }, ...atuais]);
-    setMensagem(`Aluno ${novoAluno.nome} cadastrado com sucesso.`);
+    setMensagem('Aluno cadastrado com sucesso.');
   };
 
-  const salvarProfessor = (professor) => {
-    if (!professor.nome || !professor.siape || !professor.cpf || !professor.departamento || !professor.titulacao || !professor.email
-      || !professor.telefone || !professor.areaAtuacao || !professor.regimeTrabalho || !professor.maximoOrientandos) {
+  const salvarProfessor = async (professor) => {
+    if (!professor.nome || !professor.siape || !professor.email) {
       throw new Error('Preencha os campos obrigatórios.');
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(professor.email)) throw new Error('Informe um e-mail institucional válido.');
-    if (orientadores.some((item) => item.id !== professor.id && item.siape === professor.siape)) throw new Error('Já existe um professor cadastrado com este SIAPE.');
-    if (orientadores.some((item) => item.id !== professor.id && item.cpf === professor.cpf)) throw new Error('Já existe um professor cadastrado com este CPF.');
-    if (orientadores.some((item) => item.id !== professor.id && normalizar(item.email) === normalizar(professor.email))) throw new Error('Já existe um professor cadastrado com este e-mail.');
-    setOrientadores((atuais) => [{ ...professor, id: `professor-${Date.now()}` }, ...atuais]);
-    setMensagem(`Professor ${professor.nome} cadastrado com sucesso.`);
+
+    if (professor.id && !String(professor.id).startsWith('professor-')) {
+      await api.put(`/usuarios/${professor.id}`, {
+        nome: professor.nome,
+        email: professor.email,
+        siape: professor.siape,
+        cpf: professor.cpf,
+        titulacao: professor.titulacao,
+        departamento: professor.departamento,
+        areaAtuacao: professor.areaAtuacao,
+        regimeTrabalho: professor.regimeTrabalho,
+        telefone: professor.telefone,
+        maximoOrientandos: professor.maximoOrientandos,
+      });
+    } else {
+      await api.post('/usuarios', {
+        nome: professor.nome,
+        email: professor.email,
+        password: professor.siape + '@Sage',
+        perfil: 'PROFESSOR',
+        siape: professor.siape,
+        cpf: professor.cpf,
+        titulacao: professor.titulacao,
+        departamento: professor.departamento,
+        areaAtuacao: professor.areaAtuacao,
+        regimeTrabalho: professor.regimeTrabalho,
+        telefone: professor.telefone,
+        maximoOrientandos: professor.maximoOrientandos,
+      });
+    }
+
+    setOrientadores((atuais) => [{ ...professor, id: professor.id ?? `professor-${Date.now()}` }, ...atuais.filter((p) => p.id !== professor.id)]);
+    setMensagem(professor.id ? 'Orientador atualizado com sucesso.' : 'Orientador cadastrado com sucesso.');
   };
 
   const acoesRapidas = dados.acoesRapidas.map((acao) => {
@@ -158,6 +249,7 @@ function DashboardDiretor() {
       <ModalProfessor key={cadastroProfessorAberto ? 'cadastro-professor-aberto' : 'cadastro-professor-fechado'} aberto={cadastroProfessorAberto}
         departamentos={departamentos} statusDisponiveis={statusOrientador} aoSalvar={salvarProfessor}
         aoFechar={() => setCadastroProfessorAberto(false)} />
+      <ToastAlerta mensagem={mensagem} aoFechar={() => setMensagem('')} />
       <Footer />
     </div>
   );

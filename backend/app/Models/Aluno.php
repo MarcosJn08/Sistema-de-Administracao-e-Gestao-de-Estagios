@@ -7,7 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Aluno extends Model
 {
-    protected $fillable = ['usuario_id', 'turma_id', 'matricula', 'cpf'];
+    protected $fillable = [
+        'usuario_id',
+        'turma_id',
+        'matricula',
+        'cpf',
+        'telefone',
+        'curso_nome',
+    ];
 
     public function usuario()
     {
