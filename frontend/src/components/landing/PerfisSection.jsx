@@ -1,4 +1,5 @@
 import { Building2, UserRound, UsersRound, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const perfis = [
   {
@@ -56,12 +57,15 @@ export default function PerfisSection() {
                   </span>
                   <h3>{titulo}</h3>
                   <p>{descricao}</p>
-                  <a
-                    href={link}
-                    className="sage-text-link mt-auto"
-                  >
-                    {linkTexto} <ArrowRight size={15} aria-hidden="true" />
-                  </a>
+                  {link.startsWith('/sage') ? (
+                    <Link to={link} className="sage-text-link mt-auto">
+                      {linkTexto} <ArrowRight size={15} aria-hidden="true" />
+                    </Link>
+                  ) : (
+                    <a href={link} className="sage-text-link mt-auto">
+                      {linkTexto} <ArrowRight size={15} aria-hidden="true" />
+                    </a>
+                  )}
                 </div>
               </article>
             </div>

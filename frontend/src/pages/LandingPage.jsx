@@ -1,4 +1,5 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import Button from "../components/Button/Button.jsx";
@@ -9,7 +10,12 @@ import useScrollReveal from '../hooks/useScrollReveal.js';
 
 export default function LandingPage() {
   const pageRef = useRef(null);
+  const { hash } = useLocation();
   useScrollReveal(pageRef);
+
+  useEffect(() => {
+    if (hash) document.getElementById(hash.slice(1))?.scrollIntoView();
+  }, [hash]);
 
   return (
     <div ref={pageRef}>
