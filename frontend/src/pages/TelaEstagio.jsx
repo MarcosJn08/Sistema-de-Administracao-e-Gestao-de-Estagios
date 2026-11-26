@@ -1,127 +1,147 @@
 import { ArrowLeft } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, Col, Container, Row } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
-import Button from "../components/Button/Button.jsx";
+import Button from '../components/Button/Button.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
 import CardDadosEstagio from '../components/Estagio/CardDadosEstagio.jsx';
 import CardProgresso from '../components/aluno/CardProgresso.jsx';
 import CardDocumentos from '../components/aluno/CardDocumentos.jsx';
-import ModalAnaliseDocumento from '../components/documento/ModalAnaliseDocumento.jsx';
-import ModalEditarDocumentoAluno from '../components/documento/ModalEditarDocumentoAluno.jsx';
-import dados from '../data/aluno.js';
+import api from '../services/api.js';
 import './EstagiosAluno.css';
 
-const nomeArquivo = (valor) => String(valor).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '_');
+const estados = {
+  RASCUNHO: 'Rascunho', EM_ANALISE: 'Em análise', EM_ANDAMENTO: 'Em andamento',
+  CONCLUIDO: 'Concluído', ENCERRADO: 'Encerrado', CANCELADO_DESVIO_FUNCAO: 'Cancelado por desvio de função',
+};
+const estadosDocumento = {
+  PENDENTE: 'Pendente', EM_ANALISE: 'Em análise', DEFERIDO: 'Deferido',
+  NECESSITA_AJUSTES: 'Requer ajuste', EXPIRADO: 'Expirado',
+};
+const tiposDocumento = {
+  TCE: 'Termo de Compromisso de Estágio', PLANO_ATIVIDADES: 'Plano de atividades',
+  FICHA_MATRICULA: 'Ficha de matrícula', RELATORIO_PARCIAL: 'Relatório parcial',
+  RELATORIO_FINAL: 'Relatório final', FOLHA_FREQUENCIA: 'Folha de frequência',
+};
+const formatarData = valor => valor
+  ? new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' }).format(new Date(valor.slice(0, 10) + 'T00:00:00Z'))
+  : 'Não informado';
 
-const prepararDocumentos = (estagio) => (estagio.documentos || dados.documentos).map((documento) => ({
-  ...documento,
-  aluno: dados.aluno.nome,
-  email: dados.aluno.email,
-  matricula: dados.aluno.matricula,
-  curso: dados.aluno.curso,
-  empresa: estagio.empresa,
-  arquivoNome: documento.arquivoNome || `${nomeArquivo(documento.nome)}_${nomeArquivo(dados.aluno.nome)}.pdf`,
-  arquivoUrl: documento.arquivoUrl || '/documentos/documento-exemplo.pdf',
-  historico: documento.historico || [{
-    autor: 'Sistema',
-    acao: 'Recebido',
-    data: documento.data || 'Não informada',
-    observacoes: 'Documento enviado pelo aluno.',
-  }],
-  acoes: ['Visualizar', 'Editar PDF'],
-}));
-
-function TelaEstagio() {
+export default function TelaEstagio() {
   const navigate = useNavigate();
   const { estagioId } = useParams();
-  const estagio = dados.meusEstagios.find((item) => String(item.id) === String(estagioId)) || dados.estagioAtual;
-  const [documentos, setDocumentos] = useState(() => prepararDocumentos(estagio));
-  const [documentoVisualizadoId, setDocumentoVisualizadoId] = useState(null);
-  const [documentoEditadoId, setDocumentoEditadoId] = useState(null);
-  const [mensagem, setMensagem] = useState('');
-  const documentoVisualizado = documentos.find((documento) => documento.id === documentoVisualizadoId);
-  const documentoEditado = documentos.find((documento) => documento.id === documentoEditadoId);
+  const [estado, setEstado] = useState({ carregando: true });
+  const [erroDownload, setErroDownload] = useState('');
 
-  const lidarComAcaoDocumento = (documento, acao) => {
-    if (acao === 'Visualizar') setDocumentoVisualizadoId(documento.id);
-    if (acao === 'Editar PDF') setDocumentoEditadoId(documento.id);
-  };
+  useEffect(() => {
+    const controller = new AbortController();
+    api.get(`/estagios/${estagioId}`, { signal: controller.signal })
+      .then(({ data }) => {
+        if (!controller.signal.aborted) setEstado({ id: estagioId, contrato: data.data });
+      })
+      .catch(error => {
+        if (!controller.signal.aborted) {
+          setEstado({ id: estagioId, erro: error.status === 404 ? 'Contrato não encontrado.' : error.message });
+        }
+      });
+    return () => controller.abort();
+  }, [estagioId]);
 
-  const salvarNovoPdf = (id, arquivo) => {
-    const data = new Date().toLocaleDateString('pt-BR');
-    setDocumentos((atuais) => atuais.map((documento) => documento.id === id ? {
-      ...documento,
-      arquivoNome: arquivo.name,
-      arquivoUrl: URL.createObjectURL(arquivo),
-      data,
-      status: 'Em análise',
-      historico: [{ autor: dados.aluno.nome, acao: 'Arquivo substituído', data, observacoes: 'Novo PDF enviado para análise.' }, ...documento.historico],
-    } : documento));
-    setMensagem('PDF substituído com sucesso. O documento foi enviado novamente para análise.');
-  };
+  async function baixarDocumento(documento) {
+    setErroDownload('');
+    try {
+      const { data } = await api.get(`/estagios/${estagioId}/documentos/${documento.id}/download`, { responseType: 'blob' });
+      const url = URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `documento-${documento.id}.pdf`;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (error) {
+      setErroDownload(error.message);
+    }
+  }
+
+  const respostaAtual = String(estado.id) === String(estagioId);
+  const estagio = respostaAtual ? estado.contrato : null;
+  const documentos = (estagio?.documentos || []).map(documento => ({
+    id: documento.id,
+    nome: tiposDocumento[documento.tipo] || documento.tipo,
+    descricao: documento.observacoes || 'Documento vinculado ao contrato de estágio.',
+    status: estadosDocumento[documento.status] || documento.status,
+    data: formatarData(documento.created_at),
+    acoes: ['Baixar PDF'],
+  }));
 
   return (
     <div className="detalhes-estagio-pagina d-flex flex-column min-vh-100">
-      <Header paginaAtiva="Estágios" usuario={dados.aluno} />
-
+      <Header paginaAtiva="Estágios" />
       <main className="flex-grow-1 py-4">
         <Container className="px-3 detalhes-estagio-container">
           <div className="detalhes-estagio-cabecalho">
             <div className="detalhes-estagio-titulo">
               <div className="detalhes-estagio-titulo-linha">
                 <h1>Detalhes do estágio</h1>
-                <StatusBadge status={estagio.status} />
+                {estagio && <StatusBadge status={estados[estagio.status] || estagio.status} />}
               </div>
-              <p>{estagio.cargo} na empresa {estagio.empresa}</p>
+              {estagio && <p>{estagio.cargo || 'Estágio'} na empresa {estagio.empresa.razao_social}</p>}
             </div>
             <Button tipo="botao-acao-contorno" onClick={() => navigate('/sage/aluno/estagios')}>
               <ArrowLeft size={16} aria-hidden="true" /> Voltar aos estágios
             </Button>
           </div>
 
-          <CardDadosEstagio
-            empresa={estagio.empresa}
-            cnpj={estagio.cnpj}
-            cargo={estagio.cargo}
-            professorOrientador={estagio.professorOrientador}
-            supervisorEstagio={estagio.supervisorEstagio}
-            dataInicio={estagio.dataInicio}
-            dataFim={estagio.dataFim}
-            cargaHorariaSemanal={estagio.cargaHorariaSemanal || estagio.cargaHoraria}
-            modalidade={estagio.modalidade}
-            seguro={estagio.seguro}
-          />
+          {(!respostaAtual || estado.carregando) && <p role="status">Carregando contrato…</p>}
+          {respostaAtual && estado.erro && <Alert variant="danger">{estado.erro}</Alert>}
+          {estagio && <>
+            <CardDadosEstagio
+              empresa={estagio.empresa.razao_social}
+              cnpj={estagio.empresa.cnpj}
+              cargo={estagio.cargo}
+              professorOrientador={estagio.orientador.nome}
+              supervisorEstagio={estagio.supervisor.nome}
+              dataInicio={formatarData(estagio.data_inicio)}
+              dataFim={formatarData(estagio.data_termino)}
+              cargaHorariaSemanal={estagio.carga_horaria_semanal == null ? null : `${Number(estagio.carga_horaria_semanal)}h/semana`}
+              modalidade={estagio.modalidade === 'ORIENTADO' ? 'Orientado' : 'Supervisionado em campo'}
+              seguro={estagio.apolice ? `${estagio.apolice.nome_seguradora} — Apólice ${estagio.apolice.numero_apolice}` : null}
+            />
 
-          {mensagem && <Alert variant="success" dismissible onClose={() => setMensagem('')} role="status">{mensagem}</Alert>}
+            {erroDownload && <Alert variant="danger" dismissible onClose={() => setErroDownload('')}>{erroDownload}</Alert>}
+            <Row className="g-4 detalhes-estagio-conteudo">
+              <Col xs={12} lg={4}>
+                {estagio.meta_horas_tce == null
+                  ? <div className="cartao-sage"><h2 className="cartao-sage-titulo">Progresso</h2><p>Teto de horas do TCE ainda não informado.</p><p>Horas concluídas: {estagio.horas_cumpridas}h</p></div>
+                  : <CardProgresso
+                    horasConcluidas={Number(estagio.horas_cumpridas)}
+                    metaHoras={Number(estagio.meta_horas_tce)}
+                    horasEstagio={Number(estagio.horas_cumpridas)}
+                    horasProjeto={0}
+                  />}
+              </Col>
+              <Col xs={12} lg={8}>
+                <CardDocumentos titulo="Documentos do estágio" documentos={documentos}
+                  exibirData acoesSomenteIcones aoClicarAcao={baixarDocumento} />
+              </Col>
+            </Row>
 
-          <Row className="g-4 detalhes-estagio-conteudo">
-            <Col xs={12} lg={4}>
-              <CardProgresso
-                horasConcluidas={estagio.horasConcluidas}
-                metaHoras={estagio.metaHoras}
-                horasEstagio={estagio.horasEstagio}
-                horasProjeto={estagio.horasProjeto}
-              />
-            </Col>
-            <Col xs={12} lg={8}>
-              <CardDocumentos titulo="Documentos do estágio" documentos={documentos} exibirData acoesSomenteIcones
-                aoClicarAcao={lidarComAcaoDocumento} />
-            </Col>
-          </Row>
+            <section className="cartao-sage mt-4">
+              <h2 className="cartao-sage-titulo">Plano de atividades</h2>
+              {estagio.plano ? <dl>
+                <dt>Objetivos</dt><dd>{estagio.plano.objetivos}</dd>
+                <dt>Atividades previstas</dt><dd style={{ whiteSpace: 'pre-wrap' }}>{estagio.plano.atividades_previstas}</dd>
+                <dt>Cronograma</dt><dd>{estagio.plano.cronograma}</dd>
+              </dl> : <p className="text-secondary mb-0">Plano ainda não cadastrado.</p>}
+            </section>
+            {estagio.encerrado_em && <Alert variant="secondary">
+              Encerrado em {new Date(estagio.encerrado_em).toLocaleString('pt-BR')}: {estagio.motivo_encerramento}
+            </Alert>}
+          </>}
         </Container>
       </main>
-
-      {documentoVisualizado && <ModalAnaliseDocumento key={`visualizar-${documentoVisualizado.id}`} documento={documentoVisualizado}
-        visualizacao aoFechar={() => setDocumentoVisualizadoId(null)} aoAvaliar={() => {}} />}
-      {documentoEditado && <ModalEditarDocumentoAluno key={`editar-${documentoEditado.id}`} documento={documentoEditado}
-        aoFechar={() => setDocumentoEditadoId(null)} aoSalvar={salvarNovoPdf} />}
-
       <Footer />
     </div>
   );
 }
-
-export default TelaEstagio;

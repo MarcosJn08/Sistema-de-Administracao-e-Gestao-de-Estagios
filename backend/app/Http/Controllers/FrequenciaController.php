@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\StatusEstagio;
 use App\Models\DiarioFrequencia;
 use App\Models\Estagio;
+use App\Services\ContratoEstagioService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -59,6 +60,7 @@ class FrequenciaController extends Controller
             if ($estagio->frequencias()->whereDate('data', $data['data'])->when($registro->exists, fn ($q) => $q->where('id', '!=', $registro->id))->exists()) {
                 throw ValidationException::withMessages(['data' => 'Já existe frequência neste dia.']);
             }
+            app(ContratoEstagioService::class)->validarFrequencia($estagio, $data['data'], $horas, $registro->id);
             $registro->fill($data + ['estagio_id' => $estagio->id, 'horas_diarias' => $horas])->save();
 
             return $this->successResponse($registro, 'Frequência registrada.', $frequencia ? 200 : 201);
@@ -76,6 +78,7 @@ class FrequenciaController extends Controller
             if ($estagio->status !== StatusEstagio::EM_ANDAMENTO || $frequencia->assinado_supervisor) {
                 throw ValidationException::withMessages(['frequencia' => 'Frequência já assinada ou estágio não está ativo.']);
             }
+            app(ContratoEstagioService::class)->validarFrequencia($estagio, $frequencia->data->toDateString(), (float) $frequencia->horas_diarias, $frequencia->id);
             $frequencia->forceFill(['assinado_supervisor' => true, 'assinado_por' => $request->user()->id, 'assinado_em' => now()])->save();
 
             return $this->successResponse($frequencia);

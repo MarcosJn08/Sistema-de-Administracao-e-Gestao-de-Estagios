@@ -4,11 +4,26 @@ namespace App\Policies;
 
 use App\Enums\UserRole;
 use App\Models\Estagio;
-use App\Models\Usuario;
+use App\Models\User;
 
 class EstagioPolicy
 {
-    public function view(Usuario $usuario, Estagio $estagio): bool
+    public function viewAny(User $usuario): bool
+    {
+        return true;
+    }
+
+    public function create(User $usuario): bool
+    {
+        return $usuario->temPerfil(UserRole::DIRETOR, UserRole::EMPRESA);
+    }
+
+    public function update(User $usuario, Estagio $estagio): bool
+    {
+        return $usuario->temPerfil(UserRole::DIRETOR);
+    }
+
+    public function view(User $usuario, Estagio $estagio): bool
     {
         return $usuario->temPerfil(UserRole::DIRETOR)
             || ($usuario->temPerfil(UserRole::ALUNO) && $estagio->aluno->usuario_id === $usuario->id)
@@ -16,22 +31,22 @@ class EstagioPolicy
             || ($usuario->temPerfil(UserRole::EMPRESA) && $estagio->supervisor->usuario_id === $usuario->id);
     }
 
-    public function submit(Usuario $usuario, Estagio $estagio): bool
+    public function submit(User $usuario, Estagio $estagio): bool
     {
         return $usuario->temPerfil(UserRole::DIRETOR) || ($usuario->temPerfil(UserRole::ALUNO) && $this->view($usuario, $estagio));
     }
 
-    public function review(Usuario $usuario, Estagio $estagio): bool
+    public function review(User $usuario, Estagio $estagio): bool
     {
         return $usuario->temPerfil(UserRole::DIRETOR) || ($usuario->temPerfil(UserRole::PROFESSOR) && $this->view($usuario, $estagio));
     }
 
-    public function sign(Usuario $usuario, Estagio $estagio): bool
+    public function sign(User $usuario, Estagio $estagio): bool
     {
         return $usuario->temPerfil(UserRole::EMPRESA) && $this->view($usuario, $estagio);
     }
 
-    public function transition(Usuario $usuario, Estagio $estagio): bool
+    public function transition(User $usuario, Estagio $estagio): bool
     {
         return $usuario->temPerfil(UserRole::DIRETOR);
     }

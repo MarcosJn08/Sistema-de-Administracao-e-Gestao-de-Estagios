@@ -4,6 +4,7 @@ namespace App\Enums;
 
 enum StatusEstagio: string
 {
+    case EM_ANALISE = 'EM_ANALISE';
     case RASCUNHO = 'RASCUNHO';
     case EM_ANDAMENTO = 'EM_ANDAMENTO';
     case CONCLUIDO = 'CONCLUIDO';
