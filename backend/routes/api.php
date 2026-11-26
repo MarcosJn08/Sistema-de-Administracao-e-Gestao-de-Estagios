@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CursoController;
 use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\CadastroController;
@@ -12,6 +13,9 @@ use App\Http\Controllers\FrequenciaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/status', fn () => response()->json(['success' => true, 'message' => 'API funcionando corretamente.', 'data' => ['version' => '1.0.0'], 'errors' => []]));
+
+Route::get('/cursos', [CursoController::class, 'index']);
+Route::get('/cursos/{curso}', [CursoController::class, 'show']);
 
 Route::prefix('auth')->name('auth.')->group(function (): void {
     Route::post('/login', [AuthController::class, 'login'])
@@ -30,6 +34,10 @@ Route::prefix('auth')->name('auth.')->group(function (): void {
 });
 
 Route::middleware(['auth:sanctum', 'ativo', 'throttle:api'])->group(function () {
+    Route::post('/cursos', [CursoController::class, 'store']);
+    Route::put('/cursos/{curso}', [CursoController::class, 'update']);
+    Route::delete('/cursos/{curso}', [CursoController::class, 'destroy']);
+
     Route::apiResource('usuarios', UsuarioController::class)->except(['index', 'store']);
     Route::get('/usuarios', [UsuarioController::class, 'index']);
     Route::post('/usuarios', [UsuarioController::class, 'store']);
@@ -49,7 +57,7 @@ Route::middleware(['auth:sanctum', 'ativo', 'throttle:api'])->group(function () 
     Route::post('/estagios/{estagio}/relatorio/aprovacao', [ComplementoEstagioController::class, 'approveReport']);
     Route::put('/estagios/{estagio}/avaliacao', [ComplementoEstagioController::class, 'avaliacao']);
     Route::middleware('perfil:DIRETOR')->group(function () {
-        $recursos = ['cursos', 'turmas', 'alunos', 'empresas', 'professores', 'supervisores'];
+        $recursos = ['turmas', 'alunos', 'empresas', 'professores', 'supervisores'];
         Route::get('/{recurso}', [CadastroController::class, 'index'])->whereIn('recurso', $recursos);
         Route::post('/{recurso}', [CadastroController::class, 'store'])->whereIn('recurso', $recursos);
         Route::get('/{recurso}/{id}', [CadastroController::class, 'show'])->whereIn('recurso', $recursos)->whereNumber('id');

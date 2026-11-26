@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useMatch, useNavigate, useParams } from 'react-router-dom';
 import { Search, ChevronDown } from 'lucide-react';
 import Header from '../components/Header.jsx';
@@ -9,6 +9,7 @@ import ModalDetalhesVaga from '../components/vagas/ModalDetalhesVaga.jsx';
 import ModalCandidatura from '../components/vagas/ModalCandidatura.jsx';
 import LogoBranca from '../assets/LogoBranca.png';
 import vagasIniciais from '../data/vagas.json';
+import api from '../services/api.js';
 import './VitrineVagas.css';
 
 const publicLinks = [
@@ -24,15 +25,26 @@ function VitrineVagas() {
   const emCandidatura = useMatch('/sage/vagas/:vagaId/candidatura');
   const [busca, setBusca] = useState('');
   const [cursoFiltro, setCursoFiltro] = useState('Todos');
+  const [cursosApi, setCursosApi] = useState([]);
   const vagaSelecionada = useMemo(() => vagasIniciais.find((vaga) => String(vaga.id) === vagaId) || null, [vagaId]);
 
+  useEffect(() => {
+    api.get('/cursos', { params: { per_page: 100 } })
+      .then((res) => {
+        const nomes = (res?.data?.data || res?.data || []).map((c) => c.nome);
+        if (nomes.length > 0) setCursosApi(nomes);
+      })
+      .catch(() => {});
+  }, []);
+
   const cursosDisponiveis = useMemo(() => {
+    if (cursosApi.length > 0) return ['Todos', ...cursosApi];
     const cursosSet = new Set();
     vagasIniciais.forEach((v) => {
       if (v.curso) cursosSet.add(v.curso);
     });
     return ['Todos', ...Array.from(cursosSet)];
-  }, []);
+  }, [cursosApi]);
 
   const vagasFiltradas = useMemo(() => {
     return vagasIniciais.filter((vaga) => {

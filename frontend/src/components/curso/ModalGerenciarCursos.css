@@ -1,0 +1,137 @@
+.modal-gerenciar-cursos .modal-content {
+  border: 0;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.modal-gerenciar-cursos .modal-header {
+  color: var(--sage-dark-green, #1b5e20);
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-gerenciar-cursos .modal-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.modal-gerenciar-cursos .modal-body {
+  padding: 20px;
+  background: #f8fafc;
+}
+
+.modal-gerenciar-cursos .modal-footer {
+  padding: 14px 20px;
+  background: #fff;
+  border-top: 1px solid #e2e8f0;
+}
+
+.modal-cursos-alerta-erro {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.modal-cursos-formulario {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.modal-cursos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.modal-cursos-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.modal-cursos-grid input,
+.modal-cursos-grid select {
+  min-height: 38px;
+  padding: 6px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 13px;
+}
+
+.modal-cursos-campo-largo {
+  grid-column: 1 / -1;
+}
+
+.modal-cursos-checkbox-label {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 8px !important;
+  margin-top: 6px;
+  cursor: pointer;
+}
+
+.modal-cursos-tabela-wrapper {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.modal-cursos-tabela {
+  width: 100%;
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+.modal-cursos-tabela th {
+  background: #f1f5f9;
+  color: #475569;
+  font-weight: 600;
+  padding: 10px 12px;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.modal-cursos-tabela td {
+  padding: 10px 12px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.modal-cursos-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.modal-cursos-badge-horas {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.modal-cursos-badge-mod {
+  background: #f3f4f6;
+  color: #374151;
+  text-transform: capitalize;
+}
+
+@media (max-width: 575.98px) {
+  .modal-cursos-grid {
+    grid-template-columns: 1fr;
+  }
+}

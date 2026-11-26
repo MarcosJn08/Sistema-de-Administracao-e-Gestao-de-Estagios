@@ -13,7 +13,7 @@ import DetalhesAluno from '../components/aluno/DetalhesAluno.jsx';
 import ModalCadastroAluno from '../components/aluno/ModalCadastroAluno.jsx';
 import ToastAlerta from '../components/ToastAlerta.jsx';
 import dadosDiretor from '../data/diretor.js';
-import alunosIniciais, { cursos, situacoesEstagio, orientadores } from '../data/alunos.js';
+import alunosIniciais, { situacoesEstagio, orientadores } from '../data/alunos.js';
 import { aplicarAcaoAluno } from '../utils/gestaoAluno.js';
 import api from '../services/api.js';
 import '../App.css';
@@ -31,6 +31,16 @@ function PainelAlunosDiretor() {
   const [cadastroAberto, setCadastroAberto] = useState(false);
   const [alunoSelecionadoId, setAlunoSelecionadoId] = useState(null);
   const [toast, setToast] = useState({ mensagem: '', tipo: 'sucesso' });
+  const [cursos, setCursos] = useState([]);
+
+  useEffect(() => {
+    api.get('/cursos', { params: { status: 'ativo', per_page: 100 } })
+      .then((res) => {
+        const nomes = (res?.data?.data || res?.data || []).map((c) => c.nome);
+        setCursos(nomes);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     let ativo = true;
@@ -45,7 +55,7 @@ function PainelAlunosDiretor() {
           cpf: u.cpf || 'Não informado',
           email: u.email,
           telefone: u.telefone || '(38) 99999-0000',
-          curso: u.curso || cursos[0],
+          curso: u.curso || '',
           semestre: 1,
           situacao: 'Sem estágio',
           progresso: { horasConcluidas: 0, metaHoras: 200, horasEstagio: 0, horasProjeto: 0 },

@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Curso;
 use App\Models\Usuario;
+use App\Policies\CursoPolicy;
 use App\Policies\UserPolicy;
 use App\Services\AuthService;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -18,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(Usuario::class, UserPolicy::class);
+        Gate::policy(Curso::class, CursoPolicy::class);
 
         RateLimiter::for('login', fn (Request $request) => [Limit::perMinute(20)->by($request->ip()), Limit::perMinute(5)->by(strtolower((string) $request->input('email')).'|'.$request->ip())]);
         RateLimiter::for('api', fn (Request $request) => Limit::perMinute(120)->by($request->user()?->id ?: $request->ip()));
