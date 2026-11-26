@@ -42,6 +42,7 @@ class ComplementoEstagioController extends Controller
 
         return DB::transaction(function () use ($request, $estagio) {
             $estagio = Estagio::whereKey($estagio->id)->lockForUpdate()->firstOrFail();
+            Gate::authorize('review', $estagio);
             if ($estagio->status->value !== 'EM_ANDAMENTO') {
                 throw ValidationException::withMessages(['estagio' => 'O estágio deve estar em andamento.']);
             }

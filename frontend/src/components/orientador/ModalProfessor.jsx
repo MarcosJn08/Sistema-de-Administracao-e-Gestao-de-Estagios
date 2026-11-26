@@ -5,7 +5,7 @@ import StatusBadge from '../StatusBadge.jsx';
 import Button from '../Button/Button.jsx';
 import './ModalProfessor.css';
 
-function ModalProfessor({ aberto, professor, departamentos, statusDisponiveis, aoSalvar, aoFechar }) {
+function ModalProfessor({ aberto, professor, departamentos, statusDisponiveis, aoSalvar, aoFechar, somenteLeitura = false, cadastroIntegrado = false }) {
   const cadastro = !professor;
   const [editando, setEditando] = useState(cadastro);
   const [erro, setErro] = useState('');
@@ -13,9 +13,11 @@ function ModalProfessor({ aberto, professor, departamentos, statusDisponiveis, a
 
   const salvar = async (evento) => {
     evento.preventDefault();
+    if (carregando) return;
     const formulario = new FormData(evento.currentTarget);
     const dados = {
       id: professor?.id,
+      usuarioId: professor?.usuarioId,
       nome: String(formulario.get('nome') || '').trim(),
       siape: String(formulario.get('siape') || '').trim(),
       titulacao: String(formulario.get('titulacao') || '').trim(),
@@ -60,9 +62,9 @@ function ModalProfessor({ aberto, professor, departamentos, statusDisponiveis, a
   };
 
   return (
-    <Modal show={aberto} onHide={aoFechar} centered scrollable size="lg" className="modal-professor"
+    <Modal show={aberto} onHide={carregando ? undefined : aoFechar} centered scrollable size="lg" className="modal-professor"
       aria-labelledby="modal-professor-titulo">
-      <Modal.Header closeButton closeLabel="Fechar">
+      <Modal.Header closeButton={!carregando} closeLabel="Fechar">
         <Modal.Title as="h2" id="modal-professor-titulo">
           <BookOpenCheck size={21} aria-hidden="true" />
           {cadastro ? 'Cadastrar professor' : editando ? 'Editar professor' : 'Perfil do professor'}
@@ -86,17 +88,26 @@ function ModalProfessor({ aberto, professor, departamentos, statusDisponiveis, a
 
               <dl className="modal-professor-dados">
                 <div><dt>Departamento</dt><dd>{professor.departamento}</dd></div>
-                <div><dt>Titulação</dt><dd>{professor.titulacao}</dd></div>
-                <div><dt>CPF</dt><dd>{professor.cpf || 'Não informado'}</dd></div>
                 <div><dt>E-mail institucional</dt><dd>{professor.email}</dd></div>
-                <div><dt>Telefone</dt><dd>{professor.telefone || 'Não informado'}</dd></div>
-                <div><dt>Área de atuação</dt><dd>{professor.areaAtuacao || 'Não informada'}</dd></div>
-                <div><dt>Regime de trabalho</dt><dd>{professor.regimeTrabalho || 'Não informado'}</dd></div>
+                {!somenteLeitura && <>
+                  <div><dt>Titulação</dt><dd>{professor.titulacao}</dd></div>
+                  <div><dt>CPF</dt><dd>{professor.cpf || 'Não informado'}</dd></div>
+                  <div><dt>Telefone</dt><dd>{professor.telefone || 'Não informado'}</dd></div>
+                  <div><dt>Área de atuação</dt><dd>{professor.areaAtuacao || 'Não informada'}</dd></div>
+                  <div><dt>Regime de trabalho</dt><dd>{professor.regimeTrabalho || 'Não informado'}</dd></div>
+                </>}
                 <div><dt>Alunos orientados</dt><dd>{professor.alunosOrientados}</dd></div>
                 <div><dt>Máximo de orientandos</dt><dd>{professor.maximoOrientandos || 'Não informado'}</dd></div>
                 <div><dt>Disponível para orientação</dt><dd>{professor.disponivelOrientacao ? 'Sim' : 'Não'}</dd></div>
-                <div><dt>Ingresso</dt><dd>{professor.novoNesteSemestre ? 'Neste semestre' : 'Semestre anterior'}</dd></div>
+                {!somenteLeitura && <div><dt>Ingresso</dt><dd>{professor.novoNesteSemestre ? 'Neste semestre' : 'Semestre anterior'}</dd></div>}
+                {somenteLeitura && <div><dt>Estágios em andamento</dt><dd>{professor.estagios_ativos}</dd></div>}
               </dl>
+              {professor.discentes && <section aria-label="Discentes vinculados">
+                <h3 className="fs-6">Discentes vinculados</h3>
+                {professor.discentes.length ? <ul>
+                  {professor.discentes.map((discente) => <li key={discente.id}>{discente.nome} · {discente.matricula}</li>)}
+                </ul> : <p>Nenhum discente vinculado.</p>}
+              </section>}
             </div>
           ) : (
             <div className="modal-professor-formulario">
@@ -136,7 +147,7 @@ function ModalProfessor({ aberto, professor, departamentos, statusDisponiveis, a
                 </select>
               </label>
               <label>Máximo de orientandos
-                <input name="maximoOrientandos" type="number" min={professor?.alunosOrientados || 1} max="50"
+                <input name="maximoOrientandos" type="number" min={Math.max(1, professor?.estagios_ativos ?? professor?.alunosOrientados ?? 0)} max="100"
                   defaultValue={professor?.maximoOrientandos || 5} required />
               </label>
               <label>Status
@@ -144,27 +155,29 @@ function ModalProfessor({ aberto, professor, departamentos, statusDisponiveis, a
                   {statusDisponiveis.map((item) => <option key={item} value={item}>{item}</option>)}
                 </select>
               </label>
-              <label className="modal-professor-checkbox">
+              {!cadastroIntegrado && <><label className="modal-professor-checkbox">
                 <input name="disponivelOrientacao" type="checkbox" defaultChecked={professor?.disponivelOrientacao ?? true} />
                 Disponível para receber novos estudantes
               </label>
               <label className="modal-professor-checkbox">
                 <input name="novoNesteSemestre" type="checkbox" defaultChecked={professor?.novoNesteSemestre || false} />
                 Ingressou neste semestre
-              </label>
+              </label></>}
             </div>
           )}
         </Modal.Body>
 
         <Modal.Footer>
           {!editando && professor ? <>
-            <Button tipo="botao-sage-verde" className="gap-2" onClick={() => setEditando(true)}>
+            {!somenteLeitura && <Button tipo="botao-sage-verde" className="gap-2" onClick={() => setEditando(true)}>
               <Pencil size={15} aria-hidden="true" /> Editar cadastro
-            </Button>
+            </Button>}
             <Button tipo="botao-acao-contorno" onClick={aoFechar}>Fechar</Button>
           </> : <>
-            <Button tipo="botao-acao-contorno" onClick={cadastro ? aoFechar : () => { setEditando(false); setErro(''); }}>Cancelar</Button>
-            <button type="submit" className="botao-sage-verde">{cadastro ? 'Cadastrar professor' : 'Salvar alterações'}</button>
+            <Button tipo="botao-acao-contorno" disabled={carregando} onClick={cadastro ? aoFechar : () => { setEditando(false); setErro(''); }}>Cancelar</Button>
+            <button type="submit" className="botao-sage-verde" disabled={carregando}>
+              {carregando ? 'Salvando…' : cadastro ? 'Cadastrar professor' : 'Salvar alterações'}
+            </button>
           </>}
         </Modal.Footer>
       </form>

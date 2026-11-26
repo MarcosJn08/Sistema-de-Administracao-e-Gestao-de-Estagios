@@ -64,6 +64,7 @@ class DocumentoController extends Controller
 
         return DB::transaction(function () use ($request, $estagio, $documento, $data) {
             $estagio = Estagio::whereKey($estagio->id)->lockForUpdate()->firstOrFail();
+            Gate::authorize('review', $estagio);
             $documento = Documento::whereKey($documento->id)->lockForUpdate()->firstOrFail();
             if ($estagio->estaFinalizado() || $documento->status !== StatusDocumento::EM_ANALISE || ! $documento->arquivo_path) {
                 throw ValidationException::withMessages(['status' => 'Documento não pode ser analisado neste estado.']);

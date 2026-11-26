@@ -25,6 +25,7 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', orientad
   const diretor = perfil === 'diretor' && typeof aoAtualizar === 'function';
   const estagioEditavel = aluno.estagio && !['Encerrado', 'Concluído'].includes(aluno.situacao);
   const salvar = (alteracao) => {
+    if (!diretor) return aoAtualizar(alteracao);
     aoAtualizar(alteracao);
     if (alteracao.tipo === 'homologar') baixarPreviaCertidao(aluno);
     setAcao(null);

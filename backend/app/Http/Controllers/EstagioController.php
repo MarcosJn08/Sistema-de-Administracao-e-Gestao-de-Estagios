@@ -36,7 +36,7 @@ class EstagioController extends Controller
         abort_unless($request->user()->temPerfil(UserRole::DIRETOR), 403);
         $data = $request->validate([
             'aluno_id' => 'required|integer|exists:alunos,id', 'empresa_concedente_id' => 'required|integer|exists:empresas_concedentes,id',
-            'professor_orientador_id' => 'required|integer|exists:professores_orientadores,id', 'supervisor_empresa_id' => 'required|integer|exists:supervisores_empresa,id',
+            'professor_orientador_id' => 'nullable|integer|exists:professores_orientadores,id', 'supervisor_empresa_id' => 'required|integer|exists:supervisores_empresa,id',
             'modalidade' => ['required', Rule::enum(ModalidadeEstagio::class)], 'data_inicio' => 'required|date_format:Y-m-d',
             'data_termino' => 'required|date_format:Y-m-d|after_or_equal:data_inicio', 'carga_horaria_diaria' => 'required|numeric|gt:0|max:24|decimal:0,2',
             'bolsa_auxilio' => 'nullable|numeric|min:0|max:99999999.99|decimal:0,2', 'status' => 'prohibited',

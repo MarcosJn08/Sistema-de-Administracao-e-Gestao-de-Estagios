@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { Col, Container, Row, Table } from 'react-bootstrap';
-import { BriefcaseBusiness, RotateCcw, Search, TriangleAlert, Users, UserSearch } from 'lucide-react';
+﻿import { useState } from 'react';
+import { Alert, Col, Container, Row, Table } from 'react-bootstrap';
+import { BriefcaseBusiness, CheckCircle2, RotateCcw, Search, TriangleAlert, Users } from 'lucide-react';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import CardPequeno from '../components/CardPequeno.jsx';
@@ -10,9 +10,7 @@ import StatusBadge from '../components/StatusBadge.jsx';
 import Button from "../components/Button/Button.jsx";
 import Paginacao from '../components/Paginacao.jsx';
 import DetalhesAluno from '../components/aluno/DetalhesAluno.jsx';
-import professor from '../data/professor.js';
-import alunosIniciais from '../data/alunos.js';
-import { aplicarAcaoAluno } from '../utils/gestaoAluno.js';
+import useConsultaApi from '../hooks/useConsultaApi.js';
 import api from '../services/api.js';
 import '../App.css';
 import './DashboardProfessor.css';
@@ -20,24 +18,75 @@ import './DashboardProfessor.css';
 const ITENS_POR_PAGINA = 10;
 const normalizar = (valor) => String(valor ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 
+const SITUACOES = {
+  RASCUNHO: 'Rascunho',
+  EM_ANDAMENTO: 'Em estágio ativo',
+  CONCLUIDO: 'Concluído',
+  ENCERRADO: 'Encerrado',
+  CANCELADO_DESVIO_FUNCAO: 'Cancelado',
+};
+const STATUS_DOCUMENTO = {
+  PENDENTE: 'Pendente',
+  EM_ANALISE: 'Em análise',
+  DEFERIDO: 'Deferido',
+  NECESSITA_AJUSTES: 'Requer ajuste',
+  EXPIRADO: 'Expirado',
+};
+const TIPO_DOCUMENTO = {
+  TCE: 'Termo de compromisso',
+  PLANO_ATIVIDADES: 'Plano de atividades',
+  FICHA_MATRICULA: 'Ficha de matrícula',
+  RELATORIO_PARCIAL: 'Relatório parcial',
+  RELATORIO_FINAL: 'Relatório final',
+  FOLHA_FREQUENCIA: 'Folha de frequência',
+};
+
+const dataBrasileira = (data) => data?.split('-').reverse().join('/');
+
+function prepararVinculo(discente, estagio) {
+  return {
+    ...discente,
+    vinculoId: estagio.id,
+    situacao: SITUACOES[estagio.status] ?? estagio.status,
+    estagio: {
+      empresa: estagio.empresa,
+      supervisorEstagio: estagio.supervisor,
+      dataInicio: dataBrasileira(estagio.data_inicio),
+      dataFim: dataBrasileira(estagio.data_termino),
+    },
+    progresso: {
+      horasConcluidas: estagio.horas_cumpridas,
+      horasEstagio: estagio.horas_cumpridas,
+      metaHoras: discente.carga_horaria_exigida,
+    },
+    documentos: estagio.documentos.map((documento) => ({
+      id: documento.id,
+      nome: TIPO_DOCUMENTO[documento.tipo] ?? documento.tipo,
+      status: STATUS_DOCUMENTO[documento.status] ?? documento.status,
+      data: dataBrasileira(documento.data_envio),
+      justificativa: documento.observacoes,
+      estagioId: estagio.id,
+      temArquivo: documento.tem_arquivo,
+      podeAvaliar: documento.pode_avaliar,
+    })),
+  };
+}
+
 export default function DashboardProfessor() {
-  const [alunos, setAlunos] = useState(alunosIniciais);
+  const { dados, carregando, erro, recarregar } = useConsultaApi('/orientador/meus-discentes');
+  const { dados: catalogoCursos } = useConsultaApi('/cursos?per_page=100');
+  const discentes = dados ?? [];
+  const alunos = discentes.flatMap((discente) => discente.estagios.map((estagio) => prepararVinculo(discente, estagio)));
   const [busca, setBusca] = useState('');
   const [curso, setCurso] = useState('');
   const [periodo, setPeriodo] = useState('');
   const [pagina, setPagina] = useState(1);
   const [selecionadoId, setSelecionadoId] = useState(null);
-  const [cursos, setCursos] = useState([]);
-  const alunoSelecionado = alunos.find((aluno) => aluno.id === selecionadoId);
-
-  useEffect(() => {
-    api.get('/cursos', { params: { per_page: 100 } })
-      .then((res) => {
-        const nomes = (res?.data?.data || res?.data || []).map((c) => c.nome);
-        setCursos(nomes);
-      })
-      .catch(() => {});
-  }, []);
+  const alunoSelecionado = alunos.find((aluno) => aluno.vinculoId === selecionadoId);
+  const cursos = [...new Set([
+    ...(catalogoCursos ?? []).map((item) => item.nome),
+    ...discentes.map((discente) => discente.curso),
+  ].filter(Boolean))].sort();
   const periodos = [...new Set(alunos.map((aluno) => aluno.semestre).filter(Boolean))].sort((a, b) => a - b);
   const termo = normalizar(busca);
   const filtrados = alunos.filter((aluno) => (!curso || aluno.curso === curso)
@@ -48,30 +97,42 @@ export default function DashboardProfessor() {
   const inicio = (paginaAtual - 1) * ITENS_POR_PAGINA;
   const visiveis = filtrados.slice(inicio, inicio + ITENS_POR_PAGINA);
   const indicadores = [
-    { titulo: 'Total de alunos', valor: alunos.length, texto: 'Alunos cadastrados no campus', icone: <Users size={23} />, variante: 'azul' },
+    { titulo: 'Total de alunos', valor: discentes.length, texto: 'Discentes vinculados à sua orientação', icone: <Users size={23} />, variante: 'azul' },
     { titulo: 'Estágios ativos', valor: alunos.filter((aluno) => aluno.situacao === 'Em estágio ativo').length, texto: 'Vínculos regulares vigentes', icone: <BriefcaseBusiness size={23} />, variante: 'verde' },
     { titulo: 'Pendências documentais', valor: alunos.reduce((total, aluno) => total + aluno.documentos.filter((documento) => !['Aprovado', 'Deferido'].includes(documento.status)).length, 0), texto: 'Documentos aguardando análise ou ajuste', icone: <TriangleAlert size={23} />, variante: 'ambar' },
-    { titulo: 'Sem vínculo', valor: alunos.filter((aluno) => !aluno.estagio).length, texto: 'Disponíveis para novas vagas', icone: <UserSearch size={23} />, variante: 'cinza' },
+    { titulo: 'Estágios concluídos', valor: alunos.filter((aluno) => aluno.situacao === 'Concluído').length, texto: 'Vínculos concluídos sob sua orientação', icone: <CheckCircle2 size={23} />, variante: 'cinza' },
   ];
   const limparFiltros = () => { setBusca(''); setCurso(''); setPeriodo(''); setPagina(1); };
-  const atualizarAluno = (acao) => {
-    const atualizado = aplicarAcaoAluno(alunoSelecionado, acao, { perfil: professor.role });
-    setAlunos((atuais) => atuais.map((aluno) => aluno.id === atualizado.id ? atualizado : aluno));
+  const atualizarAluno = async ({ tipo, documentoId, motivo }) => {
+    const status = tipo === 'aprovar' ? 'DEFERIDO' : 'NECESSITA_AJUSTES';
+    try {
+      await api.patch('/estagios/' + alunoSelecionado.vinculoId + '/documentos/' + documentoId + '/analise', {
+        status,
+        observacoes: motivo?.trim() || null,
+      });
+      recarregar();
+    } catch (error) {
+      if (error.status === 403) recarregar();
+      throw new Error(error.errors?.observacoes?.[0] || error.errors?.status?.[0] || error.message, { cause: error });
+    }
   };
 
   return (
     <div className="dashboard-professor d-flex flex-column min-vh-100">
-      <Header usuario={professor} paginaAtiva="Dashboard" />
+      <Header paginaAtiva="Dashboard" />
       <main className="flex-grow-1 py-4">
         <Container className="px-3 dashboard-professor-container">
           <div className="mb-4">
             <h1 className="dashboard-professor-titulo">Gerenciar alunos</h1>
-            <p className="text-secondary mb-0">Monitore a situação dos alunos do campus de forma centralizada</p>
+            <p className="text-secondary mb-0">Acompanhe os estágios vinculados à sua orientação</p>
           </div>
+          {carregando && <p role="status">Carregando seus discentes…</p>}
+          {erro && <Alert variant="danger" role="alert">{erro} <Button onClick={recarregar}>Tentar novamente</Button></Alert>}
+          {dados && <>
           <Row className="g-4 mb-4">{indicadores.map((indicador) => (
             <Col key={indicador.titulo} xs={12} sm={6} lg={3}><CardPequeno {...indicador} /></Col>
           ))}</Row>
-          <section className="cartao-sage" aria-label="Alunos do campus">
+          <section className="cartao-sage" aria-label="Discentes orientados">
             <Row className="g-3 mb-4 align-items-end">
               <Col xs={12} lg={6}>
                 <div className="dashboard-professor-busca">
@@ -96,25 +157,28 @@ export default function DashboardProfessor() {
               <Table className="tabela-sage dashboard-professor-tabela">
                 <caption className="visually-hidden">Alunos e situação dos estágios</caption>
                 <thead><tr>{['Matrícula', 'Nome do aluno', 'Curso', 'Empresa concedente', 'Status', 'Ações'].map((titulo) => <th key={titulo} scope="col">{titulo}</th>)}</tr></thead>
-                <tbody>{visiveis.map((aluno) => <tr key={aluno.id}>
+                <tbody>{visiveis.map((aluno) => <tr key={aluno.vinculoId}>
                   <td className="text-nowrap">{aluno.matricula}</td>
                   <td className="fw-semibold">{aluno.nome}</td>
                   <td>{aluno.curso}</td>
                   <td>{aluno.estagio?.empresa || 'Sem vínculo'}</td>
                   <td><StatusBadge status={aluno.situacao} /></td>
-                  <td><Button tipo="botao-sage-verde" className="dashboard-professor-perfil" onClick={() => setSelecionadoId(aluno.id)} aria-label={`Ver perfil de ${aluno.nome}`}>Ver perfil</Button></td>
+                  <td><Button tipo="botao-sage-verde" className="dashboard-professor-perfil" onClick={() => setSelecionadoId(aluno.vinculoId)} aria-label={`Ver perfil de ${aluno.nome}`}>Ver perfil</Button></td>
                 </tr>)}</tbody>
               </Table>
-              {filtrados.length === 0 && <p className="text-center text-secondary py-4" role="status">Nenhum aluno encontrado para os filtros selecionados.</p>}
+              {filtrados.length === 0 && <p className="text-center text-secondary py-4" role="status">
+                {discentes.length ? 'Nenhum aluno encontrado para os filtros selecionados.' : 'Nenhum discente vinculado à sua orientação.'}
+              </p>}
             </div>
             <Paginacao paginaAtual={paginaAtual} totalPaginas={totalPaginas} aoMudarPagina={setPagina}
-              textoResumo={filtrados.length ? `Mostrando ${inicio + 1}–${inicio + visiveis.length} de ${filtrados.length} alunos` : 'Nenhum aluno encontrado'} />
+              textoResumo={filtrados.length ? `Mostrando ${inicio + 1}–${inicio + visiveis.length} de ${filtrados.length} vínculos` : 'Nenhum vínculo encontrado'} />
           </section>
+          </>}
         </Container>
       </main>
       <Footer />
-      {alunoSelecionado && <DetalhesAluno key={alunoSelecionado.id} aberto aluno={alunoSelecionado} perfil={professor.role}
-        aoFechar={() => setSelecionadoId(null)} aoAtualizar={atualizarAluno} />}
+      {alunoSelecionado && <DetalhesAluno key={alunoSelecionado.vinculoId} aberto aluno={alunoSelecionado} perfil="professor"
+        aoFechar={() => setSelecionadoId(null)} aoAtualizar={carregando ? undefined : atualizarAluno} />}
     </div>
   );
 }

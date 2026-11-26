@@ -11,6 +11,7 @@ use App\Models\Estagio;
 use App\Models\ProfessorOrientador;
 use App\Models\SupervisorEmpresa;
 use App\Models\Turma;
+use App\Models\User;
 use App\Models\Usuario;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -290,6 +291,120 @@ class ApiWorkflowTest extends TestCase
         $this->putJson($base.'/avaliacao', ['nota_desempenho' => 9, 'conceito_atitude' => 'Bom', 'parecer_final' => 'Bom'])->assertOk();
         $this->actingAs($this->professorUser, 'sanctum')->postJson($base.'/relatorio/aprovacao')->assertOk();
         $this->actingAs($this->alunoUser, 'sanctum')->putJson($base.'/complementos/relatorio', $report)->assertUnprocessable();
+    }
+
+    public function test_director_assigns_and_transfers_orientation_and_access_follows_the_current_link(): void
+    {
+        $diretor = User::findOrFail($this->diretor->id);
+        $primeiro = User::findOrFail($this->professorUser->id);
+        $this->actingAs($diretor, 'sanctum');
+        $usuarioId = $this->postJson('/api/usuarios', [
+            'nome' => 'Professor Integração', 'email' => 'professor-integracao@ifnmg.edu.br',
+            'password' => 'SenhaDeTeste123', 'perfil' => 'PROFESSOR', 'siape' => '9000101',
+            'departamento' => 'Pesquisa', 'titulacao' => 'Mestre', 'maximoOrientandos' => 1,
+        ])->assertCreated()->assertJsonPath('data.titulacao', 'Mestre')->json('data.id');
+        $segundo = User::findOrFail($usuarioId);
+        $novo = $segundo->professor()->firstOrFail();
+        $this->assertNotSame($usuarioId, $novo->id);
+        $this->putJson('/api/usuarios/'.$usuarioId, [
+            'titulacao' => 'Doutor', 'departamento' => 'Pesquisa Aplicada',
+        ])->assertOk()->assertJsonPath('data.titulacao', 'Doutor');
+        $this->getJson('/api/orientadores')->assertOk()->assertJsonFragment([
+            'id' => $novo->id, 'usuario_id' => $usuarioId, 'titulacao' => 'Doutor',
+            'departamento' => 'Pesquisa Aplicada',
+        ]);
+        $id = $this->postJson('/api/estagios', array_diff_key($this->payload, ['professor_orientador_id' => true]))
+            ->assertCreated()->json('data.id');
+        $base = '/api/estagios/'.$id;
+
+        $this->patchJson($base.'/status', ['status' => 'EM_ANDAMENTO'])->assertUnprocessable()
+            ->assertJsonValidationErrors('professor_orientador_id');
+        $this->getJson('/api/orientadores')->assertOk()
+            ->assertJsonPath('data.discentes_sem_orientador.0.estagios.0.id', $id);
+        $this->actingAs($primeiro, 'sanctum')->getJson($base)->assertForbidden();
+        $this->patchJson($base.'/orientador', ['professor_orientador_id' => $novo->id])->assertForbidden();
+        $this->getJson('/api/orientadores')->assertForbidden();
+
+        $this->actingAs($diretor, 'sanctum')->patchJson($base.'/orientador', [
+            'professor_orientador_id' => $this->payload['professor_orientador_id'],
+        ])->assertOk()->assertJsonPath('data.professor_orientador_id', $this->payload['professor_orientador_id']);
+        $this->getJson('/api/orientadores')->assertOk()->assertJsonCount(0, 'data.discentes_sem_orientador');
+
+        $outroEstagio = $this->stage();
+        $this->actingAs($primeiro, 'sanctum')->getJson('/api/orientador/meus-discentes')->assertOk()
+            ->assertJsonCount(1, 'data')->assertJsonCount(2, 'data.0.estagios');
+        $this->getJson($base)->assertOk();
+        $this->actingAs($segundo, 'sanctum')->getJson($base)->assertForbidden();
+
+        $documento = $this->actingAs($this->alunoUser, 'sanctum')->postJson($base.'/documentos', [
+            'tipo' => 'RELATORIO_PARCIAL', 'arquivo' => UploadedFile::fake()->create('relatorio.pdf', 5, 'application/pdf'),
+        ])->assertCreated()->json('data.id');
+        $analise = $base.'/documentos/'.$documento.'/analise';
+        $this->patchJson($base.'/orientador', ['professor_orientador_id' => $novo->id])->assertForbidden();
+        $this->getJson('/api/orientador/meus-discentes')->assertForbidden();
+        $this->actingAs($this->supervisorUser, 'sanctum')
+            ->patchJson($base.'/orientador', ['professor_orientador_id' => $novo->id])->assertForbidden();
+
+        $this->actingAs($diretor, 'sanctum')->patchJson($base.'/orientador', [
+            'professor_orientador_id' => $novo->id,
+        ])->assertOk();
+        $this->getJson('/api/orientador/meus-discentes')->assertForbidden();
+        $this->assertDatabaseHas('estagios', ['id' => $id, 'professor_orientador_id' => $novo->id]);
+
+        $this->actingAs($primeiro, 'sanctum')->getJson($base)->assertForbidden();
+        $this->getJson($base.'/documentos')->assertForbidden();
+        $this->patchJson($analise, ['status' => 'DEFERIDO'])->assertForbidden();
+        $this->postJson($base.'/relatorio/aprovacao')->assertForbidden();
+        $this->getJson('/api/orientador/meus-discentes?professor_orientador_id='.$novo->id)->assertOk()
+            ->assertJsonCount(1, 'data.0.estagios')->assertJsonPath('data.0.estagios.0.id', $outroEstagio->id);
+
+        $this->actingAs($segundo, 'sanctum')->getJson($base)->assertOk();
+        $this->putJson('/api/usuarios/'.$usuarioId, ['titulacao' => 'Sem permissão'])->assertForbidden();
+        $this->getJson('/api/orientador/meus-discentes')->assertOk()->assertJsonCount(1, 'data')
+            ->assertJsonCount(1, 'data.0.estagios')->assertJsonPath('data.0.estagios.0.id', $id)
+            ->assertJsonPath('data.0.estagios.0.documentos.0.tem_arquivo', true)
+            ->assertJsonMissingPath('data.0.estagios.0.documentos.0.arquivo_path');
+        $this->patchJson($analise, ['status' => 'DEFERIDO'])->assertOk()->assertJsonPath('data.status', 'DEFERIDO');
+    }
+
+    public function test_orientation_validates_the_target_account_capacity_and_stage_state(): void
+    {
+        $this->getJson('/api/orientadores')->assertUnauthorized();
+        $this->getJson('/api/orientador/meus-discentes')->assertUnauthorized();
+        $cheio = $this->stage();
+        $cheio->update(['status' => StatusEstagio::EM_ANDAMENTO]);
+        $origem = User::factory()->create(['perfil' => UserRole::PROFESSOR]);
+        $orientador = $origem->professor()->create(['siape_matricula' => 'P2', 'departamento_area' => 'Pesquisa', 'max_orientados' => 2]);
+        $estagio = Estagio::create(array_replace($this->payload, ['professor_orientador_id' => $orientador->id, 'status' => StatusEstagio::RASCUNHO]));
+        $url = '/api/estagios/'.$estagio->id.'/orientador';
+        $this->actingAs($this->diretor, 'sanctum');
+
+        foreach ([[], ['professor_orientador_id' => 'abc'], ['professor_orientador_id' => 99999], [
+            'professor_orientador_id' => $this->payload['professor_orientador_id'],
+        ]] as $dados) {
+            $this->patchJson($url, $dados)->assertUnprocessable()->assertJsonValidationErrors('professor_orientador_id');
+        }
+        $this->patchJson('/api/estagios/'.$cheio->id.'/orientador', [
+            'professor_orientador_id' => $this->payload['professor_orientador_id'],
+        ])->assertOk();
+        $this->getJson('/api/orientadores')->assertOk()->assertJsonFragment([
+            'departamento' => 'TI', 'disponivel' => false, 'estagios_ativos' => 1,
+        ]);
+        $this->assertDatabaseHas('estagios', ['id' => $estagio->id, 'professor_orientador_id' => $orientador->id]);
+
+        $cheio->update(['status' => StatusEstagio::CONCLUIDO]);
+        $this->patchJson('/api/estagios/'.$cheio->id.'/orientador', [
+            'professor_orientador_id' => $orientador->id,
+        ])->assertUnprocessable()->assertJsonValidationErrors('estagio');
+        $primeiro = User::findOrFail($this->professorUser->id);
+        $primeiro->update(['status' => 'inativo', 'is_active' => false]);
+        $this->patchJson($url, ['professor_orientador_id' => $this->payload['professor_orientador_id']])
+            ->assertUnprocessable()->assertJsonValidationErrors('professor_orientador_id');
+        $this->actingAs($primeiro, 'sanctum')->getJson('/api/orientador/meus-discentes')->assertForbidden();
+
+        $semVinculo = User::factory()->create(['perfil' => UserRole::PROFESSOR]);
+        $this->actingAs($semVinculo, 'sanctum')->getJson('/api/orientador/meus-discentes')->assertOk()
+            ->assertExactJson(['success' => true, 'message' => 'Operação realizada com sucesso.', 'data' => [], 'errors' => []]);
     }
 
     public function test_cancellation_for_misconduct_removes_credit_without_erasing_signed_frequency(): void
