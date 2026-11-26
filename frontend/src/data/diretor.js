@@ -118,12 +118,6 @@ const diretor = {
     { id: 4, titulo: "Empresa cadastrada - EcoVerde LTDA", tempo: "1 dia atrás", cor: "#1565C0" }
   ],
 
-  acoesRapidas: [
-    { id: 1, rotulo: "Cadastrar aluno", icone: "bi bi-person-plus", href: "#" },
-    { id: 2, rotulo: "Cadastrar professor", icone: "bi bi-person-workspace", href: "#" },
-    { id: 3, rotulo: "Gerenciar empresas", icone: "bi bi-building", href: "#" }
-  ],
-
   proximosVencimentos: [
     { id: 1, titulo: "Relatório - Maria Silva", prazo: "Vence em 2 dias", cor: "#F59E0B" },
     { id: 2, titulo: "Convênio - Tech Informática", prazo: "Vence em 3 dias", cor: "#F59E0B" },
