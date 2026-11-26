@@ -104,6 +104,20 @@ export default function AuthProvider({ children }) {
     return user;
   }, [updateSession]);
 
+  const loginComGoogleCallback = useCallback(async (code) => {
+    const { data: result } = await api.post('/auth/google/callback', { code }, {
+      skipAuth: true,
+      notifyUnauthorized: false,
+    });
+    const user = result.data;
+    updateSession({ user, token: result.token, error: '', expiresAt: result.expires_at });
+    return user;
+  }, [updateSession]);
+
+  const aplicarSessaoGoogle = useCallback((token, expiresAt, role) => {
+    updateSession({ user: { role }, token, error: '', expiresAt });
+  }, [updateSession]);
+
   const logout = useCallback(async () => {
     const token = sessionRef.current.token;
     try {
@@ -121,6 +135,8 @@ export default function AuthProvider({ children }) {
     isAuthenticated: Boolean(session.user && session.token),
     hasRole,
     login,
+    loginComGoogleCallback,
+    aplicarSessaoGoogle,
     logout,
     clearResetAccountSession,
   }), [session, hasRole, login, logout, clearResetAccountSession]);
