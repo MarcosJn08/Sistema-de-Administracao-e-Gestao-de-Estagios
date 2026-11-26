@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         EmpresaConcedente::firstOrCreate(['cnpj' => '12345678000190'], ['razao_social' => 'Empresa de demonstração', 'endereco_completo' => 'Endereço de demonstração', 'representante_legal' => 'Representante de demonstração', 'status_convenio' => StatusConvenio::ATIVO]);
 
         $this->call([
+            CursoSeeder::class,
             UsuarioSeeder::class,
             AlunoSeeder::class,
             ProfessorOrientadorSeeder::class,

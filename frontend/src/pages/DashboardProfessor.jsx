@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Col, Container, Row, Table } from 'react-bootstrap';
 import { BriefcaseBusiness, RotateCcw, Search, TriangleAlert, Users, UserSearch } from 'lucide-react';
 import Header from '../components/Header.jsx';
@@ -13,6 +13,7 @@ import DetalhesAluno from '../components/aluno/DetalhesAluno.jsx';
 import professor from '../data/professor.js';
 import alunosIniciais from '../data/alunos.js';
 import { aplicarAcaoAluno } from '../utils/gestaoAluno.js';
+import api from '../services/api.js';
 import '../App.css';
 import './DashboardProfessor.css';
 
@@ -26,8 +27,17 @@ export default function DashboardProfessor() {
   const [periodo, setPeriodo] = useState('');
   const [pagina, setPagina] = useState(1);
   const [selecionadoId, setSelecionadoId] = useState(null);
+  const [cursos, setCursos] = useState([]);
   const alunoSelecionado = alunos.find((aluno) => aluno.id === selecionadoId);
-  const cursos = [...new Set(alunos.map((aluno) => aluno.curso))].sort();
+
+  useEffect(() => {
+    api.get('/cursos', { params: { per_page: 100 } })
+      .then((res) => {
+        const nomes = (res?.data?.data || res?.data || []).map((c) => c.nome);
+        setCursos(nomes);
+      })
+      .catch(() => {});
+  }, []);
   const periodos = [...new Set(alunos.map((aluno) => aluno.semestre).filter(Boolean))].sort((a, b) => a - b);
   const termo = normalizar(busca);
   const filtrados = alunos.filter((aluno) => (!curso || aluno.curso === curso)

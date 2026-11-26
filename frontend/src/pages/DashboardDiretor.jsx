@@ -12,6 +12,7 @@ import CardProximosVencimentos from '../components/diretor/CardProximosVenciment
 import ModalAnaliseDocumento from '../components/documento/ModalAnaliseDocumento.jsx';
 import ModalCadastroAluno from '../components/aluno/ModalCadastroAluno.jsx';
 import ModalProfessor from '../components/orientador/ModalProfessor.jsx';
+import ModalGerenciarCursos from '../components/curso/ModalGerenciarCursos.jsx';
 import ToastAlerta from '../components/ToastAlerta.jsx';
 import dados from '../data/diretor.js';
 import documentosIniciais from '../data/documentos.js';
@@ -31,6 +32,7 @@ function DashboardDiretor() {
   const [documentoSelecionado, setDocumentoSelecionado] = useState(null);
   const [cadastroAlunoAberto, setCadastroAlunoAberto] = useState(false);
   const [cadastroProfessorAberto, setCadastroProfessorAberto] = useState(false);
+  const [gerenciarCursosAberto, setGerenciarCursosAberto] = useState(false);
   const [mensagem, setMensagem] = useState('');
 
   useEffect(() => {
@@ -177,11 +179,32 @@ function DashboardDiretor() {
     setMensagem(professor.id ? 'Orientador atualizado com sucesso.' : 'Orientador cadastrado com sucesso.');
   };
 
-  const acoesRapidas = dados.acoesRapidas.map((acao) => {
-    if (acao.id === 1) return { ...acao, href: undefined, aoClicar: () => setCadastroAlunoAberto(true) };
-    if (acao.id === 2) return { ...acao, href: undefined, aoClicar: () => setCadastroProfessorAberto(true) };
-    return { ...acao, href: undefined, aoClicar: () => navigate('/sage/diretor/convenios') };
-  });
+  const acoesRapidas = [
+    {
+      id: 'aluno',
+      rotulo: 'Cadastrar aluno',
+      icone: 'bi bi-person-plus',
+      aoClicar: () => setCadastroAlunoAberto(true),
+    },
+    {
+      id: 'professor',
+      rotulo: 'Cadastrar professor',
+      icone: 'bi bi-person-workspace',
+      aoClicar: () => setCadastroProfessorAberto(true),
+    },
+    {
+      id: 'empresas',
+      rotulo: 'Gerenciar empresas',
+      icone: 'bi bi-building',
+      aoClicar: () => navigate('/sage/diretor/convenios'),
+    },
+    {
+      id: 'cursos',
+      rotulo: 'Gerenciar cursos',
+      icone: 'bi bi-book',
+      aoClicar: () => setGerenciarCursosAberto(true),
+    },
+  ];
 
   return (
     <div className="d-flex flex-column min-vh-100" style={{ backgroundColor: '#f4f6f8' }}>
@@ -249,6 +272,12 @@ function DashboardDiretor() {
       <ModalProfessor key={cadastroProfessorAberto ? 'cadastro-professor-aberto' : 'cadastro-professor-fechado'} aberto={cadastroProfessorAberto}
         departamentos={departamentos} statusDisponiveis={statusOrientador} aoSalvar={salvarProfessor}
         aoFechar={() => setCadastroProfessorAberto(false)} />
+      <ModalGerenciarCursos
+        key={gerenciarCursosAberto ? 'cursos-aberto' : 'cursos-fechado'}
+        aberto={gerenciarCursosAberto}
+        aoFechar={() => setGerenciarCursosAberto(false)}
+        aoAtualizar={() => setMensagem('Cursos atualizados com sucesso.')}
+      />
       <ToastAlerta mensagem={mensagem} aoFechar={() => setMensagem('')} />
       <Footer />
     </div>
