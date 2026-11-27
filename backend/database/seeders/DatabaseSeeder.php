@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             AlunoSeeder::class,
             ProfessorOrientadorSeeder::class,
             EstagioSeeder::class,
+            FrequenciaCampoSeeder::class,
         ]);
     }
 }
