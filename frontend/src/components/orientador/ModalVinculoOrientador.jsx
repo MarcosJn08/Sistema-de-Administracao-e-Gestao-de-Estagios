@@ -58,6 +58,7 @@ export default function ModalVinculoOrientador({
           {exibirOpcoes && <>
             {escolherEstagio ? (
               <Select id="vinculo-estagio" titulo="Estágio" value={estagioId} required disabled={salvando}
+                pesquisavel placeholderBusca="Pesquisar por discente, empresa ou ID..."
                 onChange={(evento) => { setEstagioId(evento.target.value); setOrientadorId(''); setErro(''); }}>
                 <option value="">Selecione o estágio</option>
                 {vinculos.map(({ discente, estagio }) => (
@@ -68,6 +69,7 @@ export default function ModalVinculoOrientador({
             {vinculo && <p>Orientador atual: {vinculo.orientador?.nome || 'Sem orientador'}</p>}
             {!professor && <>
               <Select id="vinculo-orientador" titulo="Professor orientador" value={orientadorId} required
+                pesquisavel placeholderBusca="Pesquisar por nome ou departamento..."
                 disabled={salvando || !vinculo || disponiveis.length === 0}
                 onChange={(evento) => { setOrientadorId(evento.target.value); setErro(''); }}>
                 <option value="">Selecione o professor</option>
