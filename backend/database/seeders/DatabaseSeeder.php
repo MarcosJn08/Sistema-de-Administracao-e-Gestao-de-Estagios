@@ -20,7 +20,12 @@ class DatabaseSeeder extends Seeder
             AlunoSeeder::class,
             ProfessorOrientadorSeeder::class,
             EstagioSeeder::class,
-            FrequenciaCampoSeeder::class,
         ]);
+
+        if (app()->environment('local') && ! app()->runningUnitTests()) {
+            $this->call([
+                FrequenciaCampoSeeder::class,
+            ]);
+        }
     }
 }
