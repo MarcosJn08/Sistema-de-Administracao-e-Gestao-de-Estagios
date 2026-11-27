@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use App\Enums\StatusCurso;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Curso extends Model
 {
-    use HasFactory;
-
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'nome',
@@ -24,13 +24,44 @@ class Curso extends Model
 
     protected $casts = [
         'status' => StatusCurso::class,
+        'permite_aproveitamento_projetos' => 'boolean',
+        'horas_minimas_estagio' => 'integer',
+        'carga_horaria_estagio' => 'integer',
     ];
 
-    public function turmas() { return $this->hasMany(Turma::class); }
+    protected static function boot(): void
+    {
+        parent::boot();
 
-    // Alunos do curso, passando pelas turmas
+        static::saving(function (Curso $curso) {
+            if ($curso->horas_minimas_estagio && !$curso->carga_horaria_estagio) {
+                $curso->carga_horaria_estagio = $curso->horas_minimas_estagio;
+            } elseif ($curso->carga_horaria_estagio && !$curso->horas_minimas_estagio) {
+                $curso->horas_minimas_estagio = $curso->carga_horaria_estagio;
+            }
+        });
+    }
+
+    public function turmas()
+    {
+        return $this->hasMany(Turma::class);
+    }
+
     public function alunos()
     {
         return $this->hasManyThrough(Aluno::class, Turma::class);
+    }
+
+    public function temEstagiosVinculados(): bool
+    {
+        $porTurma = Estagio::whereHas('aluno.turma', function ($q) {
+            $q->where('curso_id', $this->id);
+        })->exists();
+
+        $porNome = Estagio::whereHas('aluno', function ($q) {
+            $q->where('curso_nome', $this->nome);
+        })->exists();
+
+        return $porTurma || $porNome;
     }
 }
