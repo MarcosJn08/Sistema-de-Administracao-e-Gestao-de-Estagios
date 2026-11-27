@@ -10,6 +10,7 @@ use App\Models\Estagio;
 use App\Services\OrientadorService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class OrientadorEstagioController extends Controller
 {
@@ -31,6 +32,17 @@ class OrientadorEstagioController extends Controller
             'id' => $estagio->id,
             'professor_orientador_id' => $estagio->professor_orientador_id,
         ], 'Orientador vinculado com sucesso.');
+    }
+
+    public function desvincular(Estagio $estagio, OrientadorService $service): JsonResponse
+    {
+        Gate::authorize('vincularOrientador', $estagio);
+        $estagio = $service->desvincular($estagio);
+
+        return $this->successResponse([
+            'id' => $estagio->id,
+            'professor_orientador_id' => null,
+        ], 'Orientador desvinculado com sucesso.');
     }
 
     public function meusDiscentes(Request $request, OrientadorService $service): JsonResponse

@@ -55,7 +55,11 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', aoAtuali
           {diretor && <div className="perfil-aluno-acoes perfil-aluno-acoes-globais">
             <button type="button" className="perfil-aluno-botao" onClick={() => { setAcao('cadastro'); setMensagem(''); }}>Editar Cadastro</button>
             {aoVincularProfessor && (
-              <button type="button" className="perfil-aluno-botao" onClick={aoVincularProfessor}>Vincular a professor</button>
+              <button type="button" className="perfil-aluno-botao" onClick={aoVincularProfessor}>
+                {estagio?.professorOrientador && estagio.professorOrientador !== 'Sem orientador'
+                  ? 'Alterar / Desvincular Orientador'
+                  : 'Vincular a professor'}
+              </button>
             )}
             <button type="button" className="perfil-aluno-botao perfil-aluno-botao-perigo" disabled={!estagioEditavel}
               onClick={() => { setAcao('encerrar'); setMensagem(''); }}>Encerrar Estágio</button>

@@ -359,6 +359,16 @@ class ApiWorkflowTest extends TestCase
         $this->getJson('/api/orientador/meus-discentes')->assertForbidden();
         $this->assertDatabaseHas('estagios', ['id' => $id, 'professor_orientador_id' => $novo->id]);
 
+        $this->deleteJson($base.'/orientador')->assertOk()
+            ->assertJsonPath('data.professor_orientador_id', null);
+        $this->assertDatabaseHas('estagios', ['id' => $id, 'professor_orientador_id' => null]);
+        $this->getJson('/api/orientadores')->assertOk()
+            ->assertJsonPath('data.discentes_sem_orientador.0.estagios.0.id', $id);
+
+        $this->patchJson($base.'/orientador', [
+            'professor_orientador_id' => $novo->id,
+        ])->assertOk();
+
         $this->actingAs($primeiro, 'sanctum')->getJson($base)->assertForbidden();
         $this->getJson($base.'/documentos')->assertForbidden();
         $this->patchJson($analise, ['status' => 'DEFERIDO'])->assertForbidden();

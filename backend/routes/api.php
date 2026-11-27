@@ -52,6 +52,7 @@ Route::middleware(['auth:sanctum', 'ativo', 'throttle:api'])->group(function () 
     Route::middleware('account.active')->group(function (): void {
         Route::get('/orientadores', [OrientadorEstagioController::class, 'index'])->middleware('perfil:DIRETOR');
         Route::patch('/estagios/{estagio}/orientador', [OrientadorEstagioController::class, 'vincular'])->whereNumber('estagio');
+        Route::delete('/estagios/{estagio}/orientador', [OrientadorEstagioController::class, 'desvincular'])->whereNumber('estagio');
         Route::get('/orientador/meus-discentes', [OrientadorEstagioController::class, 'meusDiscentes'])->middleware('perfil:PROFESSOR');
     });
 

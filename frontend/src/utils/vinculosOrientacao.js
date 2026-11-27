@@ -10,5 +10,5 @@ export function listarVinculosOrientacao(dados) {
 }
 
 export function vinculoPodeSerAlterado({ estagio }) {
-  return ['RASCUNHO', 'EM_ANDAMENTO'].includes(estagio.status);
+  return ['RASCUNHO', 'EM_ANDAMENTO', 'EM_ANALISE'].includes(estagio.status);
 }

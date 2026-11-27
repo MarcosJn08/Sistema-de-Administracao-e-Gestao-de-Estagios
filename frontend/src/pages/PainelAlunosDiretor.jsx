@@ -135,6 +135,22 @@ function PainelAlunosDiretor() {
     setToast({ mensagem: `Estágio #${estagio.id} vinculado a ${orientador.nome}.`, tipo: 'sucesso' });
     recarregarVinculos();
   };
+  const desvincularOrientador = async (estagioId) => {
+    try {
+      await api.delete('/estagios/' + estagioId + '/orientador');
+      setVinculoAberto(false);
+      recarregarVinculos();
+      setToast({
+        mensagem: 'Orientador desvinculado com sucesso.',
+        tipo: 'sucesso',
+      });
+    } catch (error) {
+      setToast({
+        mensagem: error.message || 'Não foi possível desvincular o orientador.',
+        tipo: 'erro',
+      });
+    }
+  };
   const termo = normalizar(busca);
   const digitos = termo.replace(/\D/g, '');
   const buscaNumerica = /^[\d.\s/-]+$/.test(termo) && digitos.length > 0;
@@ -310,7 +326,7 @@ function PainelAlunosDiretor() {
       {alunoSelecionado && (vinculoAberto ? (
         <ModalVinculoOrientador aluno={alunoSelecionado} vinculos={estagiosDoAluno} orientadores={dadosOrientacao?.orientadores}
           carregando={carregandoVinculos} erroConsulta={erroVinculos} aoRecarregar={recarregarVinculos}
-          aoSalvar={vinculoSalvo} aoFechar={() => setVinculoAberto(false)} />
+          aoSalvar={vinculoSalvo} aoDesvincular={desvincularOrientador} aoFechar={() => setVinculoAberto(false)} />
       ) : (
         <DetalhesAluno key={alunoSelecionadoId} aberto aluno={alunoSelecionado} perfil={dadosDiretor.diretor.role}
           aoAtualizar={atualizarAluno} aoVincularProfessor={() => setVinculoAberto(true)}

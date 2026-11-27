@@ -47,7 +47,7 @@ function PainelOrientadoresDiretor() {
   const professorSelecionado = orientadores.find((professor) => professor.id === professorSelecionadoId);
   const estagiosDisponiveis = vinculoAberto
     ? listarVinculosOrientacao(dados).filter(vinculoPodeSerAlterado)
-      .filter(({ orientador }) => orientador?.id !== professorSelecionadoId)
+      .filter(({ orientador }) => !orientador || !orientador.id)
     : [];
   const termo = normalizar(busca);
   const filtrados = orientadores.filter((professor) => {
@@ -84,8 +84,19 @@ function PainelOrientadoresDiretor() {
 
   const vinculoSalvo = () => {
     setVinculoAberto(false);
-    setMensagem('Vínculo de orientação salvo.');
+    setMensagem('Vínculo de orientação salvo com sucesso.');
     recarregar();
+  };
+
+  const desvincularEstagio = async (estagioId) => {
+    try {
+      await api.delete('/estagios/' + estagioId + '/orientador');
+      setVinculoAberto(false);
+      setMensagem('Orientador desvinculado com sucesso.');
+      recarregar();
+    } catch (error) {
+      setMensagem(error.message || 'Não foi possível desvincular o orientador.');
+    }
   };
 
   const salvarProfessor = async (professor) => {
@@ -217,11 +228,11 @@ function PainelOrientadoresDiretor() {
       {professorSelecionado && (vinculoAberto ? (
         <ModalVinculoOrientador vinculos={estagiosDisponiveis} professor={professorSelecionado}
           carregando={carregando} erroConsulta={erro} aoRecarregar={recarregar}
-          aoSalvar={vinculoSalvo} aoFechar={() => setVinculoAberto(false)} />
+          aoSalvar={vinculoSalvo} aoDesvincular={desvincularEstagio} aoFechar={() => setVinculoAberto(false)} />
       ) : (
         <ModalProfessor key={professorSelecionadoId} aberto cadastroIntegrado professor={professorSelecionado}
           somenteLeitura={!professorSelecionado.cadastro_editavel} departamentos={opcoesCadastro} statusDisponiveis={['Ativo', 'Inativo']}
-          aoSalvar={salvarProfessor} aoFechar={() => setProfessorSelecionadoId(null)} mensagem={mensagem}
+          aoSalvar={salvarProfessor} aoDesvincular={desvincularEstagio} aoFechar={() => setProfessorSelecionadoId(null)} mensagem={mensagem}
           aoVincularEstagio={() => { setMensagem(''); setVinculoAberto(true); }} />
       ))}
       <Footer />

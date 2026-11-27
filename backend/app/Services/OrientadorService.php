@@ -27,7 +27,7 @@ class OrientadorService
     {
         return $this->carregarEstagios(Estagio::query())
             ->whereNull('professor_orientador_id')
-            ->whereIn('status', [StatusEstagio::RASCUNHO, StatusEstagio::EM_ANALISE])
+            ->whereIn('status', [StatusEstagio::RASCUNHO, StatusEstagio::EM_ANALISE, StatusEstagio::EM_ANDAMENTO])
             ->get();
     }
 
@@ -69,6 +69,22 @@ class OrientadorService
             }
 
             $estagio->orientador()->associate($orientador);
+            $estagio->save();
+
+            return $estagio;
+        }, 3);
+    }
+
+    public function desvincular(Estagio $estagio): Estagio
+    {
+        return DB::transaction(function () use ($estagio): Estagio {
+            $estagio = Estagio::whereKey($estagio->id)->lockForUpdate()->firstOrFail();
+
+            if ($estagio->estaFinalizado()) {
+                throw ValidationException::withMessages(['estagio' => 'O orientador de um estágio finalizado não pode ser alterado.']);
+            }
+
+            $estagio->orientador()->dissociate();
             $estagio->save();
 
             return $estagio;

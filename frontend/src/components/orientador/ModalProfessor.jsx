@@ -6,7 +6,7 @@ import Button from '../Button/Button.jsx';
 import './ModalProfessor.css';
 
 function ModalProfessor({
-  aberto, professor, departamentos, statusDisponiveis, aoSalvar, aoFechar, aoVincularEstagio, mensagem,
+  aberto, professor, departamentos, statusDisponiveis, aoSalvar, aoDesvincular, aoFechar, aoVincularEstagio, mensagem,
   somenteLeitura = false, cadastroIntegrado = false,
 }) {
   const cadastro = !professor;
@@ -106,11 +106,41 @@ function ModalProfessor({
                 {!somenteLeitura && <div><dt>Ingresso</dt><dd>{professor.novoNesteSemestre ? 'Neste semestre' : 'Semestre anterior'}</dd></div>}
                 {somenteLeitura && <div><dt>Estágios em andamento</dt><dd>{professor.estagios_ativos}</dd></div>}
               </dl>
-              {professor.discentes && <section aria-label="Discentes vinculados">
-                <h3 className="fs-6">Discentes vinculados</h3>
-                {professor.discentes.length ? <ul>
-                  {professor.discentes.map((discente) => <li key={discente.id}>{discente.nome} · {discente.matricula}</li>)}
-                </ul> : <p>Nenhum discente vinculado.</p>}
+              {professor.discentes && <section aria-label="Discentes vinculados" className="mt-3">
+                <h3 className="fs-6 fw-bold mb-2">Discentes vinculados</h3>
+                {professor.discentes.length ? (
+                  <ul className="list-unstyled mb-0">
+                    {professor.discentes.map((discente) => {
+                      const estagio = discente.estagios?.[0];
+                      return (
+                        <li key={discente.id} className="d-flex justify-content-between align-items-center py-2 border-bottom flex-wrap gap-2">
+                          <div>
+                            <span className="fw-semibold">{discente.nome}</span> · <span className="text-secondary small">{discente.matricula}</span>
+                            {estagio && (
+                              <span className="d-block text-secondary small">
+                                {estagio.empresa} (#{estagio.id})
+                              </span>
+                            )}
+                          </div>
+                          {aoDesvincular && estagio && (
+                            <Button
+                              tipo="botao-acao-contorno"
+                              size="sm"
+                              className="btn-sm py-1 px-2 text-danger border-danger"
+                              onClick={() => {
+                                if (window.confirm(`Deseja realmente desvincular o discente ${discente.nome} deste orientador?`)) {
+                                  aoDesvincular(estagio.id);
+                                }
+                              }}
+                            >
+                              Desvincular
+                            </Button>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : <p className="text-secondary small">Nenhum discente vinculado.</p>}
               </section>}
             </div>
           ) : (
