@@ -3,7 +3,7 @@ import { Card } from "react-bootstrap";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import Button from "../components/Button/Button.jsx";
-import Status from "../components/status/status.jsx";
+import StatusBadge from "../components/StatusBadge.jsx";
 import Icone from "../components/Icone/Icone.jsx";
 import InfoItem from "../components/Documentos/InfoItem.jsx";
 import Bloco from "../components/Documentos/Bloco.jsx";
@@ -37,7 +37,7 @@ function EnviarDocumento() {
               <Icone elemento="file-earmark-text" fundo="#d7f7e5" />
               <div>
                 <h1 className="fs-5 fw-bold mb-1">{tce.titulo}</h1>
-                <Status nome={tce.status} tipo="status-aprovado" />
+                <StatusBadge status={tce.status} className="card-estagio-status status-aprovado" />
               </div>
             </div>
 
