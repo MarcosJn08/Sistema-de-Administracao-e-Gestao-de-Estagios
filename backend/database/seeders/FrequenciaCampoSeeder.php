@@ -125,29 +125,23 @@ class FrequenciaCampoSeeder extends Seeder
 
     private function gerarFrequencias(Estagio $estagio, int $professorId, int $alunoId): void
     {
-        $diasPassados = collect();
         $data = today()->subWeeks(3)->startOfWeek();
 
         while ($data->lte(today()->subDay())) {
             if (! $data->isWeekend()) {
-                $diasPassados->push($data->toDateString());
+                $faltou = $data->dayOfWeek === 5;
+
+                FrequenciaDiariaCampo::factory()
+                    ->for($estagio)
+                    ->naData($data->toDateString())
+                    ->when($faltou, fn ($f) => $f->falta(), fn ($f) => $f->presente())
+                    ->createQuietly([
+                        'aluno_id'     => $alunoId,
+                        'professor_id' => $professorId,
+                    ]);
             }
+
             $data->addDay();
-        }
-
-        foreach ($diasPassados as $i => $dia) {
-            $faltou = $i % 7 === 4;
-
-            FrequenciaDiariaCampo::firstOrCreate(
-                ['estagio_id' => $estagio->id, 'data' => $dia],
-                [
-                    'aluno_id' => $alunoId,
-                    'professor_id' => $professorId,
-                    'presente' => ! $faltou,
-                    'horas_cumpridas' => $faltou ? 0 : 6.0,
-                    'observacoes' => $faltou ? 'Falta justificada' : null,
-                ]
-            );
         }
     }
 }
