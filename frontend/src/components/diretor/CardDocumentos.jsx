@@ -43,16 +43,10 @@ function CardDocumentos({
                 <div className="d-flex justify-content-center gap-2 align-items-center">
                   {doc.acoes?.map((acao, index) => <BotaoAcao
                     key={`${doc.id}-${acao}-${index}`}
-<<<<<<< HEAD
-                    tipo={acao}
-                    aria-label={`${acao} ${doc.descricao} de ${doc.nome}`}
-                    aoClicar={() => lidarComAcao && lidarComAcao(doc, acao)}
-=======
                     texto={acao}
                     tamanhoIcone={15}
                     aria-label={`${acao} ${doc.descricao} de ${doc.nome}`}
                     onClick={() => lidarComAcao && lidarComAcao(doc, acao)}
->>>>>>> origin/main
                   />)}
                 </div>
               </td>
