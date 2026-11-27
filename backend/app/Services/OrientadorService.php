@@ -27,7 +27,7 @@ class OrientadorService
     {
         return $this->carregarEstagios(Estagio::query())
             ->whereNull('professor_orientador_id')
-            ->where('status', StatusEstagio::RASCUNHO)
+            ->whereIn('status', [StatusEstagio::RASCUNHO, StatusEstagio::EM_ANALISE])
             ->get();
     }
 

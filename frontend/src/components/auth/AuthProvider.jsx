@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../hooks/useAuth.js';
 import api, { configureApiAuth } from '../../services/api.js';
 
+import { definirAlunoAutenticado } from '../../utils/alunoAutenticado.js';
+
 const initialSession = { user: null, token: null, error: '', expiresAt: null };
 const sessionKey = 'sage-auth-session';
 const expiredSession = { ...initialSession, error: 'Seu acesso expirou. Entre novamente.' };
@@ -27,6 +29,7 @@ export default function AuthProvider({ children }) {
   const navigate = useNavigate();
 
   const updateSession = useCallback((nextSession) => {
+    definirAlunoAutenticado(nextSession.user);
     sessionRef.current = nextSession;
     setSession(nextSession);
     try {
@@ -102,6 +105,20 @@ export default function AuthProvider({ children }) {
     return user;
   }, [updateSession]);
 
+  const loginComGoogleCallback = useCallback(async (code) => {
+    const { data: result } = await api.post('/auth/google/callback', { code }, {
+      skipAuth: true,
+      notifyUnauthorized: false,
+    });
+    const user = result.data;
+    updateSession({ user, token: result.token, error: '', expiresAt: result.expires_at });
+    return user;
+  }, [updateSession]);
+
+  const aplicarSessaoGoogle = useCallback((token, expiresAt, role) => {
+    updateSession({ user: { role }, token, error: '', expiresAt });
+  }, [updateSession]);
+
   const logout = useCallback(async () => {
     const token = sessionRef.current.token;
     try {
@@ -119,6 +136,8 @@ export default function AuthProvider({ children }) {
     isAuthenticated: Boolean(session.user && session.token),
     hasRole,
     login,
+    loginComGoogleCallback,
+    aplicarSessaoGoogle,
     logout,
     clearResetAccountSession,
   }), [session, hasRole, login, logout, clearResetAccountSession]);

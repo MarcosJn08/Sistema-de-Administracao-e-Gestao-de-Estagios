@@ -26,13 +26,45 @@ class EstagioService
             $supervisor = SupervisorEmpresa::findOrFail($dados['supervisor_empresa_id']);
             $this->validarVinculos($empresa, $orientador, $aluno, $supervisor);
             $dados['status'] = StatusEstagio::RASCUNHO;
+            $dados['curso_id'] = $aluno->turma->curso_id;
+            if (isset($dados['meta_horas_tce'])) {
+                app(ContratoEstagioService::class)->validar(new Estagio($dados));
+            }
 
             return Estagio::create($dados);
         });
     }
 
+    public function atualizar(Estagio $estagio, array $dados): Estagio
+    {
+        return DB::transaction(function () use ($estagio, $dados) {
+            $estagio = Estagio::whereKey($estagio->id)->lockForUpdate()->firstOrFail();
+            if ($estagio->estaFinalizado()) {
+                throw ValidationException::withMessages(['estagio' => 'Contrato finalizado não pode ser alterado.']);
+            }
+            $estagio->fill($dados);
+            if ($estagio->curso_id === null) {
+                $cursoId = $estagio->aluno->turma?->curso_id;
+                if (! $cursoId) {
+                    throw ValidationException::withMessages(['curso_id' => 'Regularize o vínculo acadêmico do aluno.']);
+                }
+                $estagio->curso_id = $cursoId;
+            }
+            app(ContratoEstagioService::class)->validar($estagio);
+            $estagio->save();
+
+            return $estagio;
+        }, 3);
+    }
+
     private function validarVinculos(EmpresaConcedente $empresa, ?ProfessorOrientador $orientador, Aluno $aluno, SupervisorEmpresa $supervisor): void
     {
+        if (! $aluno->turma?->curso || ! $aluno->usuario) {
+            throw ValidationException::withMessages(['aluno_id' => 'Aluno precisa possuir vínculos acadêmicos completos.']);
+        }
+        if ($orientador && ! $orientador->usuario) {
+            throw ValidationException::withMessages(['aluno_id' => 'Orientador precisa possuir vínculos completos.']);
+        }
         if (! $empresa->convenioAtivo()) {
             throw ValidationException::withMessages(['empresa_concedente_id' => 'A empresa não possui convênio ativo.']);
         }
@@ -57,7 +89,8 @@ class EstagioService
             $estagio = Estagio::whereKey($estagio->id)->lockForUpdate()->firstOrFail();
             $origem = $estagio->status;
             $permitidos = match ($origem) {
-                StatusEstagio::RASCUNHO => [StatusEstagio::EM_ANDAMENTO, StatusEstagio::ENCERRADO],
+                StatusEstagio::RASCUNHO => [StatusEstagio::EM_ANALISE, StatusEstagio::EM_ANDAMENTO, StatusEstagio::ENCERRADO],
+                StatusEstagio::EM_ANALISE => [StatusEstagio::EM_ANDAMENTO, StatusEstagio::ENCERRADO],
                 StatusEstagio::EM_ANDAMENTO => [StatusEstagio::CONCLUIDO, StatusEstagio::ENCERRADO, StatusEstagio::CANCELADO_DESVIO_FUNCAO],
                 default => [],
             };
@@ -86,6 +119,12 @@ class EstagioService
             }
             if (in_array($destino, [StatusEstagio::ENCERRADO, StatusEstagio::CANCELADO_DESVIO_FUNCAO], true) && ! $motivo) {
                 throw ValidationException::withMessages(['motivo' => 'Informe o motivo do encerramento.']);
+            }
+            if (in_array($destino, [StatusEstagio::EM_ANALISE, StatusEstagio::EM_ANDAMENTO], true)) {
+                app(ContratoEstagioService::class)->validar($estagio);
+            }
+            if (in_array($destino, [StatusEstagio::ENCERRADO, StatusEstagio::CANCELADO_DESVIO_FUNCAO], true)) {
+                $estagio->fill(['encerrado_em' => now(), 'motivo_encerramento' => $motivo]);
             }
             $estagio->update(['status' => $destino]);
             DB::table('historico_estagios')->insert(['estagio_id' => $estagio->id, 'usuario_id' => $autor, 'status_anterior' => $origem->value, 'status_novo' => $destino->value, 'motivo' => $motivo, 'created_at' => now()]);

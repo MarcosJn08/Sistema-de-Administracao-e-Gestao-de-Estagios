@@ -13,6 +13,7 @@ use App\Models\SupervisorEmpresa;
 use App\Models\Turma;
 use App\Models\User;
 use App\Models\Usuario;
+use App\Services\EstagioService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -45,15 +46,22 @@ class ApiWorkflowTest extends TestCase
         $professor = ProfessorOrientador::create(['usuario_id' => $this->professorUser->id, 'siape_matricula' => 'P1', 'departamento_area' => 'TI', 'max_orientados' => 1]);
         $empresa = EmpresaConcedente::create(['cnpj' => '12345678000190', 'razao_social' => 'Empresa', 'endereco_completo' => 'Rua', 'representante_legal' => 'Responsável', 'status_convenio' => 'ATIVO']);
         $supervisor = SupervisorEmpresa::create(['empresa_concedente_id' => $empresa->id, 'usuario_id' => $this->supervisorUser->id, 'nome' => 'Supervisor', 'cargo' => 'Supervisor', 'formacao' => 'TI', 'telefone' => '123', 'email' => 'supervisor@example.test']);
-        $this->payload = ['aluno_id' => $aluno->id, 'empresa_concedente_id' => $empresa->id, 'professor_orientador_id' => $professor->id, 'supervisor_empresa_id' => $supervisor->id, 'modalidade' => 'ORIENTADO', 'data_inicio' => now()->subDays(10)->toDateString(), 'data_termino' => now()->addDays(10)->toDateString(), 'carga_horaria_diaria' => 6];
+        $this->payload = ['aluno_id' => $aluno->id, 'empresa_concedente_id' => $empresa->id, 'professor_orientador_id' => $professor->id, 'supervisor_empresa_id' => $supervisor->id, 'modalidade' => 'ORIENTADO', 'data_inicio' => now()->subDays(10)->toDateString(), 'data_termino' => now()->addDays(10)->toDateString(), 'carga_horaria_diaria' => 6, 'carga_horaria_semanal' => 15, 'meta_horas_tce' => 200];
+        $this->payload['cargo'] = 'Desenvolvimento';
+        $this->payload['termo_formalizado'] = UploadedFile::fake()->create('termo.pdf', 10, 'application/pdf');
+        $this->withHeaders(['Accept' => 'application/json']);
         Storage::fake('local');
     }
 
     private function stage(): Estagio
     {
-        $id = $this->actingAs($this->diretor, 'sanctum')->postJson('/api/estagios', $this->payload)->assertCreated()->json('data.id');
+        // Fixture em rascunho para testar o fluxo documental desde o início.
+        // A criação HTTP com termo obrigatório é coberta em EstagioContratoTest.
+        $this->actingAs($this->diretor, 'sanctum');
+        $dados = $this->payload;
+        unset($dados['termo_formalizado']);
 
-        return Estagio::findOrFail($id);
+        return app(EstagioService::class)->criar($dados);
     }
 
     private function prepare(Estagio $estagio): void
@@ -121,7 +129,7 @@ class ApiWorkflowTest extends TestCase
     {
         $this->getJson('/api/usuarios')->assertUnauthorized()->assertJsonPath('success', false);
         $this->actingAs($this->alunoUser, 'sanctum')->getJson('/api/usuarios')->assertForbidden();
-        $this->postJson('/api/estagios', $this->payload)->assertForbidden();
+        $this->post('/api/estagios', $this->payload)->assertForbidden();
     }
 
     public function test_unrelated_users_cannot_read_or_mutate_another_stage(): void
@@ -130,7 +138,7 @@ class ApiWorkflowTest extends TestCase
         foreach ([UserRole::ALUNO, UserRole::PROFESSOR, UserRole::EMPRESA] as $role) {
             $outsider = Usuario::factory()->create(['perfil' => $role]);
             $this->actingAs($outsider, 'sanctum')->getJson('/api/estagios/'.$stage->id)->assertForbidden();
-            $this->getJson('/api/estagios')->assertOk()->assertJsonPath('data.total', 0);
+            $this->getJson('/api/estagios')->assertOk()->assertJsonPath('meta.total', 0);
             $this->postJson('/api/estagios/'.$stage->id.'/documentos', [])->assertForbidden();
         }
     }
@@ -138,13 +146,13 @@ class ApiWorkflowTest extends TestCase
     public function test_creation_rejects_invalid_company_supervisor_dates_and_status(): void
     {
         $this->actingAs($this->diretor, 'sanctum');
-        $this->postJson('/api/estagios', $this->payload + ['status' => 'CONCLUIDO'])->assertUnprocessable();
-        $this->postJson('/api/estagios', array_replace($this->payload, ['data_termino' => '2000-01-01']))->assertUnprocessable();
+        $this->post('/api/estagios', $this->payload + ['status' => 'CONCLUIDO'])->assertUnprocessable();
+        $this->post('/api/estagios', array_replace($this->payload, ['data_termino' => '2000-01-01']))->assertUnprocessable();
         EmpresaConcedente::first()->update(['status_convenio' => 'EXPIRADO']);
-        $this->postJson('/api/estagios', $this->payload)->assertUnprocessable();
+        $this->post('/api/estagios', $this->payload)->assertUnprocessable();
         EmpresaConcedente::first()->update(['status_convenio' => 'ATIVO']);
         $other = EmpresaConcedente::create(['cnpj' => '99999999000199', 'razao_social' => 'Outra', 'endereco_completo' => 'Rua', 'representante_legal' => 'Outro', 'status_convenio' => 'ATIVO']);
-        $this->postJson('/api/estagios', array_replace($this->payload, ['empresa_concedente_id' => $other->id]))->assertUnprocessable();
+        $this->post('/api/estagios', array_replace($this->payload, ['empresa_concedente_id' => $other->id]))->assertUnprocessable();
     }
 
     public function test_activation_requires_documents_and_rechecks_professor_capacity(): void
@@ -273,7 +281,7 @@ class ApiWorkflowTest extends TestCase
         $stage->update(['data_termino' => now()->subDay()]);
         $this->actingAs($this->diretor, 'sanctum')->patchJson('/api/estagios/'.$stage->id.'/status', ['status' => 'EM_ANDAMENTO'])->assertUnprocessable();
         Turma::first()->update(['status' => 'encerrada']);
-        $this->postJson('/api/estagios', $this->payload)->assertUnprocessable();
+        $this->post('/api/estagios', $this->payload)->assertUnprocessable();
     }
 
     public function test_report_approval_and_evaluations_follow_roles_and_lock_after_approval(): void

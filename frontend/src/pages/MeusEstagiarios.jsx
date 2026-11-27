@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { useEffect, useState, useMemo } from 'react';
+import { Alert, Modal, Row, Col } from 'react-bootstrap';
 import {
   AlertCircle,
   CalendarClock,
@@ -13,21 +13,78 @@ import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import Botao from "../components/Button/Button.jsx";
 import CardMetricaEmpresa from '../components/empresa/CardMetricaEmpresa.jsx';
-import ModalDetalhesEstagiario from '../components/empresa/ModalDetalhesEstagiario.jsx';
+import { useNavigate, useParams } from 'react-router-dom';
+import api from '../services/api.js';
 import Paginacao from '../components/Paginacao.jsx';
-import dadosEmpresa, { estagiariosEmpresa } from '../data/empresa.js';
 import './MeusEstagiarios.css';
 
+const estados = { RASCUNHO: 'Rascunho', EM_ANALISE: 'Em análise', EM_ANDAMENTO: 'Em andamento', CONCLUIDO: 'Concluído', ENCERRADO: 'Encerrado', CANCELADO_DESVIO_FUNCAO: 'Cancelado por desvio de função' };
+const data = (valor) => valor ? new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' }).format(new Date(`${valor}T00:00:00Z`)) : 'Não informado';
+
+const adaptar = c => ({
+  id: c.id, nome: c.aluno.nome || 'Não informado', cargo: c.cargo || 'Estágio', curso: c.curso?.nome || 'Não informado',
+  status: c.status === 'EM_ANDAMENTO' ? 'Ativo' : ['RASCUNHO', 'EM_ANALISE'].includes(c.status) ? 'Em Integração' : estados[c.status],
+  inicio: data(c.data_inicio), termino: data(c.data_termino), dataTermino: c.data_termino,
+  documentos: c.documentos,
+});
+
 function MeusEstagiarios() {
-  const [estagiarios, setEstagiarios] = useState(
-    dadosEmpresa.empresa?.estagiarios || estagiariosEmpresa || []
-  );
+  const [estagiarios, setEstagiarios] = useState([]);
+  const [agora] = useState(() => Date.now());
+
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState('');
+  const [tentativa, setTentativa] = useState(0);
+  useEffect(() => {
+    const controller = new AbortController();
+    async function carregar() {
+      try {
+        const registros = [];
+        let pagina = 1;
+        let ultima = 1;
+        do {
+          const { data: resposta } = await api.get('/estagios', { params: { page: pagina, per_page: 100 }, signal: controller.signal });
+          registros.push(...resposta.data);
+          ultima = resposta.meta.last_page;
+          pagina += 1;
+        } while (pagina <= ultima);
+        if (!controller.signal.aborted) setEstagiarios(registros.map(adaptar));
+      } catch (e) {
+        if (!controller.signal.aborted) setErro(e.message);
+      } finally {
+        if (!controller.signal.aborted) setCarregando(false);
+      }
+    }
+    carregar();
+    return () => controller.abort();
+  }, [tentativa]);
   const [busca, setBusca] = useState('');
   const [filtroStatus, setFiltroStatus] = useState('Ativos');
   const [paginaAtual, setPaginaAtual] = useState(1);
-  const [estagiarioSelecionado, setEstagiarioSelecionado] = useState(null);
-  const [modalDetalhesAberto, setModalDetalhesAberto] = useState(false);
-  const [mensagemToast, setMensagemToast] = useState(null);
+  const navigate = useNavigate();
+  const { id: idRota } = useParams();
+  const [selecionado, setSelecionado] = useState(null);
+  const id = selecionado || idRota;
+  const [estado, setEstado] = useState({ carregando: true });
+  const [erroDownload, setErroDownload] = useState('');
+  useEffect(() => {
+    if (!id) return;
+    const controller = new AbortController();
+    api.get(`/estagios/${id}`, { signal: controller.signal })
+      .then(({ data }) => { if (!controller.signal.aborted) setEstado({ id, contrato: data.data }); })
+      .catch((e) => { if (!controller.signal.aborted) setEstado({ id, erro: e.status === 404 ? 'Contrato não encontrado.' : e.message }); });
+    return () => controller.abort();
+  }, [id]);
+  async function baixar(documento) {
+    setErroDownload('');
+    try {
+      const { data } = await api.get(`/estagios/${id}/documentos/${documento.id}/download`, { responseType: 'blob' });
+      const url = URL.createObjectURL(data);
+      const link = document.createElement('a'); link.href = url; link.download = `documento-${documento.id}.pdf`; link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (e) { setErroDownload(e.message); }
+  }
+
   const itensPorPagina = 10;
 
   const metricas = useMemo(() => {
@@ -35,19 +92,19 @@ function MeusEstagiarios() {
     const emIntegracao = estagiarios.filter((e) => e.status === 'Em Integração').length;
     const docsPendentes = estagiarios.reduce((acc, curr) => {
       const temPendente = curr.documentos?.some(
-        (d) => d.status === 'Pendente' || d.status === 'Pendente de Envio'
+        (d) => ['PENDENTE', 'EM_ANALISE', 'NECESSITA_AJUSTES'].includes(d.status)
       );
       return temPendente ? acc + 1 : acc;
     }, 0);
-    const proximosVencer = 1;
+    const proximosVencer = estagiarios.filter(e => e.status === 'Ativo' && new Date(`${e.dataTermino}T23:59:59`) >= new Date(agora) && new Date(`${e.dataTermino}T23:59:59`) <= new Date(agora + 30 * 86400000)).length;
 
     return {
-      ativos: ativos || 5,
-      emIntegracao: emIntegracao || 2,
-      docsPendentes: docsPendentes || 3,
+      ativos,
+      emIntegracao,
+      docsPendentes,
       proximosVencer,
     };
-  }, [estagiarios]);
+  }, [estagiarios, agora]);
 
   const estagiariosFiltrados = useMemo(() => {
     return estagiarios.filter((item) => {
@@ -78,39 +135,10 @@ function MeusEstagiarios() {
     return estagiariosFiltrados.slice(inicio, inicio + itensPorPagina);
   }, [estagiariosFiltrados, paginaAtual, itensPorPagina]);
 
-  const exibirToast = (msg) => {
-    setMensagemToast(msg);
-    setTimeout(() => setMensagemToast(null), 3000);
-  };
-
-  const abrirDetalhes = (estagiario) => {
-    setEstagiarioSelecionado(estagiario);
-    setModalDetalhesAberto(true);
-  };
-
-  const lidarComSalvarAvaliacao = (estagiarioId, novaAvaliacao) => {
-    setEstagiarios((prev) =>
-      prev.map((item) => {
-        if (item.id === estagiarioId) {
-          const avaliacoesAtualizadas = [novaAvaliacao, ...(item.avaliacoes || [])];
-          return { ...item, avaliacoes: avaliacoesAtualizadas };
-        }
-        return item;
-      })
-    );
-
-    setEstagiarioSelecionado((prev) => {
-      if (prev && prev.id === estagiarioId) {
-        return {
-          ...prev,
-          avaliacoes: [novaAvaliacao, ...(prev.avaliacoes || [])],
-        };
-      }
-      return prev;
-    });
-
-    exibirToast('Avaliação registrada com sucesso!');
-  };
+  const abrirDetalhes = (estagiario) => { setEstado({ carregando: true }); setErroDownload(''); setSelecionado(estagiario.id); };
+  const respostaAtual = String(estado.id) === String(id);
+  const c = respostaAtual ? estado.contrato : null;
+  const percentual = c?.meta_horas_tce ? Math.min(100, Number(c.horas_cumpridas) / Number(c.meta_horas_tce) * 100) : 0;
 
   const linksNavegacaoEmpresa = [
     ['Dashboard', '/sage/empresa'],
@@ -135,22 +163,12 @@ function MeusEstagiarios() {
       <Header
         paginaAtiva="Estagiários"
         customLinks={linksNavegacaoEmpresa}
-        usuario={{
-          nome: dadosEmpresa.empresa?.nome || 'Shelby LTDA',
-          tipo: 'empresa',
-        }}
-        mostrarBotaoSair={false}
       />
 
       <main className="flex-grow-1">
         <div className="meus-estagiarios-container">
-          {mensagemToast && (
-            <div className="alerta-toast-sucesso">
-              <CheckCircle2 size={18} />
-              {mensagemToast}
-            </div>
-          )}
-
+{carregando && <p role="status">Carregando estágios…</p>}
+          {erro && <Alert variant="danger">{erro} <button type="button" onClick={() => { setErro(''); setCarregando(true); setTentativa(t => t + 1); }}>Tentar novamente</button></Alert>}
           <div className="meus-estagiarios-header">
             <h1 className="meus-estagiarios-title">Meus Estagiários</h1>
             <p className="meus-estagiarios-subtitle">
@@ -272,7 +290,7 @@ function MeusEstagiarios() {
                   ) : (
                     <tr>
                       <td colSpan="7" className="tabela-estagiarios-vazia">
-                        Nenhum estagiário encontrado com os filtros aplicados.
+                        {carregando ? 'Carregando…' : erro ? 'Não foi possível carregar os contratos.' : 'Nenhum estagiário encontrado com os filtros aplicados.'}
                       </td>
                     </tr>
                   )}
@@ -292,12 +310,32 @@ function MeusEstagiarios() {
         </div>
       </main>
 
-      <ModalDetalhesEstagiario
-        aberto={modalDetalhesAberto}
-        estagiario={estagiarioSelecionado}
-        aoFechar={() => setModalDetalhesAberto(false)}
-        aoSalvarAvaliacao={lidarComSalvarAvaliacao}
-      />
+      <Modal show={Boolean(id)} size="lg" onHide={() => { setSelecionado(null); if (idRota) navigate('/sage/empresa/estagiarios'); }}>
+        <Modal.Header closeButton><Modal.Title>Contrato do estagiário</Modal.Title></Modal.Header>
+        <Modal.Body>
+          {(!respostaAtual || estado.carregando) && <p role="status">Carregando contrato…</p>}
+          {respostaAtual && estado.erro && <Alert variant="danger">{estado.erro}</Alert>}
+          {c && <>
+    <h2>{c.cargo || 'Contrato de estágio'}</h2><p>{estados[c.status] || c.status}</p>
+    <dl className="row">
+      {Object.entries({ Aluno: c.aluno.nome, Matrícula: c.aluno.matricula, Curso: c.curso?.nome,
+        Empresa: c.empresa.razao_social, CNPJ: c.empresa.cnpj, Supervisor: c.supervisor.nome,
+        Orientador: c.orientador.nome, Início: data(c.data_inicio), Término: data(c.data_termino),
+        Modalidade: c.modalidade, 'Horas por semana': c.carga_horaria_semanal,
+        'Teto de horas do TCE': c.meta_horas_tce, 'Horas assinadas': c.horas_cumpridas,
+        'Horas restantes do TCE': c.horas_restantes_tce, 'Apólice de seguro': c.apolice?.numero_apolice,
+        Seguradora: c.apolice?.nome_seguradora,
+      }).map(([nome, valor]) => <div className="col-md-6 mb-3" key={nome}><dt>{nome}</dt><dd>{valor ?? 'Não informado'}</dd></div>)}
+    </dl>
+    {c.meta_horas_tce && <><label htmlFor={`progresso-${id}`}>Progresso do TCE: {percentual.toFixed(1)}%</label><progress className="w-100" id={`progresso-${id}`} max="100" value={percentual} /></>}
+    <h3 className="mt-4">Plano de atividades</h3>
+    {c.plano ? <><p>{c.plano.objetivos}</p><p style={{ whiteSpace: 'pre-wrap' }}>{c.plano.atividades_previstas}</p><p>{c.plano.cronograma}</p></> : <p>Plano ainda não cadastrado.</p>}
+    {c.encerrado_em && <p>Encerrado em {new Date(c.encerrado_em).toLocaleString('pt-BR')}: {c.motivo_encerramento}</p>}
+    <h3>Documentos</h3>{erroDownload && <Alert variant="danger">{erroDownload}</Alert>}
+    {c.documentos.length ? <ul>{c.documentos.map((d) => <li key={d.id}>{d.tipo} — {d.status} <button type="button" className="btn btn-link" onClick={() => baixar(d)}>Baixar PDF</button></li>)}</ul> : <p>Nenhum documento cadastrado.</p>}
+  </>}
+        </Modal.Body>
+      </Modal>
 
       <Footer />
     </div>

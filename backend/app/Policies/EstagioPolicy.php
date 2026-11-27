@@ -8,6 +8,21 @@ use App\Models\User;
 
 class EstagioPolicy
 {
+    public function viewAny(User $usuario): bool
+    {
+        return true;
+    }
+
+    public function create(User $usuario): bool
+    {
+        return $usuario->temPerfil(UserRole::DIRETOR, UserRole::EMPRESA);
+    }
+
+    public function update(User $usuario, Estagio $estagio): bool
+    {
+        return $usuario->temPerfil(UserRole::DIRETOR);
+    }
+
     public function view(User $usuario, Estagio $estagio): bool
     {
         return $usuario->temPerfil(UserRole::DIRETOR)

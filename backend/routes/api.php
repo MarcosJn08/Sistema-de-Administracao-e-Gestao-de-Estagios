@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CursoController;
+use App\Http\Controllers\Api\GoogleAuthController;
 use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\CadastroController;
 use App\Http\Controllers\ComplementoEstagioController;
+use App\Http\Controllers\ContratoEstagioController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EstagioController;
 use App\Http\Controllers\FrequenciaController;
@@ -20,6 +22,11 @@ Route::get('/cursos/{curso}', [CursoController::class, 'show']);
 Route::prefix('auth')->name('auth.')->group(function (): void {
     Route::post('/login', [AuthController::class, 'login'])
         ->middleware('throttle:auth-login')->name('login');
+
+    Route::prefix('google')->name('google.')->group(function (): void {
+        Route::get('/redirect', [GoogleAuthController::class, 'redirect'])->name('redirect');
+        Route::match(['get', 'post'], '/callback', [GoogleAuthController::class, 'callback'])->name('callback');
+    });
 
     Route::middleware('throttle:10,1')->name('password.')->group(function (): void {
         Route::post('/esqueci-senha', [PasswordResetController::class, 'esqueciSenha'])->name('forgot');
@@ -48,9 +55,7 @@ Route::middleware(['auth:sanctum', 'ativo', 'throttle:api'])->group(function () 
         Route::get('/orientador/meus-discentes', [OrientadorEstagioController::class, 'meusDiscentes'])->middleware('perfil:PROFESSOR');
     });
 
-    Route::get('/estagios', [EstagioController::class, 'index']);
-    Route::post('/estagios', [EstagioController::class, 'store']);
-    Route::get('/estagios/{estagio}', [EstagioController::class, 'show']);
+    Route::apiResource('estagios', ContratoEstagioController::class)->only(['index', 'store', 'show', 'update']);
     Route::patch('/estagios/{estagio}/status', [EstagioController::class, 'status']);
     Route::get('/estagios/{estagio}/documentos', [DocumentoController::class, 'index']);
     Route::post('/estagios/{estagio}/documentos', [DocumentoController::class, 'store']);

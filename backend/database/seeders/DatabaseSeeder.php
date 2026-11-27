@@ -16,10 +16,10 @@ class DatabaseSeeder extends Seeder
         $curso->turmas()->firstOrCreate(['nome' => 'SI 2026.1', 'ano' => 2026, 'semestre' => 1], ['turno' => 'noturno']);
 
         $this->call([
-            CursoSeeder::class,
             UsuarioSeeder::class,
             AlunoSeeder::class,
             ProfessorOrientadorSeeder::class,
+            EstagioSeeder::class,
         ]);
     }
 }

@@ -10,7 +10,7 @@ import ListaCandidaturasAluno from '../components/aluno/ListaCandidaturasAluno.j
 import ModalCandidatura from '../components/vagas/ModalCandidatura.jsx';
 import useCandidaturasAluno from '../hooks/useCandidaturasAluno.js';
 import { apresentarStatusCandidatura } from '../utils/candidaturaAluno.js';
-import dados from '../data/aluno.js';
+
 import vagas from '../data/vagas.json';
 import './MinhasCandidaturasAluno.css';
 
@@ -36,7 +36,7 @@ export default function MinhasCandidaturasAluno() {
 
   return (
     <div className="minhas-candidaturas-pagina d-flex flex-column min-vh-100">
-      <Header usuario={dados.aluno} paginaAtiva="Candidaturas" />
+      <Header paginaAtiva="Candidaturas" />
       <main className="flex-grow-1 py-4">
         <Container className="minhas-candidaturas-container">
           <div className="minhas-candidaturas-cabecalho">
