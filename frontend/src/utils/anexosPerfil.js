@@ -1,4 +1,4 @@
-import dados from '../data/aluno.js';
+import { chaveAlunoAutenticado } from './alunoAutenticado.js';
 
 export const MAX_ANEXOS = 5;
 export const MAX_TAMANHO_ANEXO = 5 * 1024 * 1024;
@@ -6,7 +6,7 @@ const tipos = { pdf: 'application/pdf', png: 'image/png', jpg: 'image/jpeg', jpe
 
 function abrirBanco() {
   return new Promise((resolve, reject) => {
-    const pedido = indexedDB.open(`sage-anexos-${dados.aluno.matricula}`, 1);
+    const pedido = indexedDB.open(`sage-anexos-${chaveAlunoAutenticado()}`, 1);
     pedido.onupgradeneeded = () => pedido.result.createObjectStore('arquivos');
     pedido.onsuccess = () => resolve(pedido.result);
     pedido.onerror = () => reject(new Error('Não foi possível acessar os anexos neste navegador.'));

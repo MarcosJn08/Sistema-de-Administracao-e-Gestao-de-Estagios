@@ -51,7 +51,7 @@ Listagens aceitam `page` e `per_page` (padrão 20, máximo 100), exceto o histó
 | POST | `/api/auth/login` | Público | `identifier`, `password`; retorna usuário em `data` e `token`, `token_type`, `expires_at` no nível superior |
 | POST | `/api/auth/esqueci-senha` | Público | `email`; solicita recuperação, sem revelar se a conta existe |
 | POST | `/api/auth/redefinir-senha` | Público | `email`, `token`, `password`, `password_confirmation` |
-| GET | `/api/auth/me` | Autenticado e ativo | Dados da conta autenticada |
+| GET | `/api/auth/me` | Autenticado e ativo | Dados da conta autenticada; para aluno, `formacao` e `progresso` acadêmico |
 | POST | `/api/auth/logout` | Autenticado | Revoga o token atual; resposta 204 |
 
 Exemplo de login no Postman: método POST, URL `http://127.0.0.1:8000/api/auth/login`, Body → raw → JSON:
@@ -278,3 +278,32 @@ Com `BACKUP_ENABLED=true`, o scheduler executa diariamente às 02:00 de São Pau
 Restauração deve ser ensaiada em ambiente isolado: extraia o ZIP, compare o SHA-256 do dump com `manifest.json`, restaure `database.sqlite` ou importe `database.sql` no banco correspondente e restaure `documentos/` para o disco privado. Confirme dados e downloads antes de usar o backup em produção. Para uma recuperação com corte temporal estrito, pause escritas durante o backup; a cópia de banco e arquivos não é uma transação conjunta.
 
 Referências: [Sanctum](https://laravel.com/docs/13.x/sanctum), [autorização](https://laravel.com/docs/13.x/authorization), [validação](https://laravel.com/docs/13.x/validation), [scheduler](https://laravel.com/docs/13.x/scheduling) e [implantação](https://laravel.com/docs/13.x/deployment).
+
+## Factory e seeder de estágios
+
+Para inserir somente os cinco contratos de demonstração, execute dentro de `backend`:
+
+```bash
+php artisan migrate
+php artisan db:seed --class=EstagioSeeder
+```
+
+`DatabaseSeeder` chama `EstagioSeeder` após os seeders de usuários, alunos e orientadores. Para preparar uma base nova, use `php artisan db:seed`. Para uma base já populada, execute somente `php artisan db:seed --class=EstagioSeeder`.
+
+O seeder de estágios usa os primeiros cinco alunos ativos com turma e curso ativos, os orientadores e as empresas já cadastrados. Não cria novas contas, alunos, cursos, turmas, empresas ou orientadores. Reutiliza um supervisor com conta EMPRESA ativa; se não houver, vincula a conta de demonstração `contato@techinovacoes.com.br` à empresa de demonstração criada pelo `DatabaseSeeder`, criando somente o cadastro de supervisor.
+
+Cria contratos em `RASCUNHO`, com 4h diárias, 20h semanais, teto de 400h, duração de seis meses, apólice fictícia e plano. Não cria PDFs, frequências ou aprovações. Usa o serviço para validar os vínculos e limites; contratos inválidos são ignorados com aviso. Alunos que já possuem estágio são preservados sem novo contrato. As credenciais permanecem as dos seeders existentes (empresa de demonstração: `password123`; alunos criados por `AlunoFactory`: `password`).
+
+Executa somente em `local`/`testing`. Reexecutar **EstagioSeeder** não duplica contratos; os seeders de alunos e professores podem adicionar registros quando executados novamente. Dados gerados pela versão anterior não são excluídos automaticamente.
+
+Nos testes ou no Tinker (`php artisan tinker`):
+
+```php
+\App\Models\Estagio::factory()->create();
+\App\Models\Estagio::factory()->trintaHoras()->create();
+\App\Models\Estagio::factory()->count(3)->create();
+```
+
+A factory cria contratos em rascunho e deriva o curso do aluno e a empresa do supervisor. Ao fornecer IDs existentes ou sobrescrever atributos, mantenha os vínculos e limites coerentes: factories inserem diretamente no banco e não substituem as validações dos serviços/API.
+
+O dashboard do aluno usa `GET /api/auth/me`: `formacao` contém matrícula, curso, turma e e-mail; `progresso.horas_cumpridas` soma frequências assinadas conforme as regras do aluno, e `progresso.meta_horas` é a carga exigida pelo curso (nula se não houver vínculo). No detalhe do contrato, a referência continua sendo `meta_horas_tce`.

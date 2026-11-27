@@ -4,10 +4,13 @@ namespace App\Models;
 
 use App\Enums\ModalidadeEstagio;
 use App\Enums\StatusEstagio;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Estagio extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['aluno_id', 'empresa_concedente_id', 'professor_orientador_id',
         'supervisor_empresa_id', 'modalidade', 'data_inicio', 'data_termino',
         'carga_horaria_diaria', 'bolsa_auxilio', 'status', 'cargo', 'curso_id', 'carga_horaria_semanal', 'meta_horas_tce', 'encerrado_em', 'motivo_encerramento'];

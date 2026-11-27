@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../services/api.js';
+import useAuth from '../hooks/useAuth.js';
 import { BriefcaseBusiness, CheckCircle2, Clock3, Handshake, LayoutDashboard } from 'lucide-react';
 import { Alert, Col, Container, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +25,7 @@ const adaptar = c => ({
 
 function MeusEstagiosAluno() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [estagios, setEstagios] = useState([]);
 
   const [carregando, setCarregando] = useState(true);
@@ -42,7 +44,7 @@ function MeusEstagiosAluno() {
           ultima = resposta.meta.last_page;
           pagina += 1;
         } while (pagina <= ultima);
-        if (!controller.signal.aborted) setEstagios(registros.map(adaptar));
+        if (!controller.signal.aborted) { setEstagios(registros.map(adaptar)); setErro(''); }
       } catch (e) {
         if (!controller.signal.aborted) setErro(e.message);
       } finally {
@@ -50,8 +52,9 @@ function MeusEstagiosAluno() {
       }
     }
     carregar();
-    return () => controller.abort();
-  }, [tentativa]);
+    window.addEventListener('focus', carregar);
+    return () => { controller.abort(); window.removeEventListener('focus', carregar); };
+  }, [tentativa, user?.id]);
 
   const ativos = estagios.filter((estagio) => estagio.atual).length;
   const concluidos = estagios.filter((estagio) => estagio.status === 'Concluído').length;

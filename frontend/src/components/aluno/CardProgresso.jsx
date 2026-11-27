@@ -5,7 +5,7 @@ function CardProgresso({
   horasConcluidas = 0,
   metaHoras = 0,
   horasEstagio = 0,
-  horasProjeto = 0,
+  horasProjeto = null,
 }) {
   const percentual = metaHoras > 0 ? Math.round((horasConcluidas / metaHoras) * 100) : 0;
 
@@ -53,12 +53,12 @@ function CardProgresso({
           </span>
         </div>
 
-        <div className="d-flex align-items-center gap-2">
+        {horasProjeto != null && <div className="d-flex align-items-center gap-2">
           <span className="marcador-legenda marcador-laranja" />
           <span className="fw-bold text-dark small">
             Horas de Aproveitamento de Projeto: {horasProjeto}h
           </span>
-        </div>
+        </div>}
       </div>
     </div>
   );

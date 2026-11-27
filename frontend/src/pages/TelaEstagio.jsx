@@ -37,7 +37,7 @@ export default function TelaEstagio() {
 
   useEffect(() => {
     const controller = new AbortController();
-    api.get(`/estagios/${estagioId}`, { signal: controller.signal })
+    const carregar = () => api.get(`/estagios/${estagioId}`, { signal: controller.signal })
       .then(({ data }) => {
         if (!controller.signal.aborted) setEstado({ id: estagioId, contrato: data.data });
       })
@@ -46,7 +46,9 @@ export default function TelaEstagio() {
           setEstado({ id: estagioId, erro: error.status === 404 ? 'Contrato não encontrado.' : error.message });
         }
       });
-    return () => controller.abort();
+    carregar();
+    window.addEventListener('focus', carregar);
+    return () => { controller.abort(); window.removeEventListener('focus', carregar); };
   }, [estagioId]);
 
   async function baixarDocumento(documento) {
@@ -118,7 +120,7 @@ export default function TelaEstagio() {
                     horasConcluidas={Number(estagio.horas_cumpridas)}
                     metaHoras={Number(estagio.meta_horas_tce)}
                     horasEstagio={Number(estagio.horas_cumpridas)}
-                    horasProjeto={0}
+                    horasProjeto={null}
                   />}
               </Col>
               <Col xs={12} lg={8}>

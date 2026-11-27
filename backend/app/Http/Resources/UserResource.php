@@ -15,12 +15,26 @@ class UserResource extends JsonResource
         $plainToken = $this->resource->_token_plain ?? null;
         $isLegacy = $plainToken !== null || (bool) $request->attributes->get('_legacy_email');
 
+        $aluno = $role === 'aluno' ? $this->aluno : null;
+        $turma = $aluno?->turma;
+        $curso = $turma?->curso;
+
         return [
             'id' => $this->id,
             'name' => $this->name ?? $this->nome,
             'email' => $this->email,
             'role' => $role,
-            'matricula' => $this->when($role === 'aluno', $this->matricula),
+            'matricula' => $this->when($role === 'aluno', $aluno?->matricula ?? $this->matricula),
+            'formacao' => $this->when($role === 'aluno', [
+                'matricula' => $aluno?->matricula ?? $this->matricula,
+                'curso' => $curso?->nome,
+                'periodo' => $turma?->nome,
+                'email' => $this->email,
+            ]),
+            'progresso' => $this->when($role === 'aluno', [
+                'horas_cumpridas' => $aluno?->carga_horaria_cumprida ?? 0,
+                'meta_horas' => $curso?->carga_horaria_estagio,
+            ]),
             'siape' => $this->when(in_array($role, ['professor', 'diretor'], true), $this->siape),
             'cnpj' => $this->when($role === 'empresa', $this->cnpj),
             'token' => $this->when($isLegacy, $plainToken ?? $request->attributes->get('_token_plain')),
