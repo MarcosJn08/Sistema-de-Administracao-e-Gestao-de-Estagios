@@ -13,6 +13,7 @@ use App\Models\SupervisorEmpresa;
 use App\Models\Turma;
 use App\Models\User;
 use App\Models\Usuario;
+use Database\Seeders\EstagioSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -237,6 +238,26 @@ class ApiWorkflowTest extends TestCase
         $this->seed();
         $this->seed();
         $this->assertDatabaseMissing('usuarios', ['email' => 'admin@sage.test']);
+    }
+
+    public function test_seeder_creates_drafts_the_director_can_assign_to_an_advisor(): void
+    {
+        $estagioExistente = $this->stage();
+
+        $this->seed();
+        $estagios = Estagio::count();
+        $this->seed(EstagioSeeder::class);
+
+        $this->assertDatabaseCount('estagios', $estagios);
+        $this->assertSame(1, $estagioExistente->aluno->estagios()->count());
+
+        $estagioId = $this->getJson('/api/orientadores')->assertOk()
+            ->assertJsonPath('data.discentes_sem_orientador.0.estagios.0.status', StatusEstagio::RASCUNHO->value)
+            ->json('data.discentes_sem_orientador.0.estagios.0.id');
+
+        $this->patchJson('/api/estagios/'.$estagioId.'/orientador', [
+            'professor_orientador_id' => $this->payload['professor_orientador_id'],
+        ])->assertOk()->assertJsonPath('data.professor_orientador_id', $this->payload['professor_orientador_id']);
     }
 
     public function test_document_id_cannot_be_accessed_through_another_stage(): void

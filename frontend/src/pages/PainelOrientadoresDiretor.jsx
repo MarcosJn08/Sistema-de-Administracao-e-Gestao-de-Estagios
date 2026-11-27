@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Alert, Col, Container, Row, Table } from 'react-bootstrap';
-import { BookOpenCheck, Eye, Link2, Plus, RotateCcw, Search, UserCheck, UserMinus, UsersRound } from 'lucide-react';
+import { BookOpenCheck, Eye, Plus, RotateCcw, Search, UserCheck, UserMinus, UsersRound } from 'lucide-react';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import CardPequeno from '../components/CardPequeno.jsx';
@@ -14,6 +14,7 @@ import ModalVinculoOrientador from '../components/orientador/ModalVinculoOrienta
 import useConsultaApi from '../hooks/useConsultaApi.js';
 import { departamentos as departamentosCadastro } from '../data/orientadores.js';
 import api from '../services/api.js';
+import { listarVinculosOrientacao, vinculoPodeSerAlterado } from '../utils/vinculosOrientacao.js';
 import '../App.css';
 import './PainelOrientadoresDiretor.css';
 
@@ -43,12 +44,11 @@ function PainelOrientadoresDiretor() {
   }));
   const departamentos = [...new Set(orientadores.map((item) => item.departamento))].sort();
   const opcoesCadastro = [...new Set([...departamentosCadastro, ...departamentos])].sort();
-  const vinculos = [
-    ...(dados?.discentes_sem_orientador ?? []).flatMap((discente) => discente.estagios.map((estagio) => ({ discente, estagio }))),
-    ...orientadores.flatMap((orientador) => orientador.discentes.flatMap((discente) =>
-      discente.estagios.map((estagio) => ({ estagio, discente, orientador })))),
-  ].filter(({ estagio }) => ['RASCUNHO', 'EM_ANDAMENTO'].includes(estagio.status));
   const professorSelecionado = orientadores.find((professor) => professor.id === professorSelecionadoId);
+  const estagiosDisponiveis = vinculoAberto
+    ? listarVinculosOrientacao(dados).filter(vinculoPodeSerAlterado)
+      .filter(({ orientador }) => orientador?.id !== professorSelecionadoId)
+    : [];
   const termo = normalizar(busca);
   const filtrados = orientadores.filter((professor) => {
     const correspondeBusca = [professor.nome, professor.siape, professor.email]
@@ -75,6 +75,11 @@ function PainelOrientadoresDiretor() {
     setDepartamento('');
     setStatus('');
     setPaginaAtual(1);
+  };
+
+  const abrirPerfil = (id) => {
+    setMensagem('');
+    setProfessorSelecionadoId(id);
   };
 
   const vinculoSalvo = () => {
@@ -120,18 +125,12 @@ function PainelOrientadoresDiretor() {
               <h1>Gerenciar professores</h1>
               <p>Gerencie os professores e orientadores de estágio do campus</p>
             </div>
-            <div className="d-flex flex-wrap gap-2">
-              <Button tipo="botao-sage-verde" className="gap-2" onClick={() => { setMensagem(''); setCadastroAberto(true); }}>
-                <Plus size={17} aria-hidden="true" /> Cadastrar professor
-              </Button>
-              <Button tipo="botao-acao-contorno" className="gap-2" disabled={carregando || Boolean(erro) || vinculos.length === 0}
-                onClick={() => { setMensagem(''); setVinculoAberto(true); }}>
-                <Link2 size={17} aria-hidden="true" /> Vincular ou trocar orientador
-              </Button>
-            </div>
+            <Button tipo="botao-sage-verde" className="gap-2" onClick={() => { setMensagem(''); setCadastroAberto(true); }}>
+              <Plus size={17} aria-hidden="true" /> Cadastrar professor
+            </Button>
           </div>
 
-          {mensagem && <Alert variant="success" role="status">{mensagem}</Alert>}
+          {!professorSelecionado && mensagem && <Alert variant="success" role="status">{mensagem}</Alert>}
           {carregando && <p role="status">Carregando orientadores…</p>}
           {erro && <Alert variant="danger" role="alert">{erro} <Button onClick={recarregar}>Tentar novamente</Button></Alert>}
           {dados && <>
@@ -193,7 +192,7 @@ function PainelOrientadoresDiretor() {
                     <td className="text-center fw-bold">{professor.alunosOrientados}</td>
                     <td><StatusBadge status={professor.status} /></td>
                     <td><Button tipo="botao-sage-verde" className="gap-2 text-nowrap"
-                      onClick={() => setProfessorSelecionadoId(professor.id)} aria-label={`Ver perfil de ${professor.nome}`}>
+                      onClick={() => abrirPerfil(professor.id)} aria-label={`Ver perfil de ${professor.nome}`}>
                       <Eye size={15} aria-hidden="true" /> Ver perfil
                     </Button></td>
                   </tr>)}
@@ -215,11 +214,16 @@ function PainelOrientadoresDiretor() {
 
       {cadastroAberto && <ModalProfessor aberto cadastroIntegrado departamentos={opcoesCadastro} statusDisponiveis={['Ativo', 'Inativo']}
         aoSalvar={salvarProfessor} aoFechar={() => setCadastroAberto(false)} />}
-      {professorSelecionado && <ModalProfessor key={professorSelecionadoId} aberto cadastroIntegrado professor={professorSelecionado}
-        somenteLeitura={!professorSelecionado.cadastro_editavel} departamentos={opcoesCadastro} statusDisponiveis={['Ativo', 'Inativo']}
-        aoSalvar={salvarProfessor} aoFechar={() => setProfessorSelecionadoId(null)} />}
-      {vinculoAberto && <ModalVinculoOrientador vinculos={vinculos} orientadores={orientadores}
-        aoSalvar={vinculoSalvo} aoFechar={() => setVinculoAberto(false)} />}
+      {professorSelecionado && (vinculoAberto ? (
+        <ModalVinculoOrientador vinculos={estagiosDisponiveis} professor={professorSelecionado}
+          carregando={carregando} erroConsulta={erro} aoRecarregar={recarregar}
+          aoSalvar={vinculoSalvo} aoFechar={() => setVinculoAberto(false)} />
+      ) : (
+        <ModalProfessor key={professorSelecionadoId} aberto cadastroIntegrado professor={professorSelecionado}
+          somenteLeitura={!professorSelecionado.cadastro_editavel} departamentos={opcoesCadastro} statusDisponiveis={['Ativo', 'Inativo']}
+          aoSalvar={salvarProfessor} aoFechar={() => setProfessorSelecionadoId(null)} mensagem={mensagem}
+          aoVincularEstagio={() => { setMensagem(''); setVinculoAberto(true); }} />
+      ))}
       <Footer />
     </div>
   );

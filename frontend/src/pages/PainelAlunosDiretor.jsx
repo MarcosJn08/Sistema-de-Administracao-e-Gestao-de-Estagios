@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Container, Row, Col, Table, ProgressBar } from 'react-bootstrap';
 import { Users, BriefcaseBusiness, GraduationCap, UserSearch, Search, Eye, Plus, RotateCcw } from 'lucide-react';
 import Header from '../components/Header.jsx';
@@ -11,16 +11,55 @@ import StatusBadge from '../components/StatusBadge.jsx';
 import Paginacao from '../components/Paginacao.jsx';
 import DetalhesAluno from '../components/aluno/DetalhesAluno.jsx';
 import ModalCadastroAluno from '../components/aluno/ModalCadastroAluno.jsx';
+import ModalVinculoOrientador from '../components/orientador/ModalVinculoOrientador.jsx';
 import ToastAlerta from '../components/ToastAlerta.jsx';
+import useConsultaApi from '../hooks/useConsultaApi.js';
 import dadosDiretor from '../data/diretor.js';
-import alunosIniciais, { situacoesEstagio, orientadores } from '../data/alunos.js';
+import { situacoesEstagio } from '../data/alunos.js';
 import { aplicarAcaoAluno } from '../utils/gestaoAluno.js';
+import { listarVinculosOrientacao, vinculoPodeSerAlterado } from '../utils/vinculosOrientacao.js';
 import api from '../services/api.js';
 import '../App.css';
 import './PainelAlunosDiretor.css';
 
 const normalizar = (valor) => String(valor ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 const ITENS_POR_PAGINA = 10;
+const SITUACAO_ESTAGIO = {
+  RASCUNHO: 'Rascunho',
+  EM_ANDAMENTO: 'Em estágio ativo',
+  CONCLUIDO: 'Concluído',
+  ENCERRADO: 'Encerrado',
+  CANCELADO_DESVIO_FUNCAO: 'Cancelado',
+};
+const opcoesSituacao = [...new Set([...situacoesEstagio, ...Object.values(SITUACAO_ESTAGIO)])];
+const dataBrasileira = (data) => data?.split('-').reverse().join('/');
+
+function exibirEstagioDoAluno(aluno, vinculos = []) {
+  const principal = vinculos.find(({ estagio }) => estagio.status === 'EM_ANDAMENTO')
+    ?? vinculos.find(({ estagio }) => estagio.status === 'RASCUNHO')
+    ?? vinculos[0];
+  if (!principal) return aluno;
+
+  const { discente, estagio, orientador } = principal;
+  return {
+    ...aluno,
+    semestre: discente.semestre,
+    situacao: SITUACAO_ESTAGIO[estagio.status] ?? estagio.status,
+    estagioVinculado: {
+      empresa: estagio.empresa,
+      professorOrientador: orientador?.nome ?? 'Sem orientador',
+      supervisorEstagio: estagio.supervisor,
+      dataInicio: dataBrasileira(estagio.data_inicio),
+      dataFim: dataBrasileira(estagio.data_termino),
+    },
+    progresso: {
+      ...aluno.progresso,
+      metaHoras: discente.carga_horaria_exigida,
+      horasEstagio: estagio.horas_cumpridas,
+      horasConcluidas: estagio.horas_cumpridas + aluno.progresso.horasProjeto,
+    },
+  };
+}
 
 function PainelAlunosDiretor() {
   const [alunos, setAlunos] = useState([]);
@@ -30,8 +69,22 @@ function PainelAlunosDiretor() {
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [cadastroAberto, setCadastroAberto] = useState(false);
   const [alunoSelecionadoId, setAlunoSelecionadoId] = useState(null);
+  const [vinculoAberto, setVinculoAberto] = useState(false);
   const [toast, setToast] = useState({ mensagem: '', tipo: 'sucesso' });
   const [cursos, setCursos] = useState([]);
+  const { dados: dadosOrientacao, carregando: carregandoVinculos, erro: erroVinculos, recarregar: recarregarVinculos } =
+    useConsultaApi('/orientadores');
+
+  const vinculosPorAluno = useMemo(() => {
+    const porAluno = new Map();
+    const vinculos = listarVinculosOrientacao(dadosOrientacao).sort((a, b) => b.estagio.id - a.estagio.id);
+    for (const vinculo of vinculos) {
+      const id = vinculo.discente.id;
+      if (!porAluno.has(id)) porAluno.set(id, []);
+      porAluno.get(id).push(vinculo);
+    }
+    return porAluno;
+  }, [dadosOrientacao]);
 
   useEffect(() => {
     api.get('/cursos', { params: { status: 'ativo', per_page: 100 } })
@@ -50,6 +103,7 @@ function PainelAlunosDiretor() {
         const usuariosApi = resposta?.data?.data || [];
         const novos = usuariosApi.map((u) => ({
           id: u.id,
+          alunoId: u.aluno_id,
           nome: u.nome,
           matricula: u.matricula || '---',
           cpf: u.cpf || 'Não informado',
@@ -68,15 +122,23 @@ function PainelAlunosDiretor() {
 
     return () => { ativo = false; };
   }, []);
-  const alunoSelecionado = alunos.find((aluno) => aluno.id === alunoSelecionadoId);
+  const alunosExibidos = alunos.map((aluno) => exibirEstagioDoAluno(aluno, vinculosPorAluno.get(aluno.alunoId)));
+  const alunoSelecionado = alunosExibidos.find((aluno) => aluno.id === alunoSelecionadoId);
+  const estagiosDoAluno = (vinculosPorAluno.get(alunoSelecionado?.alunoId) ?? []).filter(vinculoPodeSerAlterado);
   const atualizarAluno = (acao) => {
-    const atualizado = aplicarAcaoAluno(alunoSelecionado, acao, { perfil: dadosDiretor.diretor.role, orientadores, alunos });
+    const aluno = alunos.find(({ id }) => id === alunoSelecionadoId);
+    const atualizado = aplicarAcaoAluno(aluno, acao, { perfil: dadosDiretor.diretor.role, alunos });
     setAlunos((atuais) => atuais.map((aluno) => aluno.id === atualizado.id ? atualizado : aluno));
+  };
+  const vinculoSalvo = (estagio, orientador) => {
+    setVinculoAberto(false);
+    setToast({ mensagem: `Estágio #${estagio.id} vinculado a ${orientador.nome}.`, tipo: 'sucesso' });
+    recarregarVinculos();
   };
   const termo = normalizar(busca);
   const digitos = termo.replace(/\D/g, '');
   const buscaNumerica = /^[\d.\s/-]+$/.test(termo) && digitos.length > 0;
-  const filtrados = alunos.filter((aluno) => {
+  const filtrados = alunosExibidos.filter((aluno) => {
     const correspondeBusca = normalizar(aluno.nome).includes(termo)
       || [aluno.matricula, aluno.cpf].some((valor) => buscaNumerica
         ? String(valor).replace(/\D/g, '').includes(digitos)
@@ -89,7 +151,7 @@ function PainelAlunosDiretor() {
   const alunosPaginados = filtrados.slice(indiceInicial, indiceInicial + ITENS_POR_PAGINA);
   const primeiroExibido = filtrados.length === 0 ? 0 : indiceInicial + 1;
   const ultimoExibido = Math.min(indiceInicial + ITENS_POR_PAGINA, filtrados.length);
-  const contar = (status) => alunos.filter((aluno) => aluno.situacao === status).length;
+  const contar = (status) => alunosExibidos.filter((aluno) => aluno.situacao === status).length;
   const indicadores = [
     { titulo: 'Total de alunos cadastrados', valor: alunos.length, texto: 'Alunos matriculados no campus', icone: <Users size={23} />, variante: 'azul' },
     { titulo: 'Estudantes em estágio ativo', valor: contar('Em estágio ativo'), texto: 'Com vínculo vigente', icone: <BriefcaseBusiness size={23} />, variante: 'verde' },
@@ -129,6 +191,7 @@ function PainelAlunosDiretor() {
     setAlunos((atuais) => [{
       ...dados,
       id: usuarioCriado?.id ?? `aluno-${Date.now()}`,
+      alunoId: usuarioCriado?.aluno_id,
       situacao: 'Sem estágio',
       progresso: { horasConcluidas: 0, metaHoras: 200, horasEstagio: 0, horasProjeto: 0 },
       estagio: null,
@@ -185,7 +248,7 @@ function PainelAlunosDiretor() {
               <Col xs={12} md={6} lg={3}>
                 <Select id="situacao-alunos" titulo="Situação do Estágio" value={situacao}
                   onChange={(evento) => { setSituacao(evento.target.value); setPaginaAtual(1); }} className="mb-0"
-                  opcoes={[{ valor: '', rotulo: 'Todos' }, ...situacoesEstagio]} />
+                  opcoes={[{ valor: '', rotulo: 'Todos' }, ...opcoesSituacao]} />
               </Col>
             </Row>
           </section>
@@ -213,12 +276,13 @@ function PainelAlunosDiretor() {
                 <tbody>
                   {alunosPaginados.map((aluno) => {
                     const { horasConcluidas, metaHoras } = aluno.progresso;
+                    const estagio = aluno.estagio ?? aluno.estagioVinculado;
                     const percentual = metaHoras > 0 ? Math.min(100, Math.max(0, Math.floor(horasConcluidas / metaHoras * 100))) : 0;
                     return (
                       <tr key={aluno.id}>
                         <td><span className="fw-bold d-block">{aluno.nome}</span><span className="small text-secondary">{aluno.matricula}</span></td>
                         <td><span className="d-block">{aluno.curso}</span><span className="small text-secondary">{aluno.semestre}º semestre</span></td>
-                        <td><span className="d-block">{aluno.estagio?.empresa || 'Sem vínculo'}</span><span className="small text-secondary">{aluno.estagio?.professorOrientador || 'Sem orientador'}</span></td>
+                        <td><span className="d-block">{estagio?.empresa || 'Sem vínculo'}</span><span className="small text-secondary">{estagio?.professorOrientador || 'Sem orientador'}</span></td>
                         <td>
                           <div className="d-flex justify-content-between gap-2 small mb-2"><span>{horasConcluidas}h / {metaHoras}h</span><strong>{percentual}%</strong></div>
                           <ProgressBar now={percentual} aria-label={`Carga horária de ${aluno.nome}`} />
@@ -243,9 +307,15 @@ function PainelAlunosDiretor() {
           </section>
         </Container>
       </main>
-      <DetalhesAluno key={alunoSelecionadoId || 'fechado'} aberto={Boolean(alunoSelecionado)} aluno={alunoSelecionado}
-        perfil={dadosDiretor.diretor.role} orientadores={orientadores} aoAtualizar={atualizarAluno}
-        aoFechar={() => setAlunoSelecionadoId(null)} />
+      {alunoSelecionado && (vinculoAberto ? (
+        <ModalVinculoOrientador aluno={alunoSelecionado} vinculos={estagiosDoAluno} orientadores={dadosOrientacao?.orientadores}
+          carregando={carregandoVinculos} erroConsulta={erroVinculos} aoRecarregar={recarregarVinculos}
+          aoSalvar={vinculoSalvo} aoFechar={() => setVinculoAberto(false)} />
+      ) : (
+        <DetalhesAluno key={alunoSelecionadoId} aberto aluno={alunoSelecionado} perfil={dadosDiretor.diretor.role}
+          aoAtualizar={atualizarAluno} aoVincularProfessor={() => setVinculoAberto(true)}
+          aoFechar={() => setAlunoSelecionadoId(null)} />
+      ))}
       <ModalCadastroAluno key={cadastroAberto ? 'cadastro-aberto' : 'cadastro-fechado'} aberto={cadastroAberto}
         cursos={cursos} aoCadastrar={cadastrarAluno} aoFechar={() => setCadastroAberto(false)} />
       <ToastAlerta mensagem={toast.mensagem} tipo={toast.tipo} aoFechar={() => setToast({ mensagem: '', tipo: 'sucesso' })} />

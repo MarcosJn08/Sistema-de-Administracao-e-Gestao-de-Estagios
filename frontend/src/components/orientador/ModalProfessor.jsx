@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { Modal } from 'react-bootstrap';
-import { BookOpenCheck, Pencil, UserRound } from 'lucide-react';
+import { Alert, Modal } from 'react-bootstrap';
+import { BookOpenCheck, Link2, Pencil, UserRound } from 'lucide-react';
 import StatusBadge from '../StatusBadge.jsx';
 import Button from '../Button/Button.jsx';
 import './ModalProfessor.css';
 
-function ModalProfessor({ aberto, professor, departamentos, statusDisponiveis, aoSalvar, aoFechar, somenteLeitura = false, cadastroIntegrado = false }) {
+function ModalProfessor({
+  aberto, professor, departamentos, statusDisponiveis, aoSalvar, aoFechar, aoVincularEstagio, mensagem,
+  somenteLeitura = false, cadastroIntegrado = false,
+}) {
   const cadastro = !professor;
   const [editando, setEditando] = useState(cadastro);
   const [erro, setErro] = useState('');
@@ -71,9 +74,10 @@ function ModalProfessor({ aberto, professor, departamentos, statusDisponiveis, a
         </Modal.Title>
       </Modal.Header>
 
-      <form onSubmit={salvar}>
-        <Modal.Body>
+      <Modal.Body>
+        <form id="cadastro-professor-form" onSubmit={salvar}>
           {erro && <p className="modal-professor-erro" role="alert">{erro}</p>}
+          {!editando && mensagem && <Alert variant="success" role="status">{mensagem}</Alert>}
 
           {!editando && professor ? (
             <div className="modal-professor-perfil">
@@ -165,22 +169,25 @@ function ModalProfessor({ aberto, professor, departamentos, statusDisponiveis, a
               </label></>}
             </div>
           )}
-        </Modal.Body>
+        </form>
+      </Modal.Body>
 
-        <Modal.Footer>
-          {!editando && professor ? <>
-            {!somenteLeitura && <Button tipo="botao-sage-verde" className="gap-2" onClick={() => setEditando(true)}>
-              <Pencil size={15} aria-hidden="true" /> Editar cadastro
-            </Button>}
-            <Button tipo="botao-acao-contorno" onClick={aoFechar}>Fechar</Button>
-          </> : <>
-            <Button tipo="botao-acao-contorno" disabled={carregando} onClick={cadastro ? aoFechar : () => { setEditando(false); setErro(''); }}>Cancelar</Button>
-            <button type="submit" className="botao-sage-verde" disabled={carregando}>
-              {carregando ? 'Salvando…' : cadastro ? 'Cadastrar professor' : 'Salvar alterações'}
-            </button>
-          </>}
-        </Modal.Footer>
-      </form>
+      <Modal.Footer>
+        {!editando && professor ? <>
+          {!somenteLeitura && <Button tipo="botao-sage-verde" className="gap-2" onClick={() => setEditando(true)}>
+            <Pencil size={15} aria-hidden="true" /> Editar cadastro
+          </Button>}
+          {aoVincularEstagio && <Button tipo="botao-acao-contorno" className="gap-2" onClick={aoVincularEstagio}>
+            <Link2 size={15} aria-hidden="true" /> Vincular estágio
+          </Button>}
+          <Button tipo="botao-acao-contorno" onClick={aoFechar}>Fechar</Button>
+        </> : <>
+          <Button tipo="botao-acao-contorno" disabled={carregando} onClick={cadastro ? aoFechar : () => { setEditando(false); setErro(''); }}>Cancelar</Button>
+          <button type="submit" form="cadastro-professor-form" className="botao-sage-verde" disabled={carregando}>
+            {carregando ? 'Salvando…' : cadastro ? 'Cadastrar professor' : 'Salvar alterações'}
+          </button>
+        </>}
+      </Modal.Footer>
     </Modal>
   );
 }

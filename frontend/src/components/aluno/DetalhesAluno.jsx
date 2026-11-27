@@ -17,7 +17,7 @@ function Campo({ titulo, children, destaque = false }) {
   );
 }
 
-function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', orientadores = [], aoAtualizar }) {
+function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', aoAtualizar, aoVincularProfessor }) {
   const [acao, setAcao] = useState(null);
   const [mensagem, setMensagem] = useState('');
   if (!aluno) return null;
@@ -32,7 +32,8 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', orientad
     setMensagem('Alteração registrada nesta sessão.');
   };
 
-  const { estagio, documentos = [], progresso = {} } = aluno;
+  const { documentos = [], progresso = {} } = aluno;
+  const estagio = aluno.estagio ?? aluno.estagioVinculado;
   const { horasConcluidas = 0, metaHoras = 0, horasEstagio = 0, horasProjeto = 0 } = progresso;
   const percentual = metaHoras > 0 ? Math.min(100, Math.max(0, Math.floor(horasConcluidas / metaHoras * 100))) : 0;
   const saldoRestante = Math.max(0, metaHoras - horasConcluidas);
@@ -53,12 +54,15 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', orientad
           </div>
           {diretor && <div className="perfil-aluno-acoes perfil-aluno-acoes-globais">
             <button type="button" className="perfil-aluno-botao" onClick={() => { setAcao('cadastro'); setMensagem(''); }}>Editar Cadastro</button>
+            {aoVincularProfessor && (
+              <button type="button" className="perfil-aluno-botao" onClick={aoVincularProfessor}>Vincular a professor</button>
+            )}
             <button type="button" className="perfil-aluno-botao perfil-aluno-botao-perigo" disabled={!estagioEditavel}
               onClick={() => { setAcao('encerrar'); setMensagem(''); }}>Encerrar Estágio</button>
           </div>}
         </div>
         {mensagem && <p className="perfil-aluno-sucesso" role="status">{mensagem}</p>}
-        {diretor && acao && <FormAcaoDiretor key={acao} acao={acao} aluno={aluno} orientadores={orientadores}
+        {diretor && acao && <FormAcaoDiretor key={acao} acao={acao} aluno={aluno}
           aoSalvar={salvar} aoCancelar={() => setAcao(null)} />}
 
         <div className="perfil-aluno-layout">
@@ -87,11 +91,7 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', orientad
                   <Campo titulo="Empresa concedente:">{estagio.empresa}</Campo>
                   <Campo titulo="CNPJ:">{estagio.cnpj}</Campo>
                   <Campo titulo="Supervisor (empresa):">{estagio.supervisorEstagio}</Campo>
-                  <Campo titulo="Orientador designado:">
-                    <span>{estagio.professorOrientador || 'Não informado'}</span>
-                    {diretor && <button type="button" className="perfil-aluno-acao-inline" disabled={!estagioEditavel}
-                      onClick={() => setAcao('orientador')}>Alterar Orientador</button>}
-                  </Campo>
+                  <Campo titulo="Orientador designado:">{estagio.professorOrientador}</Campo>
                   <Campo titulo="Vigência do TCE:">
                     {estagio.dataInicio || estagio.dataFim
                       ? `${estagio.dataInicio || 'Não informada'} a ${estagio.dataFim || 'Não informada'}` : null}
