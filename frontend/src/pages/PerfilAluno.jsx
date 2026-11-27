@@ -1,3 +1,4 @@
+import useAuth from '../hooks/useAuth.js';
 import { useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Bookmark, BriefcaseBusiness, Save, Send, Sparkles, UserRound } from 'lucide-react';
@@ -11,13 +12,14 @@ import SolicitarCorrecaoAcademica from '../components/aluno/SolicitarCorrecaoAca
 import { lerFotoPerfil } from '../utils/fotoPerfil.js';
 import { habilidadesPredefinidas, separarHabilidades } from '../data/habilidades.js';
 import { guardarAnexos } from '../utils/anexosPerfil.js';
-import dados from '../data/aluno.js';
+
 import vagas from '../data/vagas.json';
 import { carregarPerfilAluno, salvarPerfilAluno } from '../utils/candidaturaAluno.js';
 import '../components/vagas/ModalCandidatura.css';
 import './PerfilAluno.css';
 
 export default function PerfilAluno() {
+  const { user } = useAuth();
   const [perfil, setPerfil] = useState(carregarPerfilAluno);
   const [selecionadas, setSelecionadas] = useState(() => separarHabilidades(perfil.habilidades).selecionadas);
   const [habilidades, setHabilidades] = useState(() => separarHabilidades(perfil.habilidades).outras);
@@ -100,20 +102,20 @@ export default function PerfilAluno() {
 
   return (
     <div className="perfil-aluno-pagina d-flex flex-column min-vh-100">
-      <Header usuario={dados.aluno} />
+      <Header />
       <main className="perfil-aluno-edicao flex-grow-1">
         <Link to={retorno} className="perfil-aluno-voltar"><ArrowLeft size={16} aria-hidden="true" /> {vaga ? 'Voltar à candidatura' : 'Voltar ao dashboard'}</Link>
         <h1>Meu perfil</h1>
-        <p className="perfil-aluno-descricao">Consulte seus dados acadêmicos e atualize seus dados pessoais, habilidades e experiências.</p>
+        <p className="perfil-aluno-descricao">Consulte seus dados acadêmicos. As alterações pessoais, habilidades e experiências ficam salvas neste navegador.</p>
         {vaga && <div className="alert alert-info">Você está se candidatando a <strong>{vaga.titulo}</strong>. Ao salvar, você voltará à candidatura com sua carta preservada.</div>}
-        <div className="perfil-aluno-identidade"><strong>{dados.aluno.nome}</strong><span>{dados.aluno.email} · Matrícula {dados.aluno.matricula}</span></div>
+        <div className="perfil-aluno-identidade"><strong>{user?.name}</strong><span>{user?.email} · Matrícula {user?.matricula}</span></div>
         {!vaga && <nav className="perfil-aluno-atalhos" aria-label="Atalhos do aluno">
           <Link to="/sage/aluno/vagas-salvas"><Bookmark size={17} aria-hidden="true" /> Vagas salvas</Link>
           <Link to="/sage/aluno/candidaturas"><Send size={17} aria-hidden="true" /> Minhas candidaturas</Link>
           <Link to="/sage/aluno/estagios"><BriefcaseBusiness size={17} aria-hidden="true" /> Meus estágios</Link>
         </nav>}
         {erro && <div className="alert alert-danger" role="alert">{erro}</div>}
-        {salvo && <div ref={mensagemSucessoRef} className="alert alert-success perfil-aluno-sucesso" role="status" tabIndex={-1}>Perfil atualizado com sucesso.</div>}
+        {salvo && <div ref={mensagemSucessoRef} className="alert alert-success perfil-aluno-sucesso" role="status" tabIndex={-1}>Perfil salvo neste navegador.</div>}
         <form onSubmit={salvar}>
           <FormacaoAluno id="formacao" formacao={perfil.formacao} acaoCorrecao={<SolicitarCorrecaoAcademica />} />
           <section id="dados-pessoais" className="candidatura-card" aria-labelledby="perfil-pessoais-titulo">

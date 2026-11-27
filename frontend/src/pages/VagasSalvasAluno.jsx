@@ -9,7 +9,7 @@ import VagaCard from '../components/VagaCard.jsx';
 import BotaoSalvarVaga from '../components/vagas/BotaoSalvarVaga.jsx';
 import ModalDetalhesVaga from '../components/vagas/ModalDetalhesVaga.jsx';
 import useVagasSalvas from '../hooks/useVagasSalvas.js';
-import dados from '../data/aluno.js';
+
 import './VagasSalvasAluno.css';
 
 const normalizar = (valor) => String(valor || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
@@ -23,7 +23,7 @@ export default function VagasSalvasAluno() {
 
   return (
     <div className="vagas-salvas-pagina d-flex flex-column min-vh-100">
-      <Header usuario={dados.aluno} />
+      <Header />
       <main className="flex-grow-1 py-4">
         <Container className="vagas-salvas-container">
           <div className="vagas-salvas-cabecalho">

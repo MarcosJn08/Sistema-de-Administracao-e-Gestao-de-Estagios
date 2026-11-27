@@ -2,18 +2,19 @@ import { useId, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { Copy, Mail, TriangleAlert } from 'lucide-react';
 import Botao from '../Button/Button.jsx';
-import dados from '../../data/aluno.js';
+import useAuth from '../../hooks/useAuth.js';
 
 const contato = (import.meta.env.VITE_NUCLEO_ESTAGIO_EMAIL || '').trim();
 const emailNucleo = /^[^\s@?&#]+@[^\s@?&#]+\.[^\s@?&#]+$/.test(contato) ? contato : '';
 
 export default function SolicitarCorrecaoAcademica() {
+  const { user } = useAuth();
   const [aberto, setAberto] = useState(false);
   const [mensagem, setMensagem] = useState('');
   const [aviso, setAviso] = useState('');
   const id = useId();
   const assunto = 'Solicitação de correção de dados acadêmicos';
-  const corpo = `${assunto}\n\nAluno: ${dados.aluno.nome}\nMatrícula: ${dados.aluno.matricula}\nE-mail institucional: ${dados.aluno.email}\n\n${mensagem.trim()}`;
+  const corpo = `${assunto}\n\nAluno: ${user?.name}\nMatrícula: ${user?.matricula || 'Não informada'}\nE-mail institucional: ${user?.email}\n\n${mensagem.trim()}`;
   const href = `mailto:${emailNucleo}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
 
   async function copiar() {

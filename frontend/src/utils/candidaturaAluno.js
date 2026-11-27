@@ -1,23 +1,17 @@
-import dados from '../data/aluno.js';
+import { carregarAlunoAutenticado, chaveAlunoAutenticado } from './alunoAutenticado.js';
 import { consolidarHabilidades } from '../data/habilidades.js';
 
-const prefixo = `sage:aluno:${dados.aluno.matricula}`;
-const chavePerfil = `${prefixo}:perfil`;
-const chaveCandidatura = (vagaId) => `${prefixo}:candidatura:${vagaId}`;
-const chaveRascunho = (vagaId) => `${prefixo}:carta:${vagaId}`;
+const prefixo = chaveAlunoAutenticado;
+const chavePerfil = () => `${prefixo()}:perfil`;
+const chaveCandidatura = (vagaId) => `${prefixo()}:candidatura:${vagaId}`;
+const chaveRascunho = (vagaId) => `${prefixo()}:carta:${vagaId}`;
 export const eventoCandidaturas = 'sage:candidaturas-atualizadas';
 export const eventoPerfilAluno = 'sage:perfil-aluno-atualizado';
 
-// Fonte acadêmica do protótipo. Na integração, deve vir do registro acadêmico,
-// nunca dos campos editáveis do perfil nem do armazenamento do navegador.
+// Dados recebidos da API de autenticação; não usa o perfil editável como fonte acadêmica.
 export function carregarDadosAcademicos() {
-  return {
-    instituicao: 'IFNMG – Campus Almenara',
-    matricula: dados.aluno.matricula,
-    curso: dados.aluno.curso,
-    periodo: dados.aluno.periodo || '',
-    email: dados.aluno.email,
-  };
+  const aluno = carregarAlunoAutenticado();
+  return { ...aluno.formacao, matricula: aluno.formacao?.matricula || aluno.matricula || '', email: aluno.email || '' };
 }
 
 const texto = (valor) => typeof valor === 'string' ? valor.trim() : '';
@@ -43,7 +37,7 @@ function lerJson(chave) {
 }
 
 export function carregarPerfilAluno() {
-  const salvo = lerJson(chavePerfil);
+  const salvo = lerJson(chavePerfil());
   return {
     formacao: carregarDadosAcademicos(),
     ...dadosPessoais(salvo),
@@ -63,7 +57,7 @@ export function salvarPerfilAluno(perfil) {
   if (perfil.foto && !fotoValida(perfil.foto)) throw new Error('A foto de perfil não é válida. Escolha outra imagem.');
   const habilidades = consolidarHabilidades(perfil.habilidades);
   const atualizado = { formacao, ...pessoais, habilidades, experiencia: (perfil.experiencia || '').trim(), anexos: perfil.anexos || [] };
-  localStorage.setItem(chavePerfil, JSON.stringify(atualizado));
+  localStorage.setItem(chavePerfil(), JSON.stringify(atualizado));
   window.dispatchEvent(new Event(eventoPerfilAluno));
   return atualizado;
 }
@@ -87,7 +81,7 @@ export function carregarCandidatura(vagaId) {
 
 export function listarCandidaturasAluno() {
   try {
-    const inicioChave = `${prefixo}:candidatura:`;
+    const inicioChave = `${prefixo()}:candidatura:`;
     const candidaturas = [];
     for (let indice = 0; indice < localStorage.length; indice += 1) {
       const chave = localStorage.key(indice);
@@ -123,7 +117,7 @@ export function enviarCandidatura(vaga, cartaApresentacao) {
     vagaId: String(vaga.id),
     vaga: vaga.titulo,
     empresa: vaga.empresa,
-    aluno: { ...dados.aluno, telefone: perfil.telefone, foto: perfil.foto },
+    aluno: { ...carregarAlunoAutenticado(), telefone: perfil.telefone, foto: perfil.foto },
     formacao: perfil.formacao,
     habilidades: perfil.habilidades,
     resumo: perfil.resumo,

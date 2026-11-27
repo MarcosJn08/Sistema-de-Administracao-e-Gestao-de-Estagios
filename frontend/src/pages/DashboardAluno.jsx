@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Alert, Container, Row, Col } from 'react-bootstrap';
 import { ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header.jsx';
@@ -11,7 +11,8 @@ import useCandidaturasAluno from '../hooks/useCandidaturasAluno.js';
 import CardProgresso from '../components/aluno/CardProgresso.jsx';
 import CardEstagioAtual from '../components/aluno/CardEstagioAtual.jsx';
 import CardEstagio from '../components/Estagio/cardEstagios/CardEstagio.jsx';
-import dados from '../data/aluno.js';
+import api from '../services/api.js';
+import useAuth from '../hooks/useAuth.js';
 import { carregarPerfilAluno } from '../utils/candidaturaAluno.js';
 import '../App.css';
 import '../components/Estagio/cardEstagios/CardEstagio.css';
@@ -24,7 +25,58 @@ function DashboardAluno() {
   const [perfil] = useState(carregarPerfilAluno);
   const candidaturas = useCandidaturasAluno();
 
-  const estagios = dados.meusEstagios || [];
+  const { user } = useAuth();
+  const [contratos, setContratos] = useState([]);
+  const [resumo, setResumo] = useState(null);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState('');
+
+  useEffect(() => {
+    const controller = new AbortController();
+    async function carregar() {
+      try {
+        const { data: conta } = await api.get('/auth/me', { signal: controller.signal });
+        const registros = [];
+        let pagina = 1;
+        let ultima = 1;
+        do {
+          const { data } = await api.get('/estagios', {
+            params: { page: pagina, per_page: 100 }, signal: controller.signal,
+          });
+          registros.push(...data.data);
+          ultima = data.meta.last_page;
+          pagina += 1;
+        } while (pagina <= ultima);
+        if (!controller.signal.aborted) {
+          setContratos(registros);
+          setResumo(conta.data);
+          setErro('');
+        }
+      } catch (error) {
+        if (!controller.signal.aborted) setErro(error.message);
+      } finally {
+        if (!controller.signal.aborted) setCarregando(false);
+      }
+    }
+    carregar();
+    window.addEventListener('focus', carregar);
+    return () => {
+      controller.abort();
+      window.removeEventListener('focus', carregar);
+    };
+  }, [user?.id]);
+
+  const estados = { RASCUNHO: 'Rascunho', EM_ANALISE: 'Em análise', EM_ANDAMENTO: 'Em andamento', CONCLUIDO: 'Concluído', ENCERRADO: 'Encerrado', CANCELADO_DESVIO_FUNCAO: 'Cancelado por desvio de função' };
+  const formatarData = valor => valor ? new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' }).format(new Date(`${valor}T00:00:00Z`)) : 'Não informado';
+  const atual = contratos.find(c => c.status === 'EM_ANDAMENTO');
+  const referencia = atual || contratos[0];
+  const estagios = contratos.map(c => ({
+    id: c.id, empresa: c.empresa.razao_social, cargo: c.cargo || 'Estágio',
+    atual: c.status === 'EM_ANDAMENTO', status: estados[c.status] || c.status,
+    dataInicio: formatarData(c.data_inicio), dataFim: formatarData(c.data_termino),
+    cargaHoraria: c.carga_horaria_semanal == null ? 'Não informada' : `${Number(c.carga_horaria_semanal)}h/semana`,
+    progresso: c.meta_horas_tce ? Math.round(Number(c.horas_cumpridas) / Number(c.meta_horas_tce) * 100) : 0,
+  }));
 
   const abrirEstagio = (estagio) => {
     navigate(`/sage/aluno/estagios/${estagio.id}`);
@@ -36,42 +88,46 @@ function DashboardAluno() {
         pagina01="Dashboard"
         pagina02="Vagas"
         paginaAtiva="Dashboard"
-        usuario={dados.aluno}
+        usuario={user}
       />
 
       <main className="flex-grow-1 py-4">
         <Container style={{ maxWidth: '1200px' }} className="px-3">
           <CardDadosAluno
-            nome={dados.aluno.nome}
-            curso={perfil.formacao.curso}
-            email={dados.aluno.email}
-            matricula={dados.aluno.matricula}
+            nome={user?.nome || user?.name || 'Aluno'}
+            curso={resumo?.formacao?.curso || user?.formacao?.curso || referencia?.curso?.nome || 'Não informado'}
+            email={user?.email}
+            matricula={referencia?.aluno?.matricula || user?.matricula || 'Não informada'}
             aoEditarPerfil={() => navigate('/sage/aluno/perfil')}
           />
 
-          <Row className="g-4 mb-4">
+          {carregando && <p role="status">Carregando estágios…</p>}
+          {erro && <Alert variant="danger">{erro}</Alert>}
+          {!carregando && !erro && <Row className="g-4 mb-4">
             <Col xs={12} lg={6}>
-              <CardProgresso
-                horasConcluidas={dados.progressoTotal.horasConcluidas}
-                metaHoras={dados.progressoTotal.metaHoras}
-                horasEstagio={dados.progressoTotal.horasEstagio}
-                horasProjeto={dados.progressoTotal.horasProjeto}
-              />
+              {resumo?.progresso?.meta_horas != null ? <>
+                <CardProgresso
+                  horasConcluidas={Number(resumo.progresso.horas_cumpridas)}
+                  metaHoras={Number(resumo.progresso.meta_horas)}
+                  horasEstagio={Number(resumo.progresso.horas_cumpridas)}
+                  horasProjeto={null}
+                />
+              </> : <div className="cartao-sage">Carga horária exigida pelo curso ainda não informada.</div>}
             </Col>
 
             <Col xs={12} lg={6}>
-              <CardEstagioAtual
-                status={dados.estagioAtual.status}
-                empresa={dados.estagioAtual.empresa}
-                professorOrientador={dados.estagioAtual.professorOrientador}
-                supervisorEstagio={dados.estagioAtual.supervisorEstagio}
-                dataInicio={dados.estagioAtual.dataInicio}
-                dataFim={dados.estagioAtual.dataFim}
-                cargaHorariaSemanal={dados.estagioAtual.cargaHorariaSemanal}
+              {atual ? <CardEstagioAtual
+                status={estados[atual.status]}
+                empresa={atual.empresa.razao_social}
+                professorOrientador={atual.orientador.nome}
+                supervisorEstagio={atual.supervisor.nome}
+                dataInicio={formatarData(atual.data_inicio)}
+                dataFim={formatarData(atual.data_termino)}
+                cargaHorariaSemanal={atual.carga_horaria_semanal == null ? 'Não informada' : `${Number(atual.carga_horaria_semanal)}h/semana`}
                 aoVerHistorico={() => navigate('/sage/aluno/estagios')}
-              />
+              /> : <div className="cartao-sage h-100"><h2 className="cartao-sage-titulo">Estágio Atual</h2><p>Nenhum estágio em andamento.</p></div>}
             </Col>
-          </Row>
+          </Row>}
 
           <section className="dashboard-estagios mb-4" aria-labelledby="titulo-meus-estagios">
             <div className="dashboard-estagios-cabecalho">

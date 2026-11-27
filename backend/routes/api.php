@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\CadastroController;
 use App\Http\Controllers\ComplementoEstagioController;
+use App\Http\Controllers\ContratoEstagioController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EstagioController;
 use App\Http\Controllers\FrequenciaController;
@@ -47,9 +48,7 @@ Route::middleware(['auth:sanctum', 'ativo', 'throttle:api'])->group(function () 
     Route::get('/usuarios', [UsuarioController::class, 'index']);
     Route::post('/usuarios', [UsuarioController::class, 'store']);
 
-    Route::get('/estagios', [EstagioController::class, 'index']);
-    Route::post('/estagios', [EstagioController::class, 'store']);
-    Route::get('/estagios/{estagio}', [EstagioController::class, 'show']);
+    Route::apiResource('estagios', ContratoEstagioController::class)->only(['index', 'store', 'show', 'update']);
     Route::patch('/estagios/{estagio}/status', [EstagioController::class, 'status']);
     Route::get('/estagios/{estagio}/documentos', [DocumentoController::class, 'index']);
     Route::post('/estagios/{estagio}/documentos', [DocumentoController::class, 'store']);

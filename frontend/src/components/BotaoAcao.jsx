@@ -28,12 +28,13 @@ function chaveDoIcone(texto) {
   return TRECHOS_COM_ICONE.find((trecho) => texto.includes(trecho));
 }
 
-function BotaoAcao({ texto = 'Visualizar', variante, icone, tamanhoIcone = 14, somenteIcone = false, className = '', ...props }) {
-  const acao = texto.toLowerCase().trim();
+function BotaoAcao({ texto, tipo = 'Visualizar', aoClicar, onClick, variante, icone, tamanhoIcone = 14, somenteIcone = false, className = '', ...props }) {
+  const rotulo = texto ?? tipo;
+  const acao = rotulo.toLowerCase().trim();
   const cor = variante || varianteDaAcao(acao);
   const Icone = icone ?? ICONES[chaveDoIcone(acao)];
   const classeIcone = somenteIcone ? ' botao-acao-somente-icone' : '';
-  const rotuloIcone = somenteIcone ? texto : undefined;
+  const rotuloIcone = somenteIcone ? rotulo : undefined;
 
   return (
     <button
@@ -41,10 +42,11 @@ function BotaoAcao({ texto = 'Visualizar', variante, icone, tamanhoIcone = 14, s
       className={`botao-acao-pilula botao-acao-${cor}${classeIcone} ${className}`.trim()}
       aria-label={rotuloIcone}
       title={rotuloIcone}
+      onClick={onClick || aoClicar}
       {...props}
     >
       {Icone && <Icone size={tamanhoIcone} aria-hidden="true" />}
-      {!somenteIcone && texto}
+      {!somenteIcone && rotulo}
     </button>
   );
 }

@@ -16,17 +16,11 @@ export function getDashboardPath(role) {
 export function getPostLoginPath(role, requestedPath) {
   const dashboard = dashboards[role];
   if (!dashboard) return '/sage/login';
-  if (typeof requestedPath !== 'string') return dashboard;
+  if (role === 'aluno' || typeof requestedPath !== 'string') return dashboard;
 
   const pathname = requestedPath.split(/[?#]/)[0];
   const ownArea = pathname === dashboard || pathname.startsWith(`${dashboard}/`);
-  const studentAction = role === 'aluno' && (
-    /^\/sage\/vagas\/[^/]+\/candidatura$/.test(pathname)
-    || pathname === '/sage/enviar-documento'
-    || pathname === '/sage/estagio'
-  );
-
-  return ownArea || studentAction ? requestedPath : dashboard;
+  return ownArea ? requestedPath : dashboard;
 }
 
 export default function useAuth() {

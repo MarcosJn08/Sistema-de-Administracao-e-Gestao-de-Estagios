@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../hooks/useAuth.js';
 import api, { configureApiAuth } from '../../services/api.js';
 
+import { definirAlunoAutenticado } from '../../utils/alunoAutenticado.js';
+
 const initialSession = { user: null, token: null, error: '', expiresAt: null };
 const sessionKey = 'sage-auth-session';
 const expiredSession = { ...initialSession, error: 'Seu acesso expirou. Entre novamente.' };
@@ -27,6 +29,7 @@ export default function AuthProvider({ children }) {
   const navigate = useNavigate();
 
   const updateSession = useCallback((nextSession) => {
+    definirAlunoAutenticado(nextSession.user);
     sessionRef.current = nextSession;
     setSession(nextSession);
     try {

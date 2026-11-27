@@ -13,14 +13,14 @@ function CardEstagio({ estagio, aoVerEstagio }) {
     Math.max(0, Number(estagio.progresso ?? 0))
   );
 
-  const status = estagio.status || 'Concluído';
+  const status = estagio.status || 'Não informado';
   const atual = Boolean(estagio.atual);
 
   return (
     <article className={`card-estagio ${atual ? 'card-estagio-atual' : ''}`}>
       <div className="card-estagio-topo">
         <span className="card-estagio-rotulo">
-          {atual ? 'Estágio atual' : 'Estágio anterior'}
+          {atual ? 'Estágio atual' : ['Concluído', 'Encerrado', 'Cancelado por desvio de função'].includes(status) ? 'Estágio anterior' : 'Vínculo de estágio'}
         </span>
 
         <StatusBadge status={status} />

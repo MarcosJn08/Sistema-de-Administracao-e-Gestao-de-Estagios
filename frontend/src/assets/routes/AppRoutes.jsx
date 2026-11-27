@@ -47,7 +47,7 @@ function AppRoutes() {
               <Route path="/sage/aluno/estagios/:estagioId" element={<TelaEstagio />} />
               <Route path="/sage/vagas/:vagaId/candidatura" element={<VitrineVagas />} />
               <Route path="/sage/enviar-documento" element={<EnviarDocumento />} />
-              <Route path="/sage/estagio" element={<Navigate to="/sage/aluno/estagios/1" replace />} />
+              <Route path="/sage/estagio" element={<Navigate to="/sage/aluno/estagios" replace />} />
             </Route>
 
             <Route element={<RoleRoute roles={['professor']} />}>
