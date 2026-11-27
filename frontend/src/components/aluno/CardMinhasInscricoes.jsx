@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../App.css';
 import StatusBadge from '../StatusBadge.jsx';
-import BotaoAcao from './BotaoAcao.jsx';
+import BotaoAcao from '../BotaoAcao.jsx';
 
 function CardMinhasInscricoes({
   inscricoes = [],
@@ -37,8 +37,8 @@ function CardMinhasInscricoes({
                     {item.acoes?.map((acao, index) => (
                       <BotaoAcao
                         key={index}
-                        tipo={acao}
-                        aoClicar={() => lidarComAcao && lidarComAcao(item, acao)}
+                        texto={acao}
+                        onClick={() => lidarComAcao && lidarComAcao(item, acao)}
                       />
                     ))}
                   </div>

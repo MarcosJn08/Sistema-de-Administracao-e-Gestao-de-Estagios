@@ -1,6 +1,6 @@
 import TabelaDocumentos from '../TabelaDocumentos.jsx';
 import StatusBadge from '../StatusBadge.jsx';
-import BotaoAcao from './BotaoAcao.jsx';
+import BotaoAcao from '../BotaoAcao.jsx';
 
 function CardDocumentos({
   documentos = [],
