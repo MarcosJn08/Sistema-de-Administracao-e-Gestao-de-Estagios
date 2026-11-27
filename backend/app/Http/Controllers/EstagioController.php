@@ -20,3 +20,4 @@ class EstagioController extends Controller
         return $this->successResponse($service->transicionar($estagio, StatusEstagio::from($data['status']), $request->user()->id, $data['motivo'] ?? null));
     }
 }
+

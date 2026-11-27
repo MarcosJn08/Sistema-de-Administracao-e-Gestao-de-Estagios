@@ -23,6 +23,7 @@ class UsuarioResource extends JsonResource
             'perfil'     => $perfil,
             'role'       => $role,
             'status'     => $this->status ?? ($this->is_active ? 'ativo' : 'inativo'),
+            'aluno_id'        => $this->when($role === 'aluno', $this->aluno?->id),
             'matricula'       => $this->when($role === 'aluno', $this->matricula),
             'siape'           => $this->when(in_array($role, ['professor', 'diretor'], true), $this->siape),
             'cnpj'            => $this->when($role === 'empresa', $this->cnpj),

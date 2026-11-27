@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
 const titulos = {
-  cadastro: 'Editar cadastro', orientador: 'Alterar orientador', horas: 'Validar horas de projetos',
+  cadastro: 'Editar cadastro', horas: 'Validar horas de projetos',
   encerrar: 'Encerrar estágio', homologar: 'Homologar carga horária e emitir certidão',
 };
 
-export default function FormAcaoDiretor({ acao, aluno, orientadores, aoSalvar, aoCancelar }) {
+export default function FormAcaoDiretor({ acao, aluno, aoSalvar, aoCancelar }) {
   const [erro, setErro] = useState('');
   const tituloRef = useRef(null);
   useEffect(() => { tituloRef.current?.focus(); }, []);
@@ -27,12 +27,6 @@ export default function FormAcaoDiretor({ acao, aluno, orientadores, aoSalvar, a
           <label key={campo}>{rotulo}<input name={campo} type={tipo} defaultValue={aluno[campo] || ''} required={obrigatorio} /></label>
         ))}
       </div>}
-      {acao === 'orientador' && <label>Orientador designado
-        <select name="orientadorId" defaultValue={aluno.estagio.orientadorId || orientadores.find((item) => item.nome === aluno.estagio.professorOrientador)?.id || ''} required>
-          <option value="" disabled>Selecione um professor</option>
-          {orientadores.map((orientador) => <option key={orientador.id} value={orientador.id}>{orientador.nome}</option>)}
-        </select>
-      </label>}
       {acao === 'horas' && <>
         <p>Ensino Médio Integrado: até 40h de pesquisa/extensão. Informe o total validado; ele substitui o total atual de {aluno.progresso.horasProjeto}h.</p>
         <label>Total de horas de projetos<input name="horas" type="number" min="0" max="40" step="any" defaultValue={aluno.progresso.horasProjeto} required /></label>

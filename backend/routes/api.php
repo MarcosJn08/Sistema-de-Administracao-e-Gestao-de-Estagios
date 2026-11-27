@@ -11,6 +11,7 @@ use App\Http\Controllers\ContratoEstagioController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EstagioController;
 use App\Http\Controllers\FrequenciaController;
+use App\Http\Controllers\OrientadorEstagioController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/status', fn () => response()->json(['success' => true, 'message' => 'API funcionando corretamente.', 'data' => ['version' => '1.0.0'], 'errors' => []]));
@@ -47,6 +48,13 @@ Route::middleware(['auth:sanctum', 'ativo', 'throttle:api'])->group(function () 
     Route::apiResource('usuarios', UsuarioController::class)->except(['index', 'store']);
     Route::get('/usuarios', [UsuarioController::class, 'index']);
     Route::post('/usuarios', [UsuarioController::class, 'store']);
+
+    Route::middleware('account.active')->group(function (): void {
+        Route::get('/orientadores', [OrientadorEstagioController::class, 'index'])->middleware('perfil:DIRETOR');
+        Route::patch('/estagios/{estagio}/orientador', [OrientadorEstagioController::class, 'vincular'])->whereNumber('estagio');
+        Route::delete('/estagios/{estagio}/orientador', [OrientadorEstagioController::class, 'desvincular'])->whereNumber('estagio');
+        Route::get('/orientador/meus-discentes', [OrientadorEstagioController::class, 'meusDiscentes'])->middleware('perfil:PROFESSOR');
+    });
 
     Route::apiResource('estagios', ContratoEstagioController::class)->only(['index', 'store', 'show', 'update']);
     Route::patch('/estagios/{estagio}/status', [EstagioController::class, 'status']);

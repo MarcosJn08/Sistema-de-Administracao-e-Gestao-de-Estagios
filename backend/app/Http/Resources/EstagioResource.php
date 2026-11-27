@@ -29,7 +29,7 @@ class EstagioResource extends JsonResource
             'curso' => $this->curso ? ['id' => $this->curso->id, 'nome' => $this->curso->nome] : null,
             'empresa' => ['id' => $this->empresa->id, 'razao_social' => $this->empresa->razao_social, 'cnpj' => $this->empresa->cnpj],
             'supervisor' => ['id' => $this->supervisor->id, 'nome' => $this->supervisor->nome],
-            'orientador' => ['id' => $this->orientador->id, 'nome' => $this->orientador->usuario?->nome],
+            'orientador' => $this->orientador ? ['id' => $this->orientador->id, 'nome' => $this->orientador->usuario?->nome] : null,
             'apolice' => $this->apolice, 'plano' => $this->plano,
             'documentos' => $this->documentos,
         ];

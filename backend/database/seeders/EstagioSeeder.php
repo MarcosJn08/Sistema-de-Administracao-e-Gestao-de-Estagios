@@ -22,18 +22,32 @@ class EstagioSeeder extends Seeder
         }
 
         DB::transaction(function (): void {
-            $empresa = EmpresaConcedente::where('cnpj', '12345678000190')->where('status_convenio', 'ATIVO')->first();
-            $usuarioEmpresa = User::where('email', 'contato@techinovacoes.com.br')->where('role', 'empresa')->where('status', 'ativo')->first();
+            $usuarioEmpresa = User::where('role', 'empresa')->where('status', 'ativo')->orderBy('id')->first();
+
+            // Garante que existe pelo menos uma empresa concedente ativa para os estágios de demonstração.
+            $empresa = EmpresaConcedente::where('status_convenio', 'ATIVO')->orderBy('id')->first();
+            if (! $empresa && $usuarioEmpresa) {
+                $empresa = EmpresaConcedente::firstOrCreate(
+                    ['cnpj' => preg_replace('/\D/', '', $usuarioEmpresa->cnpj ?? '12345678000190')],
+                    [
+                        'razao_social' => $usuarioEmpresa->name ?? 'Tech Inovações LTDA',
+                        'endereco_completo' => 'Av. Principal, 100 – Montes Claros/MG',
+                        'representante_legal' => $usuarioEmpresa->name ?? 'Representante',
+                        'status_convenio' => 'ATIVO',
+                    ]
+                );
+            }
+
             $supervisor = SupervisorEmpresa::whereHas('empresa', fn ($q) => $q->where('status_convenio', 'ATIVO'))
                 ->whereIn('usuario_id', User::where('role', 'empresa')->where('status', 'ativo')->select('id'))->orderBy('id')->first();
 
-            // Os seeders existentes não cadastram supervisor. Vincula apenas as contas de demonstração conhecidas.
+            // Vincula o usuário empresa como supervisor se ainda não existir.
             if (! $supervisor && $empresa && $usuarioEmpresa) {
                 $supervisor = SupervisorEmpresa::firstOrCreate([
                     'empresa_concedente_id' => $empresa->id,
                     'usuario_id' => $usuarioEmpresa->id,
                 ], [
-                    'nome' => $usuarioEmpresa->nome,
+                    'nome' => $usuarioEmpresa->name ?? $usuarioEmpresa->nome,
                     'cargo' => 'Supervisor de estágio',
                     'formacao' => 'Sistemas de Informação',
                     'telefone' => '38999990000',

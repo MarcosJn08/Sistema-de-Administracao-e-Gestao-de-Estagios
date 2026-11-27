@@ -95,7 +95,7 @@ class UsuarioControllerTest extends TestCase
             'status' => 'ativa',
         ]);
 
-        Aluno::create([
+        $aluno = Aluno::create([
             'usuario_id' => $this->aluno->id,
             'turma_id' => $turma->id,
             'matricula' => $this->aluno->matricula,
@@ -105,7 +105,8 @@ class UsuarioControllerTest extends TestCase
         $this->actingAs($this->diretor, 'sanctum')
             ->getJson('/api/usuarios?curso=Sistemas')
             ->assertOk()
-            ->assertJsonFragment(['id' => $this->aluno->id]);
+            ->assertJsonPath('data.0.id', $this->aluno->id)
+            ->assertJsonPath('data.0.aluno_id', $aluno->id);
 
         $this->actingAs($this->diretor, 'sanctum')
             ->getJson('/api/usuarios?curso=Direito')

@@ -27,7 +27,7 @@ class EstagioPolicy
     {
         return $usuario->temPerfil(UserRole::DIRETOR)
             || ($usuario->temPerfil(UserRole::ALUNO) && $estagio->aluno->usuario_id === $usuario->id)
-            || ($usuario->temPerfil(UserRole::PROFESSOR) && $estagio->orientador->usuario_id === $usuario->id)
+            || ($usuario->temPerfil(UserRole::PROFESSOR) && $estagio->orientador?->usuario_id === $usuario->id)
             || ($usuario->temPerfil(UserRole::EMPRESA) && $estagio->supervisor->usuario_id === $usuario->id);
     }
 
@@ -47,6 +47,11 @@ class EstagioPolicy
     }
 
     public function transition(User $usuario, Estagio $estagio): bool
+    {
+        return $usuario->temPerfil(UserRole::DIRETOR);
+    }
+
+    public function vincularOrientador(User $usuario, Estagio $estagio): bool
     {
         return $usuario->temPerfil(UserRole::DIRETOR);
     }

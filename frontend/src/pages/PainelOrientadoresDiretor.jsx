@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { Col, Container, Row, Table } from 'react-bootstrap';
-import { BookOpenCheck, Eye, Plus, RotateCcw, Search, Sparkles, UserMinus, UsersRound } from 'lucide-react';
+import { useState } from 'react';
+import { Alert, Col, Container, Row, Table } from 'react-bootstrap';
+import { BookOpenCheck, Eye, Plus, RotateCcw, Search, UserCheck, UserMinus, UsersRound } from 'lucide-react';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import CardPequeno from '../components/CardPequeno.jsx';
@@ -10,10 +10,11 @@ import Button from "../components/Button/Button.jsx";
 import StatusBadge from '../components/StatusBadge.jsx';
 import Paginacao from '../components/Paginacao.jsx';
 import ModalProfessor from '../components/orientador/ModalProfessor.jsx';
-import ToastAlerta from '../components/ToastAlerta.jsx';
-import dadosDiretor from '../data/diretor.js';
-import orientadoresIniciais, { departamentos, statusOrientador } from '../data/orientadores.js';
+import ModalVinculoOrientador from '../components/orientador/ModalVinculoOrientador.jsx';
+import useConsultaApi from '../hooks/useConsultaApi.js';
+import { departamentos as departamentosCadastro } from '../data/orientadores.js';
 import api from '../services/api.js';
+import { listarVinculosOrientacao, vinculoPodeSerAlterado } from '../utils/vinculosOrientacao.js';
 import '../App.css';
 import './PainelOrientadoresDiretor.css';
 
@@ -21,46 +22,33 @@ const ITENS_POR_PAGINA = 10;
 const normalizar = (valor) => String(valor ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 
 function PainelOrientadoresDiretor() {
-  const [orientadores, setOrientadores] = useState([]);
+  const { dados, erro, carregando, recarregar } = useConsultaApi('/orientadores');
   const [busca, setBusca] = useState('');
   const [departamento, setDepartamento] = useState('');
   const [status, setStatus] = useState('');
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [professorSelecionadoId, setProfessorSelecionadoId] = useState(null);
+  const [vinculoAberto, setVinculoAberto] = useState(false);
   const [cadastroAberto, setCadastroAberto] = useState(false);
-  const [toast, setToast] = useState({ mensagem: '', tipo: 'sucesso' });
+  const [mensagem, setMensagem] = useState('');
 
-  useEffect(() => {
-    let ativo = true;
-    api.get('/usuarios', { params: { perfil: 'PROFESSOR', per_page: 100 } })
-      .then((resposta) => {
-        if (!ativo) return;
-        const usuariosApi = resposta?.data?.data || [];
-        const novos = usuariosApi.map((u) => ({
-          id: u.id,
-          nome: u.nome,
-          siape: u.siape || '---',
-          cpf: u.cpf || 'Não informado',
-          email: u.email,
-          telefone: u.telefone || '(38) 99999-0000',
-          titulacao: u.titulacao || 'Não informada',
-          departamento: u.departamento || 'Informática',
-          areaAtuacao: u.area_atuacao || u.departamento || 'Geral',
-          regimeTrabalho: u.regime_trabalho || 'Dedicação exclusiva',
-          maximoOrientandos: u.max_orientados || 5,
-          alunosOrientados: 0,
-          disponivelOrientacao: u.status === 'ativo',
-          status: u.status === 'inativo' ? 'Inativo' : 'Ativo',
-          novoNesteSemestre: true,
-        }));
-        setOrientadores(novos);
-      })
-      .catch((err) => console.warn('Erro ao carregar orientadores da API:', err));
-
-    return () => { ativo = false; };
-  }, []);
-
+  const orientadores = (dados?.orientadores ?? []).map((item) => ({
+    ...item,
+    status: item.ativo ? 'Ativo' : 'Inativo',
+    alunosOrientados: item.discentes.length,
+    maximoOrientandos: item.max_orientados,
+    disponivelOrientacao: item.disponivel,
+    usuarioId: item.usuario_id,
+    areaAtuacao: item.area_atuacao,
+    regimeTrabalho: item.regime_trabalho,
+  }));
+  const departamentos = [...new Set(orientadores.map((item) => item.departamento))].sort();
+  const opcoesCadastro = [...new Set([...departamentosCadastro, ...departamentos])].sort();
   const professorSelecionado = orientadores.find((professor) => professor.id === professorSelecionadoId);
+  const estagiosDisponiveis = vinculoAberto
+    ? listarVinculosOrientacao(dados).filter(vinculoPodeSerAlterado)
+      .filter(({ orientador }) => !orientador || !orientador.id)
+    : [];
   const termo = normalizar(busca);
   const filtrados = orientadores.filter((professor) => {
     const correspondeBusca = [professor.nome, professor.siape, professor.email]
@@ -77,9 +65,9 @@ function PainelOrientadoresDiretor() {
 
   const indicadores = [
     { titulo: 'Total de professores', valor: orientadores.length, texto: 'Professores cadastrados no campus', icone: <UsersRound size={23} />, variante: 'azul' },
-    { titulo: 'Orientadores ativos', valor: orientadores.filter((item) => item.status === 'Ativo').length, texto: 'Disponíveis no semestre atual', icone: <BookOpenCheck size={23} />, variante: 'verde' },
-    { titulo: 'Sem vínculo', valor: orientadores.filter((item) => item.alunosOrientados === 0).length, texto: 'Disponíveis para novos projetos', icone: <UserMinus size={23} />, variante: 'cinza' },
-    { titulo: 'Novos neste semestre', valor: orientadores.filter((item) => item.novoNesteSemestre).length, texto: 'Professores recém-admitidos', icone: <Sparkles size={23} />, variante: 'azul' },
+    { titulo: 'Orientadores ativos', valor: orientadores.filter((item) => item.ativo).length, texto: 'Professores com conta ativa', icone: <BookOpenCheck size={23} />, variante: 'verde' },
+    { titulo: 'Sem vínculo', valor: orientadores.filter((item) => item.alunosOrientados === 0).length, texto: 'Professores sem discentes vinculados', icone: <UserMinus size={23} />, variante: 'cinza' },
+    { titulo: 'Disponíveis', valor: orientadores.filter((item) => item.disponivel).length, texto: 'Com capacidade para orientar', icone: <UserCheck size={23} />, variante: 'azul' },
   ];
 
   const limparFiltros = () => {
@@ -89,67 +77,57 @@ function PainelOrientadoresDiretor() {
     setPaginaAtual(1);
   };
 
-  const salvarProfessor = async (dados) => {
-    if (!dados.nome || !dados.siape || !dados.cpf || !dados.departamento || !dados.titulacao || !dados.email
-      || !dados.telefone || !dados.areaAtuacao || !dados.regimeTrabalho || !dados.maximoOrientandos) {
-      throw new Error('Preencha os campos obrigatórios.');
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dados.email)) {
-      throw new Error('Informe um e-mail institucional válido.');
-    }
-    if (orientadores.some((item) => item.id !== dados.id && item.siape === dados.siape)) {
-      throw new Error('Já existe um professor cadastrado com este SIAPE.');
-    }
-    if (orientadores.some((item) => item.id !== dados.id && item.cpf === dados.cpf)) {
-      throw new Error('Já existe um professor cadastrado com este CPF.');
-    }
-    if (orientadores.some((item) => item.id !== dados.id && normalizar(item.email) === normalizar(dados.email))) {
-      throw new Error('Já existe um professor cadastrado com este e-mail.');
-    }
-    if (dados.maximoOrientandos < dados.alunosOrientados) {
-      throw new Error('O limite não pode ser menor que o número atual de alunos orientados.');
-    }
+  const abrirPerfil = (id) => {
+    setMensagem('');
+    setProfessorSelecionadoId(id);
+  };
 
-    if (dados.id && !String(dados.id).startsWith('professor-')) {
-      await api.put(`/usuarios/${dados.id}`, {
-        nome: dados.nome,
-        email: dados.email,
-        siape: dados.siape,
-        cpf: dados.cpf,
-        titulacao: dados.titulacao,
-        departamento: dados.departamento,
-        areaAtuacao: dados.areaAtuacao,
-        regimeTrabalho: dados.regimeTrabalho,
-        telefone: dados.telefone,
-        maximoOrientandos: dados.maximoOrientandos,
-      });
-      setOrientadores((atuais) => atuais.map((item) => item.id === dados.id ? dados : item));
-      setToast({ mensagem: 'Orientador atualizado com sucesso!', tipo: 'sucesso' });
-    } else {
-      const { data: resultado } = await api.post('/usuarios', {
-        nome: dados.nome,
-        email: dados.email,
-        password: dados.siape + '@Sage',
-        perfil: 'PROFESSOR',
-        siape: dados.siape,
-        cpf: dados.cpf,
-        titulacao: dados.titulacao,
-        departamento: dados.departamento,
-        areaAtuacao: dados.areaAtuacao,
-        regimeTrabalho: dados.regimeTrabalho,
-        telefone: dados.telefone,
-        maximoOrientandos: dados.maximoOrientandos,
-      });
-      const criado = resultado?.data;
-      setOrientadores((atuais) => [{ ...dados, id: criado?.id ?? `professor-${Date.now()}` }, ...atuais]);
-      setToast({ mensagem: 'Orientador cadastrado com sucesso!', tipo: 'sucesso' });
-      setPaginaAtual(1);
+  const vinculoSalvo = () => {
+    setVinculoAberto(false);
+    setMensagem('Vínculo de orientação salvo com sucesso.');
+    recarregar();
+  };
+
+  const desvincularEstagio = async (estagioId) => {
+    try {
+      await api.delete('/estagios/' + estagioId + '/orientador');
+      setVinculoAberto(false);
+      setMensagem('Orientador desvinculado com sucesso.');
+      recarregar();
+    } catch (error) {
+      setMensagem(error.message || 'Não foi possível desvincular o orientador.');
     }
+  };
+
+  const salvarProfessor = async (professor) => {
+    const payload = {
+      nome: professor.nome,
+      email: professor.email,
+      siape: professor.siape,
+      cpf: professor.cpf,
+      titulacao: professor.titulacao,
+      departamento: professor.departamento,
+      areaAtuacao: professor.areaAtuacao,
+      regimeTrabalho: professor.regimeTrabalho,
+      telefone: professor.telefone,
+      maximoOrientandos: professor.maximoOrientandos,
+      status: professor.status === 'Inativo' ? 'inativo' : 'ativo',
+    };
+
+    if (professor.usuarioId != null) {
+      await api.put('/usuarios/' + professor.usuarioId, payload);
+      setMensagem('Cadastro do professor atualizado.');
+    } else {
+      await api.post('/usuarios', { ...payload, perfil: 'PROFESSOR', password: professor.siape + '@Sage' });
+      setPaginaAtual(1);
+      setMensagem('Professor cadastrado com sucesso.');
+    }
+    recarregar();
   };
 
   return (
     <div className="painel-orientadores d-flex flex-column min-vh-100">
-      <Header paginaAtiva="Orientadores" usuario={dadosDiretor.diretor} />
+      <Header paginaAtiva="Orientadores" />
 
       <main className="flex-grow-1 py-4">
         <Container className="px-3 painel-orientadores-container">
@@ -158,11 +136,15 @@ function PainelOrientadoresDiretor() {
               <h1>Gerenciar professores</h1>
               <p>Gerencie os professores e orientadores de estágio do campus</p>
             </div>
-            <Button tipo="botao-sage-verde" className="gap-2" onClick={() => setCadastroAberto(true)}>
+            <Button tipo="botao-sage-verde" className="gap-2" onClick={() => { setMensagem(''); setCadastroAberto(true); }}>
               <Plus size={17} aria-hidden="true" /> Cadastrar professor
             </Button>
           </div>
 
+          {!professorSelecionado && mensagem && <Alert variant="success" role="status">{mensagem}</Alert>}
+          {carregando && <p role="status">Carregando orientadores…</p>}
+          {erro && <Alert variant="danger" role="alert">{erro} <Button onClick={recarregar}>Tentar novamente</Button></Alert>}
+          {dados && <>
           <Row className="g-4 mb-4">
             {indicadores.map((indicador) => <Col key={indicador.titulo} xs={12} sm={6} lg={3}>
               <CardPequeno {...indicador} />
@@ -187,7 +169,7 @@ function PainelOrientadoresDiretor() {
               <Col xs={12} md={6} lg={3}>
                 <Select id="status-orientadores" titulo="Status" value={status}
                   onChange={(evento) => { setStatus(evento.target.value); setPaginaAtual(1); }} className="mb-0"
-                  opcoes={[{ valor: '', rotulo: 'Todos' }, ...statusOrientador]} />
+                  opcoes={[{ valor: '', rotulo: 'Todos' }, 'Ativo', 'Inativo']} />
               </Col>
             </Row>
           </section>
@@ -215,20 +197,20 @@ function PainelOrientadoresDiretor() {
                 <tbody>
                   {professoresPaginados.map((professor) => <tr key={professor.id}>
                     <td className="fw-bold">{professor.siape}</td>
-                    <td><span className="fw-bold d-block">{professor.nome}</span><span className="small text-secondary">{professor.titulacao}</span></td>
+                    <td><span className="fw-bold d-block">{professor.nome}</span><span className="small text-secondary">{professor.disponivel ? 'Disponível' : 'Indisponível'}</span></td>
                     <td>{professor.departamento}</td>
                     <td><a href={`mailto:${professor.email}`}>{professor.email}</a></td>
                     <td className="text-center fw-bold">{professor.alunosOrientados}</td>
                     <td><StatusBadge status={professor.status} /></td>
                     <td><Button tipo="botao-sage-verde" className="gap-2 text-nowrap"
-                      onClick={() => setProfessorSelecionadoId(professor.id)} aria-label={`Ver perfil de ${professor.nome}`}>
+                      onClick={() => abrirPerfil(professor.id)} aria-label={`Ver perfil de ${professor.nome}`}>
                       <Eye size={15} aria-hidden="true" /> Ver perfil
                     </Button></td>
                   </tr>)}
                   {filtrados.length === 0 && <tr><td colSpan={7} className="text-center py-5">
                     <UserMinus size={32} className="text-secondary mb-3" aria-hidden="true" />
-                    <p className="fw-bold mb-1">Nenhum professor encontrado</p>
-                    <p className="text-secondary mb-0">Altere a busca ou limpe os filtros para ver outros professores.</p>
+                    <p className="fw-bold mb-1">{orientadores.length ? 'Nenhum professor encontrado' : 'Nenhum orientador cadastrado'}</p>
+                    {orientadores.length > 0 && <p className="text-secondary mb-0">Altere a busca ou limpe os filtros para ver outros professores.</p>}
                   </td></tr>}
                 </tbody>
               </Table>
@@ -237,16 +219,22 @@ function PainelOrientadoresDiretor() {
             <Paginacao paginaAtual={paginaExibida} totalPaginas={totalPaginas} aoMudarPagina={setPaginaAtual}
               textoResumo={`Mostrando ${primeiroExibido}–${ultimoExibido} de ${filtrados.length} professores`} />
           </section>
+          </>}
         </Container>
       </main>
 
-      <ModalProfessor key={cadastroAberto ? 'cadastro' : 'cadastro-fechado'} aberto={cadastroAberto}
-        departamentos={departamentos} statusDisponiveis={statusOrientador} aoSalvar={salvarProfessor}
-        aoFechar={() => setCadastroAberto(false)} />
-      <ModalProfessor key={professorSelecionadoId || 'perfil-fechado'} aberto={Boolean(professorSelecionado)}
-        professor={professorSelecionado} departamentos={departamentos} statusDisponiveis={statusOrientador}
-        aoSalvar={salvarProfessor} aoFechar={() => setProfessorSelecionadoId(null)} />
-      <ToastAlerta mensagem={toast.mensagem} tipo={toast.tipo} aoFechar={() => setToast({ mensagem: '', tipo: 'sucesso' })} />
+      {cadastroAberto && <ModalProfessor aberto cadastroIntegrado departamentos={opcoesCadastro} statusDisponiveis={['Ativo', 'Inativo']}
+        aoSalvar={salvarProfessor} aoFechar={() => setCadastroAberto(false)} />}
+      {professorSelecionado && (vinculoAberto ? (
+        <ModalVinculoOrientador vinculos={estagiosDisponiveis} professor={professorSelecionado}
+          carregando={carregando} erroConsulta={erro} aoRecarregar={recarregar}
+          aoSalvar={vinculoSalvo} aoDesvincular={desvincularEstagio} aoFechar={() => setVinculoAberto(false)} />
+      ) : (
+        <ModalProfessor key={professorSelecionadoId} aberto cadastroIntegrado professor={professorSelecionado}
+          somenteLeitura={!professorSelecionado.cadastro_editavel} departamentos={opcoesCadastro} statusDisponiveis={['Ativo', 'Inativo']}
+          aoSalvar={salvarProfessor} aoDesvincular={desvincularEstagio} aoFechar={() => setProfessorSelecionadoId(null)} mensagem={mensagem}
+          aoVincularEstagio={() => { setMensagem(''); setVinculoAberto(true); }} />
+      ))}
       <Footer />
     </div>
   );

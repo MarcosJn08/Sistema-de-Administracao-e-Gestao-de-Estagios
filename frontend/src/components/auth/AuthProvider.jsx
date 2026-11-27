@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../hooks/useAuth.js';
 import api, { configureApiAuth } from '../../services/api.js';
@@ -55,7 +55,8 @@ export default function AuthProvider({ children }) {
     });
   }, [location.pathname, location.search, navigate, updateSession]);
 
-  useEffect(() => configureApiAuth({
+  // Registra o token antes das consultas iniciadas pelos efeitos das páginas após a navegação.
+  useLayoutEffect(() => configureApiAuth({
     getToken: () => sessionRef.current.token,
     onUnauthorized: expireSession,
   }), [expireSession]);

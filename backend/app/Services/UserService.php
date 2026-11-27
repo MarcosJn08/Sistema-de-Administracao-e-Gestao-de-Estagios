@@ -103,6 +103,10 @@ class UserService
                 throw ValidationException::withMessages(['status' => 'Você não pode desativar a própria conta.']);
             }
 
+            if (isset($dados['status'])) {
+                $dados['is_active'] = $dados['status'] === 'ativo';
+            }
+
             $usuario->update($dados);
 
             $perfil = strtoupper((string) ($usuario->perfil instanceof \BackedEnum ? $usuario->perfil->value : ($usuario->perfil ?? $usuario->role)));
@@ -118,6 +122,14 @@ class UserService
                 ], fn ($val) => $val !== null);
 
                 if (! empty($camposProfessor)) {
+                    if (isset($camposProfessor['max_orientados'])) {
+                        $orientador = ProfessorOrientador::where('usuario_id', $usuario->id)->lockForUpdate()->first();
+                        if ($orientador && $camposProfessor['max_orientados'] < $orientador->estagiosAtivos()->count()) {
+                            throw ValidationException::withMessages([
+                                'maximoOrientandos' => 'O limite não pode ser menor que o número de estágios ativos.',
+                            ]);
+                        }
+                    }
                     ProfessorOrientador::updateOrCreate(['usuario_id' => $usuario->id], $camposProfessor);
                 }
             } elseif ($perfil === 'ALUNO') {
@@ -138,7 +150,7 @@ class UserService
             }
 
             return $usuario->refresh();
-        });
+        }, 3);
     }
 
     public function inativar(Usuario $usuario, int $authUserId): void

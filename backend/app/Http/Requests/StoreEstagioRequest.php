@@ -20,7 +20,7 @@ class StoreEstagioRequest extends FormRequest
             'aluno_id' => 'required|integer|exists:alunos,id',
             'empresa_concedente_id' => 'required|integer|exists:empresas_concedentes,id',
             'supervisor_empresa_id' => 'required|integer|exists:supervisores_empresa,id',
-            'professor_orientador_id' => 'required|integer|exists:professores_orientadores,id',
+            'professor_orientador_id' => 'nullable|integer|exists:professores_orientadores,id',
             'cargo' => 'required|string|max:255',
             'data_inicio' => 'required|date_format:Y-m-d',
             'data_termino' => 'required|date_format:Y-m-d|after_or_equal:data_inicio',

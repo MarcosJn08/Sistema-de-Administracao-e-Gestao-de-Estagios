@@ -1,15 +1,20 @@
 import { useState } from 'react';
 import { CheckCircle2, Clock3 } from 'lucide-react';
 import StatusBadge from '../StatusBadge.jsx';
+import api from '../../services/api.js';
 import { assinaturaPartes, exigeHomologacaoFinal, pendenciasAssinaturas, podeAvaliarDocumentoAluno } from '../../utils/gestaoAluno.js';
 
 export default function DocumentoAluno({ documento, perfil = 'professor', aoAtualizar }) {
   const [devolvendo, setDevolvendo] = useState(false);
   const [visualizando, setVisualizando] = useState(false);
   const [erro, setErro] = useState('');
-  const homologacaoFinal = exigeHomologacaoFinal(documento);
+  const [salvando, setSalvando] = useState(false);
+  const [baixando, setBaixando] = useState(false);
+  const integrado = documento.estagioId != null;
+  const homologacaoFinal = !integrado && exigeHomologacaoFinal(documento);
   const diretor = perfil === 'diretor';
-  const podeAvaliar = typeof aoAtualizar === 'function' && podeAvaliarDocumentoAluno(documento, perfil);
+  const podeAvaliar = typeof aoAtualizar === 'function'
+    && (integrado ? documento.podeAvaliar : podeAvaliarDocumentoAluno(documento, perfil));
   const pendencias = diretor && homologacaoFinal ? pendenciasAssinaturas(documento) : [];
   const aprovado = homologacaoFinal
     ? documento.aprovadoPelaDirecao || (['Aprovado', 'Deferido'].includes(documento.status) && documento.assinaturas?.direcao === 'assinado')
@@ -18,12 +23,36 @@ export default function DocumentoAluno({ documento, perfil = 'professor', aoAtua
   const partes = documento.tipo === 'tce' ? ['empresa', 'aluno', 'direcao']
     : documento.tipo === 'ficha-matricula' ? ['aluno', 'direcao'] : Object.keys(documento.assinaturas || {});
 
-  const atualizar = (acao) => {
+  const atualizar = async (acao) => {
+    if (salvando) return;
+    setSalvando(true);
     try {
-      aoAtualizar({ ...acao, documentoId: documento.id });
+      await aoAtualizar({ ...acao, documentoId: documento.id });
       setErro('');
       setDevolvendo(false);
-    } catch (error) { setErro(error.message); }
+    } catch (error) {
+      setErro(error.message);
+    } finally {
+      setSalvando(false);
+    }
+  };
+
+  const baixar = async () => {
+    setBaixando(true);
+    setErro('');
+    try {
+      const { data } = await api.get('/estagios/' + documento.estagioId + '/documentos/' + documento.id + '/download', { responseType: 'blob' });
+      const url = URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'documento-' + documento.id + '.pdf';
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (error) {
+      setErro(error.message);
+    } finally {
+      setBaixando(false);
+    }
   };
 
   return (
@@ -52,7 +81,10 @@ export default function DocumentoAluno({ documento, perfil = 'professor', aoAtua
       {documento.justificativa && <p className="perfil-aluno-justificativa"><strong>Motivo da devolução:</strong> {documento.justificativa}</p>}
       {erro && <p className="perfil-aluno-erro" role="alert">{erro}</p>}
       <div className="perfil-aluno-acoes">
-        {documento.url ? (
+        {integrado && documento.temArquivo ? (
+          <button type="button" className="perfil-aluno-botao perfil-aluno-botao-visualizar" disabled={baixando}
+            onClick={baixar}>{baixando ? 'Baixando…' : 'Baixar PDF'}</button>
+        ) : documento.url ? (
           <a className="perfil-aluno-botao perfil-aluno-botao-visualizar" href={documento.url} target="_blank" rel="noopener noreferrer"
             aria-label={`Visualizar ${documento.nome}`}>Visualizar</a>
         ) : (
@@ -60,9 +92,9 @@ export default function DocumentoAluno({ documento, perfil = 'professor', aoAtua
             aria-expanded={visualizando} aria-controls={`documento-previa-${documento.id}`} aria-label={`Visualizar ${documento.nome}`}>Visualizar</button>
         )}
         {podeAvaliar && <>
-          <button type="button" className="perfil-aluno-botao perfil-aluno-botao-primario" disabled={aprovado || pendencias.length > 0 || (!diretor && parecerAprovado)}
+          <button type="button" className="perfil-aluno-botao perfil-aluno-botao-primario" disabled={salvando || aprovado || pendencias.length > 0 || (!diretor && parecerAprovado)}
             onClick={() => atualizar({ tipo: 'aprovar' })} aria-label={`Aprovar ${documento.nome}`}>{!diretor && homologacaoFinal ? 'Aprovar parecer' : 'Aprovar'}</button>
-          <button type="button" className="perfil-aluno-botao perfil-aluno-botao-perigo" onClick={() => setDevolvendo(!devolvendo)}
+          <button type="button" className="perfil-aluno-botao perfil-aluno-botao-perigo" disabled={salvando} onClick={() => setDevolvendo(!devolvendo)}
             aria-expanded={devolvendo} aria-controls={`documento-devolucao-${documento.id}`} aria-label={`Devolver ${documento.nome}`}>Devolver</button>
         </>}
       </div>
@@ -78,7 +110,7 @@ export default function DocumentoAluno({ documento, perfil = 'professor', aoAtua
       }}>
         <label>Justificativa obrigatória<textarea name="motivo" rows={3} required maxLength={1000} placeholder="Descreva os ajustes necessários neste documento." /></label>
         <div className="perfil-aluno-acoes">
-          <button type="submit" className="perfil-aluno-botao perfil-aluno-botao-perigo">Confirmar devolução</button>
+          <button type="submit" className="perfil-aluno-botao perfil-aluno-botao-perigo" disabled={salvando}>Confirmar devolução</button>
           <button type="button" className="perfil-aluno-botao" onClick={() => setDevolvendo(false)}>Cancelar</button>
         </div>
       </form>}

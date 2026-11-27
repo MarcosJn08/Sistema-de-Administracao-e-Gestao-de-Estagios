@@ -21,7 +21,7 @@ export function podeAvaliarDocumentoAluno(documento, perfil) {
     || (['Aprovado', 'Deferido'].includes(documento.status) && documento.assinaturas?.direcao === 'assinado'));
 }
 
-export function aplicarAcaoAluno(aluno, acao, { perfil, orientadores = [], alunos = [] } = {}) {
+export function aplicarAcaoAluno(aluno, acao, { perfil, alunos = [] } = {}) {
   if (perfil !== 'diretor' && !(perfil === 'professor' && ['aprovar', 'devolver'].includes(acao.tipo))) {
     throw new Error('Esta ação é exclusiva da Direção.');
   }
@@ -39,12 +39,6 @@ export function aplicarAcaoAluno(aluno, acao, { perfil, orientadores = [], aluno
         throw new Error('Esta matrícula já pertence a outro aluno.');
       }
       return { ...aluno, ...campos };
-    }
-    case 'orientador': {
-      if (!estagioEditavel) throw new Error('O estágio não está disponível para alteração.');
-      const orientador = orientadores.find((item) => item.id === acao.orientadorId);
-      if (!orientador) throw new Error('Selecione um orientador cadastrado.');
-      return { ...aluno, estagio: { ...aluno.estagio, orientadorId: orientador.id, professorOrientador: orientador.nome } };
     }
     case 'encerrar':
       if (!estagioEditavel) throw new Error('O estágio não está disponível para encerramento.');
