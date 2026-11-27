@@ -108,7 +108,7 @@ export default function AbaSupervisaoCampo() {
     <div className="cartao-sage p-4 mb-4">
       <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
         <div>
-          <h2 className="cartao-sage-titulo mb-1">Supervisão de Estágio em Campo (RN09)</h2>
+          <h2 className="cartao-sage-titulo mb-1">Supervisão de Estágio em Campo</h2>
           <p className="text-secondary small mb-0">
             Controle e lançamento diário de presenças e horas para cursos com modalidade supervisionada (ex: Técnico em Enfermagem).
           </p>

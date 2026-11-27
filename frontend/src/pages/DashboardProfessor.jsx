@@ -11,7 +11,6 @@ import Button from "../components/Button/Button.jsx";
 import Paginacao from '../components/Paginacao.jsx';
 import DetalhesAluno from '../components/aluno/DetalhesAluno.jsx';
 import useConsultaApi from '../hooks/useConsultaApi.js';
-import AbaSupervisaoCampo from '../components/professor/AbaSupervisaoCampo.jsx';
 import api from '../services/api.js';
 import '../App.css';
 import './DashboardProfessor.css';
@@ -133,7 +132,6 @@ export default function DashboardProfessor() {
           <Row className="g-4 mb-4">{indicadores.map((indicador) => (
             <Col key={indicador.titulo} xs={12} sm={6} lg={3}><CardPequeno {...indicador} /></Col>
           ))}</Row>
-          <AbaSupervisaoCampo />
 
           <section className="cartao-sage" aria-label="Discentes orientados">
             <Row className="g-3 mb-4 align-items-end">

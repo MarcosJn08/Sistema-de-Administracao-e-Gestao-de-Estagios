@@ -26,6 +26,7 @@ import PainelDocumentosDiretor from '../../pages/PainelDocumentosDiretor.jsx';
 import GestaoCandidatos from '../../pages/GestaoCandidatos.jsx';
 import PerfilCandidato from '../../pages/PerfilCandidato.jsx';
 import MeusEstagiarios from '../../pages/MeusEstagiarios.jsx';
+import SupervisaoCampo from '../../pages/SupervisaoCampo.jsx';
 import EnviarDocumento from "../../pages/EnviarDocumento.jsx";
 
 function AppRoutes() {
@@ -53,6 +54,7 @@ function AppRoutes() {
             <Route element={<RoleRoute roles={['professor']} />}>
               <Route path="/sage/professor" element={<DashboardProfessor />} />
               <Route path="/sage/professor/alunos" element={<DashboardProfessor />} />
+              <Route path="/sage/professor/supervisao-campo" element={<SupervisaoCampo />} />
             </Route>
 
             <Route element={<RoleRoute roles={['diretor']} />}>
