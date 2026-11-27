@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, FileText, ArrowLeft, Plus, Check } from 'lucide-react';
+import SecaoFrequenciasMensais from '../frequencia/SecaoFrequenciasMensais.jsx';
 import './ModalDetalhesEstagiario.css';
 
 function ModalDetalhesEstagiario({
@@ -345,6 +346,14 @@ function ModalDetalhesEstagiario({
                     <p className="texto-observacoes">"{avaliacaoRecente.observacoes}"</p>
                   </div>
                 </div>
+              </div>
+
+              <div className="mt-4">
+                <SecaoFrequenciasMensais
+                  estagioId={estagiario.estagioId || estagiario.id}
+                  podeAprovar={true}
+                  podeEnviar={false}
+                />
               </div>
 
               <div className="modal-estagiario-voltar-card">

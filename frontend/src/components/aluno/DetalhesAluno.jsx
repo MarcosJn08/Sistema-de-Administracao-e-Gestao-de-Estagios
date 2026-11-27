@@ -57,8 +57,8 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', aoAtuali
             {aoVincularProfessor && (
               <button type="button" className="perfil-aluno-botao" onClick={aoVincularProfessor}>
                 {estagio?.professorOrientador && estagio.professorOrientador !== 'Sem orientador'
-                  ? 'Alterar / Desvincular Orientador'
-                  : 'Vincular a professor'}
+                  ? 'Gerenciar orientador'
+                  : 'Vincular orientador'}
               </button>
             )}
             <button type="button" className="perfil-aluno-botao perfil-aluno-botao-perigo" disabled={!estagioEditavel}
