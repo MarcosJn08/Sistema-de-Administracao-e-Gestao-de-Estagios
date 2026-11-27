@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CursoController;
+use App\Http\Controllers\Api\GoogleAuthController;
 use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\CadastroController;
@@ -19,6 +20,11 @@ Route::get('/cursos/{curso}', [CursoController::class, 'show']);
 Route::prefix('auth')->name('auth.')->group(function (): void {
     Route::post('/login', [AuthController::class, 'login'])
         ->middleware('throttle:auth-login')->name('login');
+
+    Route::prefix('google')->name('google.')->group(function (): void {
+        Route::get('/redirect', [GoogleAuthController::class, 'redirect'])->name('redirect');
+        Route::match(['get', 'post'], '/callback', [GoogleAuthController::class, 'callback'])->name('callback');
+    });
 
     Route::middleware('throttle:10,1')->name('password.')->group(function (): void {
         Route::post('/esqueci-senha', [PasswordResetController::class, 'esqueciSenha'])->name('forgot');

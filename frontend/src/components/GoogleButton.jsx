@@ -1,10 +1,11 @@
 import React from "react";
 
-const GoogleButton = ({ onClick }) => {
+const GoogleButton = ({ onClick, disabled = false, carregando = false }) => {
   return (
     <button
       type="button"
       onClick={onClick}
+      disabled={disabled || carregando}
       style={{
         display: "flex",
         alignItems: "center",
@@ -14,7 +15,8 @@ const GoogleButton = ({ onClick }) => {
         backgroundColor: "#ffffff",
         border: "1px solid #dadce0",
         borderRadius: "6px",
-        cursor: "pointer",
+        cursor: disabled || carregando ? "not-allowed" : "pointer",
+        opacity: disabled || carregando ? 0.7 : 1,
         fontSize: "15px",
         color: "#3c4043",
         fontFamily: "inherit",
@@ -28,7 +30,7 @@ const GoogleButton = ({ onClick }) => {
         alt="Google logo"
         style={{ width: "20px", height: "20px", marginRight: "12px" }}
       />
-      Login com Google
+      {carregando ? "Conectando ao Google..." : "Login com Google"}
     </button>
   );
 };
