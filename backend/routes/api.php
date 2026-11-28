@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CursoController;
+use App\Http\Controllers\Api\FrequenciaCampoController;
+use App\Http\Controllers\Api\FrequenciaMensalController;
 use App\Http\Controllers\Api\GoogleAuthController;
 use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\UsuarioController;
@@ -70,6 +72,16 @@ Route::middleware(['auth:sanctum', 'ativo', 'throttle:api'])->group(function () 
     Route::post('/estagios/{estagio}/frequencias', [FrequenciaController::class, 'store']);
     Route::put('/estagios/{estagio}/frequencias/{frequencia}', [FrequenciaController::class, 'update']);
     Route::post('/estagios/{estagio}/frequencias/{frequencia}/assinatura', [FrequenciaController::class, 'sign']);
+
+    Route::prefix('supervisao-campo')->name('supervisao-campo.')->group(function () {
+        Route::get('/turmas', [FrequenciaCampoController::class, 'turmas'])->name('turmas');
+        Route::post('/frequencia-diaria', [FrequenciaCampoController::class, 'lancarLote'])->name('frequencia-diaria');
+        Route::get('/historico-aluno/{alunoId}', [FrequenciaCampoController::class, 'historicoAluno'])->name('historico-aluno');
+    });
+
+    Route::get('/estagios/{estagio}/frequencias-mensais', [FrequenciaMensalController::class, 'index'])->name('estagios.frequencias-mensais.index');
+    Route::post('/estagios/{estagio}/frequencias-mensais', [FrequenciaMensalController::class, 'store'])->name('estagios.frequencias-mensais.store');
+    Route::post('/frequencias-mensais/{frequenciaMensal}/aprovar', [FrequenciaMensalController::class, 'aprovar'])->name('frequencias-mensais.aprovar');
     Route::put('/estagios/{estagio}/complementos/{tipo}', [ComplementoEstagioController::class, 'save'])->whereIn('tipo', ['apolice', 'plano', 'salubridade', 'relatorio']);
     Route::post('/estagios/{estagio}/relatorio/aprovacao', [ComplementoEstagioController::class, 'approveReport']);
     Route::put('/estagios/{estagio}/avaliacao', [ComplementoEstagioController::class, 'avaliacao']);

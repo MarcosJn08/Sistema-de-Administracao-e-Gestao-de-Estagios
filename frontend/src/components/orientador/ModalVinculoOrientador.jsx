@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Alert, Form, Modal } from 'react-bootstrap';
 import Button from '../Button/Button.jsx';
 import Select from '../Select.jsx';
+import ModalConfirmacao from '../ModalConfirmacao.jsx';
 import api from '../../services/api.js';
 
 export default function ModalVinculoOrientador({
@@ -11,6 +12,7 @@ export default function ModalVinculoOrientador({
   const [orientadorId, setOrientadorId] = useState('');
   const [salvando, setSalvando] = useState(false);
   const [desvinculando, setDesvinculando] = useState(false);
+  const [confirmarDesvinculoAberto, setConfirmarDesvinculoAberto] = useState(false);
   const [erro, setErro] = useState('');
 
   useEffect(() => {
@@ -119,15 +121,15 @@ export default function ModalVinculoOrientador({
                   <strong>{vinculo.orientador.nome}</strong>
                 </div>
                 {aoDesvincular && (
-                  <Button
-                    tipo="botao-acao-contorno"
-                    size="sm"
-                    className="text-danger border-danger"
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-danger py-1 px-2 text-nowrap"
+                    style={{ fontSize: '12px', fontWeight: 600, borderRadius: '4px' }}
                     disabled={salvando || desvinculando}
-                    onClick={executarDesvinculo}
+                    onClick={() => setConfirmarDesvinculoAberto(true)}
                   >
-                    {desvinculando ? 'Desvinculando…' : 'Desvincular orientador'}
-                  </Button>
+                    {desvinculando ? 'Desvinculando…' : 'Desvincular'}
+                  </button>
                 )}
               </div>
             )}
@@ -161,6 +163,21 @@ export default function ModalVinculoOrientador({
           )}
         </Modal.Footer>
       </Form>
+
+      <ModalConfirmacao
+        aberto={confirmarDesvinculoAberto}
+        titulo="Confirmar desvinculação"
+        mensagem={`Deseja realmente desvincular o orientador ${vinculo?.orientador?.nome || ''}? O estágio voltará a ficar sem professor orientador.`}
+        textoConfirmar="Sim, desvincular"
+        textoCancelar="Cancelar"
+        variante="perigo"
+        carregando={desvinculando}
+        aoConfirmar={async () => {
+          setConfirmarDesvinculoAberto(false);
+          await executarDesvinculo();
+        }}
+        aoCancelar={() => setConfirmarDesvinculoAberto(false)}
+      />
     </Modal>
   );
 }

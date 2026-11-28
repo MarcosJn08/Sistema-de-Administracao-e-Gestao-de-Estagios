@@ -38,7 +38,9 @@ class DiscenteOrientadoResource extends JsonResource
                 'supervisor' => $estagio->supervisor->nome,
                 'data_inicio' => $estagio->data_inicio->toDateString(),
                 'data_termino' => $estagio->data_termino->toDateString(),
-                'horas_cumpridas' => (float) $estagio->horas_cumpridas,
+                'horas_cumpridas' => (float) $estagio->horas_cumpridas
+                    + (float) $estagio->horas_campo
+                    + (float) $estagio->horas_mensais,
                 'documentos' => $estagio->documentos->map(fn (Documento $documento) => [
                     'id' => $documento->id,
                     'tipo' => $documento->tipo->value,

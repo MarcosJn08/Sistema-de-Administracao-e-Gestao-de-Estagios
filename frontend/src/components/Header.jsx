@@ -67,7 +67,10 @@ function Header({
     ['Empresas', '/sage/diretor/convenios'],
     ['Documentos', '/sage/diretor/documentos'],
   ];
-  const professorLinks = [['Dashboard', '/sage/professor']];
+  const professorLinks = [
+    ['Dashboard', '/sage/professor'],
+    ['Supervisão de Campo', '/sage/professor/supervisao-campo'],
+  ];
   const empresaLinks = [
     ['Dashboard', '/sage/empresa'],
     ['Candidatos', '/sage/empresa/candidatos'],

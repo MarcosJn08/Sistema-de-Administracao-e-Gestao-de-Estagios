@@ -13,6 +13,8 @@ import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import Botao from "../components/Button/Button.jsx";
 import CardMetricaEmpresa from '../components/empresa/CardMetricaEmpresa.jsx';
+import SecaoFrequenciasMensais from '../components/frequencia/SecaoFrequenciasMensais.jsx';
+import useAuth from '../hooks/useAuth.js';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../services/api.js';
 import Paginacao from '../components/Paginacao.jsx';
@@ -29,6 +31,9 @@ const adaptar = c => ({
 });
 
 function MeusEstagiarios() {
+  const { user } = useAuth();
+  const role = user?.role?.toLowerCase();
+  const ehOrientadorOuDiretor = ['professor', 'diretor'].includes(role);
   const [estagiarios, setEstagiarios] = useState([]);
   const [agora] = useState(() => Date.now());
 
@@ -333,6 +338,10 @@ function MeusEstagiarios() {
     {c.encerrado_em && <p>Encerrado em {new Date(c.encerrado_em).toLocaleString('pt-BR')}: {c.motivo_encerramento}</p>}
     <h3>Documentos</h3>{erroDownload && <Alert variant="danger">{erroDownload}</Alert>}
     {c.documentos.length ? <ul>{c.documentos.map((d) => <li key={d.id}>{d.tipo} — {d.status} <button type="button" className="btn btn-link" onClick={() => baixar(d)}>Baixar PDF</button></li>)}</ul> : <p>Nenhum documento cadastrado.</p>}
+
+    <div className="mt-4">
+      <SecaoFrequenciasMensais estagioId={c.id} podeAprovar={ehOrientadorOuDiretor} podeEnviar={true} />
+    </div>
   </>}
         </Modal.Body>
       </Modal>

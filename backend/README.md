@@ -217,7 +217,7 @@ Uploads entram em `EM_ANALISE`. Um documento em análise/deferido bloqueia outro
 
 Lançamentos e assinaturas exigem estágio em andamento. Um registro por dia, dentro do período contratual, sem data futura. Saída deve ser posterior à entrada no mesmo dia. Horas são calculadas no servidor; não envie `horas_diarias` ou `assinado_supervisor`. Frequências assinadas não podem ser editadas. O modelo considera um intervalo contínuo por dia.
 
-O total do aluno inclui as frequências assinadas de estágios encerrados ou cancelados por desvio de função. A finalização preserva os registros e impede novos lançamentos, edições e assinaturas. Frequências pendentes continuam sem crédito. O campo legado `alunos.carga_horaria_cumprida` serve para compatibilidade. Valores antigos sem frequência precisam de reconciliação.
+O saldo exigido pelo curso soma o diário assinado, as horas de presença em campo e as folhas de frequência mensais aprovadas. Estágios cancelados por desvio de função ficam fora desse cálculo. O histórico e o detalhe do estágio continuam exibindo as frequências e horas já registradas. O cancelamento impede novos lançamentos. Frequências pendentes continuam sem crédito. O campo legado `alunos.carga_horaria_cumprida` serve para compatibilidade. Valores antigos sem frequência precisam de reconciliação.
 
 ## Complementos, relatório e avaliações
 

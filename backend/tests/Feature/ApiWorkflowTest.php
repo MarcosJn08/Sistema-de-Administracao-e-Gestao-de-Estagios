@@ -427,7 +427,7 @@ class ApiWorkflowTest extends TestCase
             ->assertExactJson(['success' => true, 'message' => 'Operação realizada com sucesso.', 'data' => [], 'errors' => []]);
     }
 
-    public function test_cancellation_for_misconduct_preserves_credit_and_blocks_frequency_changes(): void
+    public function test_cancellation_for_misconduct_preserves_stage_hours_and_blocks_frequency_changes(): void
     {
         Event::fake([EstagioCanceladoDesvioFuncaoEvent::class]);
         $stage = $this->stage();
@@ -441,10 +441,12 @@ class ApiWorkflowTest extends TestCase
         $this->postJson($base.'/frequencias/'.$id.'/assinatura')->assertUnprocessable();
         $this->assertEquals(2.5, $stage->aluno->carga_horaria_cumprida);
         $this->actingAs($this->diretor, 'sanctum')->patchJson($base.'/status', ['status' => 'CANCELADO_DESVIO_FUNCAO', 'motivo' => 'Atividade incompatível'])->assertOk();
-        $this->assertEquals(2.5, $stage->aluno->carga_horaria_cumprida);
+        $this->assertSame(2.5, $stage->horasCumpridas());
+        $this->assertSame(0.0, $stage->aluno->carga_horaria_cumprida);
         $this->assertDatabaseHas('diarios_frequencia', ['id' => $id, 'assinado_supervisor' => true]);
-        $this->actingAs($this->alunoUser, 'sanctum')->getJson('/api/auth/me')
-            ->assertOk()->assertJsonPath('data.progresso.horas_cumpridas', 2.5);
+        $this->actingAs($this->alunoUser, 'sanctum')->getJson($base.'/frequencias')
+            ->assertOk()->assertJsonPath('data.horas_cumpridas', 2.5);
+        $this->getJson('/api/auth/me')->assertOk()->assertJsonPath('data.progresso.horas_cumpridas', 0);
         $this->postJson($base.'/frequencias', array_replace($ontem, ['data' => today()->subDays(2)->toDateString()]))
             ->assertUnprocessable()->assertJsonValidationErrors('frequencia');
         $this->putJson($base.'/frequencias/'.$pendente, $ontem)

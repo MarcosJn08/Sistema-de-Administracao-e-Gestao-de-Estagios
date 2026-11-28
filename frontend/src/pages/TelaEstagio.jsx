@@ -9,6 +9,8 @@ import StatusBadge from '../components/StatusBadge.jsx';
 import CardDadosEstagio from '../components/Estagio/CardDadosEstagio.jsx';
 import CardProgresso from '../components/aluno/CardProgresso.jsx';
 import CardDocumentos from '../components/aluno/CardDocumentos.jsx';
+import SecaoFrequenciasMensais from '../components/frequencia/SecaoFrequenciasMensais.jsx';
+import useAuth from '../hooks/useAuth.js';
 import api from '../services/api.js';
 import './EstagiosAluno.css';
 
@@ -32,6 +34,10 @@ const formatarData = valor => valor
 export default function TelaEstagio() {
   const navigate = useNavigate();
   const { estagioId } = useParams();
+  const { user } = useAuth();
+  const role = user?.role?.toLowerCase();
+  const ehOrientadorOuDiretor = ['professor', 'diretor'].includes(role);
+  const ehAluno = role === 'aluno' || !role;
   const [estado, setEstado] = useState({ carregando: true });
   const [erroDownload, setErroDownload] = useState('');
 
@@ -140,6 +146,14 @@ export default function TelaEstagio() {
             {estagio.encerrado_em && <Alert variant="secondary">
               Encerrado em {new Date(estagio.encerrado_em).toLocaleString('pt-BR')}: {estagio.motivo_encerramento}
             </Alert>}
+
+            <div className="mt-4">
+              <SecaoFrequenciasMensais
+                estagioId={estagio.id}
+                podeAprovar={ehOrientadorOuDiretor}
+                podeEnviar={ehAluno || ehOrientadorOuDiretor}
+              />
+            </div>
           </>}
         </Container>
       </main>
