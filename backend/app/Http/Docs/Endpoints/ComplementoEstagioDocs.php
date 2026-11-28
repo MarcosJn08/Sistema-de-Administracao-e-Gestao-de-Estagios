@@ -15,8 +15,20 @@ use OpenApi\Attributes as OA;
     ],
     requestBody: new OA\RequestBody(
         required: true,
-        content: new OA\JsonContent(type: 'object',
-        ),
+        content: new OA\JsonContent(oneOf: [
+            new OA\Schema(title: 'Aluno', type: 'object', additionalProperties: false, required: ['auto_avaliacao'],
+                properties: [
+                    new OA\Property(property: 'auto_avaliacao', type: 'string'),
+                ],
+            ),
+            new OA\Schema(title: 'Concedente', type: 'object', additionalProperties: false, required: ['nota_desempenho', 'conceito_atitude', 'parecer_final'],
+                properties: [
+                    new OA\Property(property: 'nota_desempenho', type: 'number', minimum: 0, maximum: 10),
+                    new OA\Property(property: 'conceito_atitude', type: 'string'),
+                    new OA\Property(property: 'parecer_final', type: 'string'),
+                ],
+            ),
+        ]),
     ),
     responses: [
         new OA\Response(response: 200, description: 'Operação realizada com sucesso.'),
@@ -39,8 +51,36 @@ use OpenApi\Attributes as OA;
     ],
     requestBody: new OA\RequestBody(
         required: true,
-        content: new OA\JsonContent(type: 'object',
-        ),
+        content: new OA\JsonContent(oneOf: [
+            new OA\Schema(title: 'Apólice', type: 'object', additionalProperties: false, required: ['numero_apolice', 'nome_seguradora'],
+                properties: [
+                    new OA\Property(property: 'numero_apolice', type: 'string'),
+                    new OA\Property(property: 'nome_seguradora', type: 'string'),
+                ],
+            ),
+            new OA\Schema(title: 'Plano', type: 'object', additionalProperties: false, required: ['objetivos', 'atividades_previstas', 'cronograma'],
+                properties: [
+                    new OA\Property(property: 'objetivos', type: 'string'),
+                    new OA\Property(property: 'atividades_previstas', type: 'string'),
+                    new OA\Property(property: 'cronograma', type: 'string'),
+                ],
+            ),
+            new OA\Schema(title: 'Salubridade', type: 'object', additionalProperties: false, required: ['local_estagio', 'condicoes_higiene', 'possui_epi'],
+                properties: [
+                    new OA\Property(property: 'local_estagio', type: 'string'),
+                    new OA\Property(property: 'condicoes_higiene', type: 'string'),
+                    new OA\Property(property: 'possui_epi', type: 'boolean'),
+                    new OA\Property(property: 'riscos_ocupacionais', type: 'string'),
+                ],
+            ),
+            new OA\Schema(title: 'Relatório', type: 'object', additionalProperties: false, required: ['resumo_atividades', 'relacao_teoria_pratica'],
+                properties: [
+                    new OA\Property(property: 'resumo_atividades', type: 'string'),
+                    new OA\Property(property: 'relacao_teoria_pratica', type: 'string'),
+                    new OA\Property(property: 'dificuldades', type: 'string'),
+                ],
+            ),
+        ]),
     ),
     responses: [
         new OA\Response(response: 200, description: 'Operação realizada com sucesso.'),
