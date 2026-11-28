@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\StatusEstagio;
 use App\Models\Estagio;
 use App\Models\ProfessorOrientador;
 use App\Models\User;
@@ -27,7 +26,6 @@ class OrientadorService
     {
         return $this->carregarEstagios(Estagio::query())
             ->whereNull('professor_orientador_id')
-            ->whereIn('status', [StatusEstagio::RASCUNHO, StatusEstagio::EM_ANALISE, StatusEstagio::EM_ANDAMENTO])
             ->get();
     }
 
@@ -42,6 +40,8 @@ class OrientadorService
     {
         return $query->with(['aluno.usuario' => fn ($usuario) => $usuario->withTrashed(), 'aluno.turma.curso', 'empresa', 'supervisor', 'documentos'])
             ->withSum(['frequencias as horas_cumpridas' => fn (Builder $query) => $query->where('assinado_supervisor', true)], 'horas_diarias')
+            ->withSum(['frequenciasCampo as horas_campo' => fn (Builder $query) => $query->where('presente', true)], 'horas_cumpridas')
+            ->withSum(['frequenciasMensais as horas_mensais' => fn (Builder $query) => $query->where('status', 'APROVADO')], 'total_horas_mes')
             ->orderByDesc('id');
     }
 

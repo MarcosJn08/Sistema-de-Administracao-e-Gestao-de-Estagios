@@ -1,4 +1,27 @@
+import api from '../services/api.js';
+
 export const assinaturaPartes = { empresa: 'Empresa', aluno: 'Aluno', direcao: 'Direção' };
+
+export const situacoesEstagio = {
+  RASCUNHO: 'Rascunho',
+  EM_ANALISE: 'Em análise',
+  EM_ANDAMENTO: 'Em estágio ativo',
+  CONCLUIDO: 'Concluído',
+  ENCERRADO: 'Encerrado',
+  CANCELADO_DESVIO_FUNCAO: 'Cancelado por desvio de função',
+};
+
+export async function finalizarEstagio(estagioId, acao) {
+  const campo = acao.tipo === 'cancelar-desvio-funcao' ? 'justificativa_pedagogica' : 'motivo';
+  try {
+    const { data } = await api.post('/estagios/' + estagioId + '/' + acao.tipo, {
+      [campo]: String(acao[campo] ?? '').trim(),
+    });
+    return data.data;
+  } catch (error) {
+    throw new Error(error.errors?.[campo]?.[0] || error.errors?.status?.[0] || error.message, { cause: error });
+  }
+}
 
 export function exigeHomologacaoFinal(documento) {
   return ['tce', 'ficha-matricula'].includes(documento.tipo);
@@ -40,10 +63,6 @@ export function aplicarAcaoAluno(aluno, acao, { perfil, alunos = [] } = {}) {
       }
       return { ...aluno, ...campos };
     }
-    case 'encerrar':
-      if (!estagioEditavel) throw new Error('O estágio não está disponível para encerramento.');
-      if (!motivo) throw new Error('Informe a justificativa do encerramento.');
-      return { ...aluno, situacao: 'Encerrado', estagio: { ...aluno.estagio, encerradoEm: agora, motivoEncerramento: motivo } };
     case 'horas': {
       if (aluno.modalidade !== 'Ensino Médio Integrado') throw new Error('Esta validação está disponível para o Ensino Médio Integrado.');
       if (!estagioEditavel || aluno.progresso.homologadoEm) throw new Error('A carga horária não está disponível para alteração.');

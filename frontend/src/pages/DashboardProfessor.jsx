@@ -12,19 +12,13 @@ import Paginacao from '../components/Paginacao.jsx';
 import DetalhesAluno from '../components/aluno/DetalhesAluno.jsx';
 import useConsultaApi from '../hooks/useConsultaApi.js';
 import api from '../services/api.js';
+import { situacoesEstagio } from '../utils/gestaoAluno.js';
 import '../App.css';
 import './DashboardProfessor.css';
 
 const ITENS_POR_PAGINA = 10;
 const normalizar = (valor) => String(valor ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 
-const SITUACOES = {
-  RASCUNHO: 'Rascunho',
-  EM_ANDAMENTO: 'Em estágio ativo',
-  CONCLUIDO: 'Concluído',
-  ENCERRADO: 'Encerrado',
-  CANCELADO_DESVIO_FUNCAO: 'Cancelado',
-};
 const STATUS_DOCUMENTO = {
   PENDENTE: 'Pendente',
   EM_ANALISE: 'Em análise',
@@ -47,12 +41,15 @@ function prepararVinculo(discente, estagio) {
   return {
     ...discente,
     vinculoId: estagio.id,
-    situacao: SITUACOES[estagio.status] ?? estagio.status,
+    situacao: situacoesEstagio[estagio.status] ?? estagio.status,
     estagio: {
+      id: estagio.id,
+      status: estagio.status,
       empresa: estagio.empresa,
       supervisorEstagio: estagio.supervisor,
       dataInicio: dataBrasileira(estagio.data_inicio),
       dataFim: dataBrasileira(estagio.data_termino),
+      motivoEncerramento: estagio.motivo_encerramento,
     },
     progresso: {
       horasConcluidas: estagio.horas_cumpridas,
@@ -179,7 +176,7 @@ export default function DashboardProfessor() {
       </main>
       <Footer />
       {alunoSelecionado && <DetalhesAluno key={alunoSelecionado.vinculoId} aberto aluno={alunoSelecionado} perfil="professor"
-        aoFechar={() => setSelecionadoId(null)} aoAtualizar={carregando ? undefined : atualizarAluno} />}
+        aoFechar={() => setSelecionadoId(null)} aoAtualizar={carregando ? undefined : atualizarAluno} aoFinalizarEstagio={recarregar} />}
     </div>
   );
 }

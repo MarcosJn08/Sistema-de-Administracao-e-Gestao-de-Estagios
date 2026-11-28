@@ -16,7 +16,7 @@ import ToastAlerta from '../components/ToastAlerta.jsx';
 import useConsultaApi from '../hooks/useConsultaApi.js';
 import dadosDiretor from '../data/diretor.js';
 import { situacoesEstagio } from '../data/alunos.js';
-import { aplicarAcaoAluno } from '../utils/gestaoAluno.js';
+import { aplicarAcaoAluno, situacoesEstagio as situacoesEstagioApi } from '../utils/gestaoAluno.js';
 import { listarVinculosOrientacao, vinculoPodeSerAlterado } from '../utils/vinculosOrientacao.js';
 import api from '../services/api.js';
 import '../App.css';
@@ -24,18 +24,13 @@ import './PainelAlunosDiretor.css';
 
 const normalizar = (valor) => String(valor ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 const ITENS_POR_PAGINA = 10;
-const SITUACAO_ESTAGIO = {
-  RASCUNHO: 'Rascunho',
-  EM_ANDAMENTO: 'Em estágio ativo',
-  CONCLUIDO: 'Concluído',
-  ENCERRADO: 'Encerrado',
-  CANCELADO_DESVIO_FUNCAO: 'Cancelado',
-};
-const opcoesSituacao = [...new Set([...situacoesEstagio, ...Object.values(SITUACAO_ESTAGIO)])];
+const opcoesSituacao = [...new Set([...situacoesEstagio, ...Object.values(situacoesEstagioApi)])];
 const dataBrasileira = (data) => data?.split('-').reverse().join('/');
 
-function exibirEstagioDoAluno(aluno, vinculos = []) {
-  const principal = vinculos.find(({ estagio }) => estagio.status === 'EM_ANDAMENTO')
+function exibirEstagioDoAluno(aluno, vinculos = [], estagioSelecionadoId = null) {
+  const principal = vinculos.find(({ estagio }) => estagio.id === estagioSelecionadoId)
+    ?? vinculos.find(({ estagio }) => estagio.status === 'EM_ANDAMENTO')
+    ?? vinculos.find(({ estagio }) => estagio.status === 'EM_ANALISE')
     ?? vinculos.find(({ estagio }) => estagio.status === 'RASCUNHO')
     ?? vinculos[0];
   if (!principal) return aluno;
@@ -44,17 +39,20 @@ function exibirEstagioDoAluno(aluno, vinculos = []) {
   return {
     ...aluno,
     semestre: discente.semestre,
-    situacao: SITUACAO_ESTAGIO[estagio.status] ?? estagio.status,
+    situacao: situacoesEstagioApi[estagio.status] ?? estagio.status,
     estagioVinculado: {
+      id: estagio.id,
+      status: estagio.status,
       empresa: estagio.empresa,
       professorOrientador: orientador?.nome ?? 'Sem orientador',
       supervisorEstagio: estagio.supervisor,
       dataInicio: dataBrasileira(estagio.data_inicio),
       dataFim: dataBrasileira(estagio.data_termino),
+      motivoEncerramento: estagio.motivo_encerramento,
     },
     progresso: {
       ...aluno.progresso,
-      metaHoras: discente.carga_horaria_exigida,
+      metaHoras: discente.carga_horaria_exigida ?? 0,
       horasEstagio: estagio.horas_cumpridas,
       horasConcluidas: estagio.horas_cumpridas + aluno.progresso.horasProjeto,
     },
@@ -69,6 +67,7 @@ function PainelAlunosDiretor() {
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [cadastroAberto, setCadastroAberto] = useState(false);
   const [alunoSelecionadoId, setAlunoSelecionadoId] = useState(null);
+  const [estagioSelecionadoId, setEstagioSelecionadoId] = useState(null);
   const [vinculoAberto, setVinculoAberto] = useState(false);
   const [toast, setToast] = useState({ mensagem: '', tipo: 'sucesso' });
   const [cursos, setCursos] = useState([]);
@@ -123,12 +122,20 @@ function PainelAlunosDiretor() {
     return () => { ativo = false; };
   }, []);
   const alunosExibidos = alunos.map((aluno) => exibirEstagioDoAluno(aluno, vinculosPorAluno.get(aluno.alunoId)));
-  const alunoSelecionado = alunosExibidos.find((aluno) => aluno.id === alunoSelecionadoId);
+  const alunoEmEdicao = alunos.find((aluno) => aluno.id === alunoSelecionadoId);
+  const alunoSelecionado = alunoEmEdicao && exibirEstagioDoAluno(alunoEmEdicao, vinculosPorAluno.get(alunoEmEdicao.alunoId), estagioSelecionadoId);
   const estagiosDoAluno = (vinculosPorAluno.get(alunoSelecionado?.alunoId) ?? []).filter(vinculoPodeSerAlterado);
   const atualizarAluno = (acao) => {
-    const aluno = alunos.find(({ id }) => id === alunoSelecionadoId);
-    const atualizado = aplicarAcaoAluno(aluno, acao, { perfil: dadosDiretor.diretor.role, alunos });
+    const atualizado = aplicarAcaoAluno(alunoEmEdicao, acao, { perfil: dadosDiretor.diretor.role, alunos });
     setAlunos((atuais) => atuais.map((aluno) => aluno.id === atualizado.id ? atualizado : aluno));
+  };
+  const registrarFinalizacao = (estagio) => {
+    setEstagioSelecionadoId(estagio.id);
+    recarregarVinculos();
+  };
+  const fecharDetalhes = () => {
+    setAlunoSelecionadoId(null);
+    setEstagioSelecionadoId(null);
   };
   const vinculoSalvo = (estagio, orientador) => {
     setVinculoAberto(false);
@@ -330,7 +337,7 @@ function PainelAlunosDiretor() {
       ) : (
         <DetalhesAluno key={alunoSelecionadoId} aberto aluno={alunoSelecionado} perfil={dadosDiretor.diretor.role}
           aoAtualizar={atualizarAluno} aoVincularProfessor={() => setVinculoAberto(true)}
-          aoFechar={() => setAlunoSelecionadoId(null)} />
+          aoFechar={fecharDetalhes} aoFinalizarEstagio={registrarFinalizacao} />
       ))}
       <ModalCadastroAluno key={cadastroAberto ? 'cadastro-aberto' : 'cadastro-fechado'} aberto={cadastroAberto}
         cursos={cursos} aoCadastrar={cadastrarAluno} aoFechar={() => setCadastroAberto(false)} />

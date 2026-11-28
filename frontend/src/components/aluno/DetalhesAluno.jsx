@@ -5,7 +5,7 @@ import StatusBadge from '../StatusBadge.jsx';
 import Button from '../Button/Button.jsx';
 import FormAcaoDiretor from './FormAcaoDiretor.jsx';
 import DocumentoAluno from './DocumentoAluno.jsx';
-import { baixarPreviaCertidao, podeHomologarHoras } from '../../utils/gestaoAluno.js';
+import { baixarPreviaCertidao, finalizarEstagio, podeHomologarHoras, situacoesEstagio } from '../../utils/gestaoAluno.js';
 import './DetalhesAluno.css';
 
 function Campo({ titulo, children, destaque = false }) {
@@ -17,13 +17,28 @@ function Campo({ titulo, children, destaque = false }) {
   );
 }
 
-function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', aoAtualizar, aoVincularProfessor }) {
+function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', aoAtualizar, aoVincularProfessor, aoFinalizarEstagio }) {
   const [acao, setAcao] = useState(null);
   const [mensagem, setMensagem] = useState('');
+  const [salvando, setSalvando] = useState(false);
+  const [estagioFinalizado, setEstagioFinalizado] = useState(null);
   if (!aluno) return null;
 
+  const estagioAtual = aluno.estagio ?? aluno.estagioVinculado;
+  const estagio = estagioFinalizado && (!estagioAtual || estagioFinalizado.id === estagioAtual.id)
+    ? estagioFinalizado : estagioAtual;
+  const situacao = situacoesEstagio[estagio?.status] ?? aluno.situacao;
   const diretor = perfil === 'diretor' && typeof aoAtualizar === 'function';
-  const estagioEditavel = aluno.estagio && !['Encerrado', 'Concluído'].includes(aluno.situacao);
+  const podeReprovar = ['diretor', 'professor'].includes(perfil) && Boolean(estagio?.id)
+    && ['EM_ANALISE', 'EM_ANDAMENTO'].includes(estagio.status);
+  const podeEncerrar = Boolean(estagio?.id) && ['RASCUNHO', 'EM_ANALISE', 'EM_ANDAMENTO'].includes(estagio.status);
+  const estagioEditavel = aluno.estagio && !['Encerrado', 'Concluído', situacoesEstagio.CANCELADO_DESVIO_FUNCAO].includes(situacao);
+
+  const abrirAcao = (tipo) => {
+    setAcao(tipo);
+    setMensagem('');
+  };
+
   const salvar = (alteracao) => {
     if (!diretor) return aoAtualizar(alteracao);
     aoAtualizar(alteracao);
@@ -32,16 +47,32 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', aoAtuali
     setMensagem('Alteração registrada nesta sessão.');
   };
 
+  const salvarAcao = async (alteracao) => {
+    if (!['cancelar-desvio-funcao', 'encerrar'].includes(alteracao.tipo)) return salvar(alteracao);
+
+    setSalvando(true);
+    try {
+      const resultado = await finalizarEstagio(estagio.id, alteracao);
+      setEstagioFinalizado({ ...estagio, status: resultado.status, motivoEncerramento: resultado.motivo_encerramento });
+      setAcao(null);
+      setMensagem(resultado.status === 'CANCELADO_DESVIO_FUNCAO'
+        ? 'Estágio cancelado por desvio de função.'
+        : 'Estágio encerrado.');
+      aoFinalizarEstagio?.(resultado);
+    } finally {
+      setSalvando(false);
+    }
+  };
+
   const { documentos = [], progresso = {} } = aluno;
-  const estagio = aluno.estagio ?? aluno.estagioVinculado;
   const { horasConcluidas = 0, metaHoras = 0, horasEstagio = 0, horasProjeto = 0 } = progresso;
   const percentual = metaHoras > 0 ? Math.min(100, Math.max(0, Math.floor(horasConcluidas / metaHoras * 100))) : 0;
   const saldoRestante = Math.max(0, metaHoras - horasConcluidas);
 
   return (
-    <Modal show={aberto} onHide={aoFechar} size="xl" centered scrollable fullscreen="sm-down"
+    <Modal show={aberto} onHide={salvando ? undefined : aoFechar} size="xl" centered scrollable fullscreen="sm-down"
       className="detalhes-aluno" aria-labelledby="detalhes-aluno-titulo">
-      <Modal.Header closeButton closeLabel="Fechar detalhes do aluno">
+      <Modal.Header closeButton={!salvando} closeLabel="Fechar detalhes do aluno">
         <Modal.Title as="h1" id="detalhes-aluno-titulo">
           <GraduationCap size={22} aria-hidden="true" /> Detalhes do Aluno
         </Modal.Title>
@@ -50,24 +81,27 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', aoAtuali
         <div className="perfil-aluno-cabecalho">
           <div className="perfil-aluno-cabecalho-titulo">
             <h2>Perfil do Aluno</h2>
-            <StatusBadge status={aluno.situacao} />
+            <StatusBadge status={situacao} />
           </div>
-          {diretor && <div className="perfil-aluno-acoes perfil-aluno-acoes-globais">
-            <button type="button" className="perfil-aluno-botao" onClick={() => { setAcao('cadastro'); setMensagem(''); }}>Editar Cadastro</button>
-            {aoVincularProfessor && (
-              <button type="button" className="perfil-aluno-botao" onClick={aoVincularProfessor}>
+          {(diretor || podeReprovar) && <div className="perfil-aluno-acoes perfil-aluno-acoes-globais">
+            {diretor && <button type="button" className="perfil-aluno-botao" disabled={salvando}
+              onClick={() => abrirAcao('cadastro')}>Editar Cadastro</button>}
+            {diretor && aoVincularProfessor && (
+              <button type="button" className="perfil-aluno-botao" onClick={aoVincularProfessor} disabled={salvando}>
                 {estagio?.professorOrientador && estagio.professorOrientador !== 'Sem orientador'
                   ? 'Gerenciar orientador'
                   : 'Vincular orientador'}
               </button>
             )}
-            <button type="button" className="perfil-aluno-botao perfil-aluno-botao-perigo" disabled={!estagioEditavel}
-              onClick={() => { setAcao('encerrar'); setMensagem(''); }}>Encerrar Estágio</button>
+            {podeReprovar && <button type="button" className="perfil-aluno-botao perfil-aluno-botao-perigo" disabled={salvando}
+              onClick={() => abrirAcao('cancelar-desvio-funcao')}>Reprovar por desvio de função</button>}
+            {diretor && <button type="button" className="perfil-aluno-botao perfil-aluno-botao-perigo" disabled={salvando || !podeEncerrar}
+              onClick={() => abrirAcao('encerrar')}>Encerrar Estágio</button>}
           </div>}
         </div>
         {mensagem && <p className="perfil-aluno-sucesso" role="status">{mensagem}</p>}
-        {diretor && acao && <FormAcaoDiretor key={acao} acao={acao} aluno={aluno}
-          aoSalvar={salvar} aoCancelar={() => setAcao(null)} />}
+        {acao && <FormAcaoDiretor key={acao} acao={acao} aluno={aluno} estagio={estagio} salvando={salvando}
+          aoSalvar={salvarAcao} aoCancelar={() => setAcao(null)} />}
 
         <div className="perfil-aluno-layout">
           <div className="perfil-aluno-resumo">
@@ -102,7 +136,11 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', aoAtuali
                   </Campo>
                   <Campo titulo="Carga horária semanal:">{estagio.cargaHorariaSemanal}</Campo>
                   <Campo titulo="Seguro contra acidentes:">{estagio.seguro}</Campo>
-                  {estagio.motivoEncerramento && <Campo titulo="Motivo do encerramento:">{estagio.motivoEncerramento}</Campo>}
+                  {estagio.motivoEncerramento && (
+                    <Campo titulo={estagio.status === 'CANCELADO_DESVIO_FUNCAO' ? 'Parecer pedagógico:' : 'Motivo do encerramento:'}>
+                      {estagio.motivoEncerramento}
+                    </Campo>
+                  )}
                 </dl>
               ) : (
                 <p className="perfil-aluno-vazio">O estudante ainda não possui vínculo de estágio, empresa concedente ou professor orientador.</p>
@@ -121,7 +159,7 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', aoAtuali
                 <Campo titulo="Aproveitamento de projetos:">
                   <span>{horasProjeto}h{aluno.modalidade === 'Ensino Médio Integrado' ? ' / 40h' : ''}</span>
                   {diretor && <button type="button" className="perfil-aluno-acao-inline"
-                    disabled={aluno.modalidade !== 'Ensino Médio Integrado' || !estagioEditavel || Boolean(progresso.homologadoEm)}
+                    disabled={salvando || aluno.modalidade !== 'Ensino Médio Integrado' || !estagioEditavel || Boolean(progresso.homologadoEm)}
                     onClick={() => setAcao('horas')}>Validar Horas</button>}
                 </Campo>
                 <Campo titulo="Saldo restante:" destaque={saldoRestante > 0}>{saldoRestante}h</Campo>
@@ -133,7 +171,7 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', aoAtuali
                   <button type="button" className="perfil-aluno-botao" onClick={() => baixarPreviaCertidao(aluno)}>Baixar prévia da certidão</button>
                 </> : <>
                   <button type="button" className="perfil-aluno-botao perfil-aluno-botao-primario perfil-aluno-botao-homologar"
-                    disabled={!podeHomologarHoras(aluno)} onClick={() => setAcao('homologar')}>
+                    disabled={salvando || !podeHomologarHoras(aluno)} onClick={() => setAcao('homologar')}>
                     Homologar Carga Horária e Emitir Certidão
                   </button>
                   {!podeHomologarHoras(aluno) && <p className="perfil-aluno-ajuda">Disponível ao cumprir a carga horária obrigatória, em estágio não encerrado.</p>}
@@ -161,7 +199,7 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', aoAtuali
           </section>
         </div>
       </Modal.Body>
-      <Modal.Footer><Button tipo="botao-sage-verde" onClick={aoFechar}>Fechar</Button></Modal.Footer>
+      <Modal.Footer><Button tipo="botao-sage-verde" onClick={aoFechar} disabled={salvando}>Fechar</Button></Modal.Footer>
     </Modal>
   );
 }

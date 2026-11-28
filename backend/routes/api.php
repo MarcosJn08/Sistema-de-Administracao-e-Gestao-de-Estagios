@@ -11,6 +11,7 @@ use App\Http\Controllers\CadastroController;
 use App\Http\Controllers\ComplementoEstagioController;
 use App\Http\Controllers\ContratoEstagioController;
 use App\Http\Controllers\DocumentoController;
+use App\Http\Controllers\EncerramentoEstagioController;
 use App\Http\Controllers\EstagioController;
 use App\Http\Controllers\FrequenciaController;
 use App\Http\Controllers\OrientadorEstagioController;
@@ -60,6 +61,8 @@ Route::middleware(['auth:sanctum', 'ativo', 'throttle:api'])->group(function () 
 
     Route::apiResource('estagios', ContratoEstagioController::class)->only(['index', 'store', 'show', 'update']);
     Route::patch('/estagios/{estagio}/status', [EstagioController::class, 'status']);
+    Route::post('/estagios/{estagio}/cancelar-desvio-funcao', [EncerramentoEstagioController::class, 'cancelarDesvioFuncao'])->whereNumber('estagio');
+    Route::post('/estagios/{estagio}/encerrar', [EncerramentoEstagioController::class, 'encerrar'])->whereNumber('estagio');
     Route::get('/estagios/{estagio}/documentos', [DocumentoController::class, 'index']);
     Route::post('/estagios/{estagio}/documentos', [DocumentoController::class, 'store']);
     Route::patch('/estagios/{estagio}/documentos/{documento}/analise', [DocumentoController::class, 'review']);

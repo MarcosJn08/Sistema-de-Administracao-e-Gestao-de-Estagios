@@ -6,6 +6,7 @@ use App\Enums\ModalidadeEstagio;
 use App\Enums\StatusConvenio;
 use App\Enums\StatusCurso;
 use App\Enums\StatusEstagio;
+use App\Events\EstagioCanceladoDesvioFuncaoEvent;
 use App\Models\Aluno;
 use App\Models\Curso;
 use App\Models\EmpresaConcedente;
@@ -16,6 +17,7 @@ use App\Models\SupervisorEmpresa;
 use App\Models\Turma;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class FrequenciaCampoControllerTest extends TestCase
@@ -199,6 +201,48 @@ class FrequenciaCampoControllerTest extends TestCase
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['horas_cumpridas']);
+    }
+
+    public function test_cancelamento_preserva_extrato_de_campo_e_bloqueia_novos_lancamentos(): void
+    {
+        Event::fake([EstagioCanceladoDesvioFuncaoEvent::class]);
+        $this->actingAs($this->professorUser, 'sanctum');
+
+        $rotaLancamento = '/api/supervisao-campo/frequencia-diaria';
+        $rotaHistorico = '/api/supervisao-campo/historico-aluno/'.$this->aluno->id;
+        $lancamento = [
+            'data' => today()->subDay()->toDateString(),
+            'registros' => [[
+                'aluno_id' => $this->aluno->id,
+                'estagio_id' => $this->estagio->id,
+                'presente' => true,
+                'horas_cumpridas' => 3.5,
+            ]],
+        ];
+        $registroId = $this->postJson($rotaLancamento, $lancamento)
+            ->assertCreated()->assertJsonPath('data.0.saldo_atualizado', 3.5)->json('data.0.id');
+        $this->getJson($rotaHistorico)->assertOk()
+            ->assertJsonPath('data.aluno.total_horas_campo', 3.5)
+            ->assertJsonPath('data.aluno.saldo_restante', 156.5);
+
+        $this->postJson('/api/estagios/'.$this->estagio->id.'/cancelar-desvio-funcao', [
+            'justificativa_pedagogica' => 'As atividades de campo executadas são incompatíveis com o PPC.',
+        ])->assertOk()->assertJsonPath('data.status', 'CANCELADO_DESVIO_FUNCAO');
+
+        $this->postJson($rotaLancamento, array_replace($lancamento, ['data' => today()->toDateString()]))
+            ->assertUnprocessable()->assertJsonValidationErrors('estagio');
+        $this->getJson($rotaHistorico)->assertOk()
+            ->assertJsonCount(1, 'data.extrato')
+            ->assertJsonPath('data.extrato.0.id', $registroId)
+            ->assertJsonPath('data.extrato.0.horas_cumpridas', 3.5)
+            ->assertJsonPath('data.aluno.total_horas_campo', 3.5)
+            ->assertJsonPath('data.aluno.saldo_restante', 160);
+        $this->getJson('/api/orientador/meus-discentes')->assertOk()
+            ->assertJsonPath('data.0.estagios.0.id', $this->estagio->id)
+            ->assertJsonPath('data.0.estagios.0.status', 'CANCELADO_DESVIO_FUNCAO')
+            ->assertJsonPath('data.0.estagios.0.horas_cumpridas', 3.5);
+        $this->assertDatabaseCount('frequencias_diarias_campo', 1);
+        Event::assertDispatchedTimes(EstagioCanceladoDesvioFuncaoEvent::class, 1);
     }
 
     public function test_extrato_historico_aluno_retorna_corretamente(): void

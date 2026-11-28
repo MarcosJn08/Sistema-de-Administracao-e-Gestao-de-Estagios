@@ -42,9 +42,18 @@ class Aluno extends Model
 
     public function getCargaHorariaCumpridaAttribute(): float
     {
-        $horasDiario = (float) DiarioFrequencia::whereHas('estagio', fn ($query) => $query->where('aluno_id', $this->id)->where('status', '!=', StatusEstagio::CANCELADO_DESVIO_FUNCAO))->where('assinado_supervisor', true)->sum('horas_diarias');
-        $horasCampo = (float) FrequenciaDiariaCampo::whereHas('estagio', fn ($query) => $query->where('aluno_id', $this->id)->where('status', '!=', StatusEstagio::CANCELADO_DESVIO_FUNCAO))->where('presente', true)->sum('horas_cumpridas');
-        $horasMensais = (float) FrequenciaMensal::whereHas('estagio', fn ($query) => $query->where('aluno_id', $this->id)->where('status', '!=', StatusEstagio::CANCELADO_DESVIO_FUNCAO))->where('status', 'APROVADO')->sum('total_horas_mes');
+        $estagiosComCredito = fn ($query) => $query->where('aluno_id', $this->id)
+            ->where('status', '!=', StatusEstagio::CANCELADO_DESVIO_FUNCAO);
+
+        $horasDiario = (float) DiarioFrequencia::whereHas('estagio', $estagiosComCredito)
+            ->where('assinado_supervisor', true)
+            ->sum('horas_diarias');
+        $horasCampo = (float) FrequenciaDiariaCampo::whereHas('estagio', $estagiosComCredito)
+            ->where('presente', true)
+            ->sum('horas_cumpridas');
+        $horasMensais = (float) FrequenciaMensal::whereHas('estagio', $estagiosComCredito)
+            ->where('status', 'APROVADO')
+            ->sum('total_horas_mes');
 
         return $horasDiario + $horasCampo + $horasMensais;
     }

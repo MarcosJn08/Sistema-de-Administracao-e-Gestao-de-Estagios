@@ -17,7 +17,7 @@ trait OrientadorDocs
         security: [['bearerAuth' => []]],
         tags: ['Orientação de estágio'],
         responses: [
-            new OA\Response(response: 200, description: 'Orientadores com departamento, disponibilidade e discentes, além dos rascunhos sem orientador.'),
+            new OA\Response(response: 200, description: 'Orientadores com departamento, disponibilidade e discentes, além dos estágios sem orientador.'),
             new OA\Response(response: 401, description: 'Não autenticado.'),
             new OA\Response(response: 403, description: 'Acesso exclusivo da Direção.'),
         ]

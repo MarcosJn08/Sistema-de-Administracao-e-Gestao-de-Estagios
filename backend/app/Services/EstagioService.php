@@ -10,7 +10,9 @@ use App\Models\EmpresaConcedente;
 use App\Models\Estagio;
 use App\Models\ProfessorOrientador;
 use App\Models\SupervisorEmpresa;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 class EstagioService
@@ -83,14 +85,25 @@ class EstagioService
         }
     }
 
-    public function transicionar(Estagio $estagio, StatusEstagio $destino, int $autor, ?string $motivo): Estagio
+    public function transicionar(Estagio $estagio, StatusEstagio $destino, User $autor, ?string $motivo): Estagio
     {
         return DB::transaction(function () use ($estagio, $destino, $autor, $motivo) {
             $estagio = Estagio::whereKey($estagio->id)->lockForUpdate()->firstOrFail();
             $origem = $estagio->status;
+            $encerrando = in_array($destino, [StatusEstagio::ENCERRADO, StatusEstagio::CANCELADO_DESVIO_FUNCAO], true);
+            if ($encerrando) {
+                $habilidade = $destino === StatusEstagio::CANCELADO_DESVIO_FUNCAO ? 'cancelarDesvioFuncao' : 'transition';
+                Gate::forUser($autor)->authorize($habilidade, $estagio);
+                if (! $motivo) {
+                    throw ValidationException::withMessages(['motivo' => 'Informe o motivo do encerramento.']);
+                }
+                if ($origem === $destino) {
+                    return $estagio;
+                }
+            }
             $permitidos = match ($origem) {
                 StatusEstagio::RASCUNHO => [StatusEstagio::EM_ANALISE, StatusEstagio::EM_ANDAMENTO, StatusEstagio::ENCERRADO],
-                StatusEstagio::EM_ANALISE => [StatusEstagio::EM_ANDAMENTO, StatusEstagio::ENCERRADO],
+                StatusEstagio::EM_ANALISE => [StatusEstagio::EM_ANDAMENTO, StatusEstagio::ENCERRADO, StatusEstagio::CANCELADO_DESVIO_FUNCAO],
                 StatusEstagio::EM_ANDAMENTO => [StatusEstagio::CONCLUIDO, StatusEstagio::ENCERRADO, StatusEstagio::CANCELADO_DESVIO_FUNCAO],
                 default => [],
             };
@@ -117,17 +130,14 @@ class EstagioService
                 || $estagio->aluno->cargaHorariaRestante() > 0)) {
                 throw ValidationException::withMessages(['status' => 'A conclusão exige relatório aprovado e carga horária do curso cumprida.']);
             }
-            if (in_array($destino, [StatusEstagio::ENCERRADO, StatusEstagio::CANCELADO_DESVIO_FUNCAO], true) && ! $motivo) {
-                throw ValidationException::withMessages(['motivo' => 'Informe o motivo do encerramento.']);
-            }
             if (in_array($destino, [StatusEstagio::EM_ANALISE, StatusEstagio::EM_ANDAMENTO], true)) {
                 app(ContratoEstagioService::class)->validar($estagio);
             }
-            if (in_array($destino, [StatusEstagio::ENCERRADO, StatusEstagio::CANCELADO_DESVIO_FUNCAO], true)) {
+            if ($encerrando) {
                 $estagio->fill(['encerrado_em' => now(), 'motivo_encerramento' => $motivo]);
             }
             $estagio->update(['status' => $destino]);
-            DB::table('historico_estagios')->insert(['estagio_id' => $estagio->id, 'usuario_id' => $autor, 'status_anterior' => $origem->value, 'status_novo' => $destino->value, 'motivo' => $motivo, 'created_at' => now()]);
+            DB::table('historico_estagios')->insert(['estagio_id' => $estagio->id, 'usuario_id' => $autor->id, 'status_anterior' => $origem->value, 'status_novo' => $destino->value, 'motivo' => $motivo, 'created_at' => now()]);
 
             return $estagio;
         }, 3);
