@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Alert, Col, Container, Row, Table } from 'react-bootstrap';
 import { BriefcaseBusiness, CheckCircle2, RotateCcw, Search, TriangleAlert, Users } from 'lucide-react';
 import Header from '../components/Header.jsx';
@@ -132,6 +132,7 @@ export default function DashboardProfessor() {
           <Row className="g-4 mb-4">{indicadores.map((indicador) => (
             <Col key={indicador.titulo} xs={12} sm={6} lg={3}><CardPequeno {...indicador} /></Col>
           ))}</Row>
+
           <section className="cartao-sage" aria-label="Discentes orientados">
             <Row className="g-3 mb-4 align-items-end">
               <Col xs={12} lg={6}>

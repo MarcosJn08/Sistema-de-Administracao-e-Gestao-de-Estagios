@@ -42,7 +42,11 @@ class Aluno extends Model
 
     public function getCargaHorariaCumpridaAttribute(): float
     {
-        return (float) DiarioFrequencia::whereHas('estagio', fn ($query) => $query->where('aluno_id', $this->id)->where('status', '!=', StatusEstagio::CANCELADO_DESVIO_FUNCAO))->where('assinado_supervisor', true)->sum('horas_diarias');
+        $horasDiario = (float) DiarioFrequencia::whereHas('estagio', fn ($query) => $query->where('aluno_id', $this->id)->where('status', '!=', StatusEstagio::CANCELADO_DESVIO_FUNCAO))->where('assinado_supervisor', true)->sum('horas_diarias');
+        $horasCampo = (float) FrequenciaDiariaCampo::whereHas('estagio', fn ($query) => $query->where('aluno_id', $this->id)->where('status', '!=', StatusEstagio::CANCELADO_DESVIO_FUNCAO))->where('presente', true)->sum('horas_cumpridas');
+        $horasMensais = (float) FrequenciaMensal::whereHas('estagio', fn ($query) => $query->where('aluno_id', $this->id)->where('status', '!=', StatusEstagio::CANCELADO_DESVIO_FUNCAO))->where('status', 'APROVADO')->sum('total_horas_mes');
+
+        return $horasDiario + $horasCampo + $horasMensais;
     }
 
     public function cargaHorariaExigida(): int

@@ -76,6 +76,16 @@ class Estagio extends Model
         return $this->hasMany(DiarioFrequencia::class);
     }
 
+    public function frequenciasCampo()
+    {
+        return $this->hasMany(FrequenciaDiariaCampo::class);
+    }
+
+    public function frequenciasMensais()
+    {
+        return $this->hasMany(FrequenciaMensal::class);
+    }
+
     public function avaliacoes()
     {
         return $this->hasMany(AvaliacaoEstagio::class);
@@ -88,7 +98,11 @@ class Estagio extends Model
 
     public function horasCumpridas(): float
     {
-        return (float) $this->frequencias()->where('assinado_supervisor', true)->sum('horas_diarias');
+        $horasDiario = (float) $this->frequencias()->where('assinado_supervisor', true)->sum('horas_diarias');
+        $horasCampo = (float) $this->frequenciasCampo()->where('presente', true)->sum('horas_cumpridas');
+        $horasMensais = (float) $this->frequenciasMensais()->where('status', 'APROVADO')->sum('total_horas_mes');
+
+        return $horasDiario + $horasCampo + $horasMensais;
     }
 
     public function estaFinalizado(): bool

@@ -3,6 +3,7 @@ import { Alert, Modal } from 'react-bootstrap';
 import { BookOpenCheck, Link2, Pencil, UserRound } from 'lucide-react';
 import StatusBadge from '../StatusBadge.jsx';
 import Button from '../Button/Button.jsx';
+import ModalConfirmacao from '../ModalConfirmacao.jsx';
 import './ModalProfessor.css';
 
 function ModalProfessor({
@@ -13,6 +14,7 @@ function ModalProfessor({
   const [editando, setEditando] = useState(cadastro);
   const [erro, setErro] = useState('');
   const [carregando, setCarregando] = useState(false);
+  const [discenteParaDesvincular, setDiscenteParaDesvincular] = useState(null);
 
   const salvar = async (evento) => {
     evento.preventDefault();
@@ -123,18 +125,14 @@ function ModalProfessor({
                             )}
                           </div>
                           {aoDesvincular && estagio && (
-                            <Button
-                              tipo="botao-acao-contorno"
-                              size="sm"
-                              className="btn-sm py-1 px-2 text-danger border-danger"
-                              onClick={() => {
-                                if (window.confirm(`Deseja realmente desvincular o discente ${discente.nome} deste orientador?`)) {
-                                  aoDesvincular(estagio.id);
-                                }
-                              }}
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-danger py-1 px-2 text-nowrap"
+                              style={{ fontSize: '12px', fontWeight: 600, borderRadius: '4px' }}
+                              onClick={() => setDiscenteParaDesvincular({ estagioId: estagio.id, nome: discente.nome })}
                             >
                               Desvincular
-                            </Button>
+                            </button>
                           )}
                         </li>
                       );
@@ -218,6 +216,21 @@ function ModalProfessor({
           </button>
         </>}
       </Modal.Footer>
+
+      <ModalConfirmacao
+        aberto={Boolean(discenteParaDesvincular)}
+        titulo="Confirmar desvinculação"
+        mensagem={`Deseja realmente desvincular o discente ${discenteParaDesvincular?.nome} deste orientador? O estágio voltará a ficar sem professor responsável.`}
+        textoConfirmar="Sim, desvincular"
+        textoCancelar="Cancelar"
+        variante="perigo"
+        aoConfirmar={async () => {
+          const item = discenteParaDesvincular;
+          setDiscenteParaDesvincular(null);
+          if (item) await aoDesvincular(item.estagioId);
+        }}
+        aoCancelar={() => setDiscenteParaDesvincular(null)}
+      />
     </Modal>
   );
 }
