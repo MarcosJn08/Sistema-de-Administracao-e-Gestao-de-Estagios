@@ -72,6 +72,8 @@ function PainelAlunosDiretor() {
   const [vinculoAberto, setVinculoAberto] = useState(false);
   const [toast, setToast] = useState({ mensagem: '', tipo: 'sucesso' });
   const [cursos, setCursos] = useState([]);
+  const [fichasPendentes, setFichasPendentes] = useState([]);
+  const [observacoesFicha, setObservacoesFicha] = useState({});
   const { dados: dadosOrientacao, carregando: carregandoVinculos, erro: erroVinculos, recarregar: recarregarVinculos } =
     useConsultaApi('/orientadores');
 
@@ -87,6 +89,7 @@ function PainelAlunosDiretor() {
   }, [dadosOrientacao]);
 
   useEffect(() => {
+    api.get('/diretor/fichas-matricula').then(({ data }) => setFichasPendentes(data.data || [])).catch(() => {});
     api.get('/cursos', { params: { status: 'ativo', per_page: 100 } })
       .then((res) => {
         const nomes = (res?.data?.data || res?.data || []).map((c) => c.nome);
@@ -94,6 +97,21 @@ function PainelAlunosDiretor() {
       })
       .catch(() => {});
   }, []);
+  async function analisarFicha(ficha, status) {
+    try {
+      await api.patch(`/diretor/fichas-matricula/${ficha.id}`, { status, observacoes: observacoesFicha[ficha.id] || '' });
+      setFichasPendentes((atuais) => atuais.filter((item) => item.id !== ficha.id));
+      setToast({ mensagem: 'Ficha analisada.', tipo: 'sucesso' });
+    } catch (error) { setToast({ mensagem: error.message, tipo: 'erro' }); }
+  }
+  async function baixarFicha(ficha) {
+    try {
+      const { data } = await api.get(`/diretor/fichas-matricula/${ficha.id}/arquivo`, { responseType: 'blob' });
+      const url = URL.createObjectURL(data);
+      const link = document.createElement('a'); link.href = url; link.download = `ficha-matricula-${ficha.id}.pdf`; link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (error) { setToast({ mensagem: error.message, tipo: 'erro' }); }
+  }
 
   useEffect(() => {
     let ativo = true;
@@ -177,8 +195,7 @@ function PainelAlunosDiretor() {
   const limparFiltros = () => { setBusca(''); setCurso(''); setSituacao(''); setPaginaAtual(1); };
   const cadastrarAluno = async (dados) => {
     if (!dados.nome || !dados.matricula || !dados.cpf || !dados.dataNascimento || !dados.email || !dados.telefone
-      || !dados.curso || !dados.semestre || !dados.periodoAno || !dados.turno || !dados.cep || !dados.logradouro
-      || !dados.numero || !dados.bairro || !dados.cidade || !dados.estado) {
+      || !dados.curso || !dados.semestre || !dados.periodoAno || !dados.turno) {
       throw new Error('Preencha os campos obrigatórios.');
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dados.email)) {
@@ -200,6 +217,10 @@ function PainelAlunosDiretor() {
       cpf: dados.cpf,
       curso: dados.curso,
       telefone: dados.telefone,
+      dataNascimento: dados.dataNascimento,
+      semestre: dados.semestre,
+      periodoAno: dados.periodoAno,
+      turno: dados.turno,
     });
 
     const usuarioCriado = resultado?.data;
@@ -240,6 +261,19 @@ function PainelAlunosDiretor() {
               <Plus size={17} aria-hidden="true" /> Cadastrar aluno
             </Button>
           </div>
+          <section className="cartao-sage" aria-labelledby="fichas-pendentes-titulo">
+            <h2 id="fichas-pendentes-titulo" className="cartao-sage-titulo">Fichas de matrícula em análise</h2>
+            {fichasPendentes.length === 0 && <p>Nenhuma ficha aguardando análise.</p>}
+            {fichasPendentes.map((ficha) => <div key={ficha.id} className="border-top py-3">
+              <strong>{ficha.aluno?.usuario?.nome || ficha.aluno?.usuario?.name || `Aluno #${ficha.aluno_id}`}</strong>
+              <span className="ms-2">Matrícula {ficha.aluno?.matricula}</span>
+              <button type="button" className="botao-acao-contorno ms-2" onClick={() => baixarFicha(ficha)}>Baixar ficha</button>
+              <label className="d-block mt-2" htmlFor={`parecer-ficha-${ficha.id}`}>Observações para correção</label>
+              <textarea id={`parecer-ficha-${ficha.id}`} className="form-control mb-2" value={observacoesFicha[ficha.id] || ''} onChange={(evento) => setObservacoesFicha((atual) => ({ ...atual, [ficha.id]: evento.target.value }))} />
+              <button type="button" className="botao-sage-verde me-2" onClick={() => analisarFicha(ficha, 'DEFERIDO')}>Aprovar</button>
+              <button type="button" className="botao-acao-contorno" onClick={() => analisarFicha(ficha, 'NECESSITA_AJUSTES')}>Solicitar correções</button>
+            </div>)}
+          </section>
           <Row className="g-4 mb-4">
             {indicadores.map((indicador) => (
               <Col xs={12} sm={6} lg={3} key={indicador.titulo}>

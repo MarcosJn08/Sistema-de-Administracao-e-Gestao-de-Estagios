@@ -17,7 +17,10 @@ class Aluno extends Model
         'cpf',
         'telefone',
         'curso_nome',
+        'dados_perfil',
     ];
+
+    protected $casts = ['dados_perfil' => 'array'];
 
     public function usuario()
     {

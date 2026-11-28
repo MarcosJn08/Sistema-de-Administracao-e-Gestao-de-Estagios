@@ -11,6 +11,7 @@ import FormacaoAluno from '../aluno/FormacaoAluno.jsx';
 import { apresentarStatusCandidatura, carregarCandidatura, carregarPerfilAluno, carregarRascunho, enviarCandidatura, salvarRascunho } from '../../utils/candidaturaAluno.js';
 import './ModalDetalhesVaga.css';
 import './ModalCandidatura.css';
+import api from '../../services/api.js';
 
 export default function ModalCandidatura({ vaga, aoFechar, aoVoltar, candidaturaRegistrada }) {
   const [perfil] = useState(carregarPerfilAluno);
@@ -38,9 +39,10 @@ export default function ModalCandidatura({ vaga, aoFechar, aoVoltar, candidatura
     }
   }
 
-  function confirmar(evento) {
+  async function confirmar(evento) {
     evento.preventDefault();
     try {
+      await api.post('/aluno/candidaturas', { vaga_id: String(vaga.id), vaga: vaga.titulo, empresa: vaga.empresa, carta_apresentacao: carta });
       setCandidatura(enviarCandidatura(vaga, carta));
       setErro('');
     } catch (error) {

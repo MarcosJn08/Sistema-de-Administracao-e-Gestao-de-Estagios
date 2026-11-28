@@ -98,28 +98,6 @@ function ModalCadastroAluno({ aberto, cursos, aoCadastrar, aoFechar }) {
                 <option value="Integral">Integral</option>
               </select>
             </label>
-            <div className="modal-cadastro-aluno-secao">Endereço residencial</div>
-            <label>CEP
-              <input name="cep" required maxLength={10} placeholder="00000-000" />
-            </label>
-            <label className="modal-cadastro-aluno-campo-largo">Rua / logradouro
-              <input name="logradouro" required maxLength={160} />
-            </label>
-            <label>Número
-              <input name="numero" required maxLength={20} />
-            </label>
-            <label>Complemento
-              <input name="complemento" maxLength={100} />
-            </label>
-            <label>Bairro
-              <input name="bairro" required maxLength={100} />
-            </label>
-            <label>Cidade
-              <input name="cidade" required maxLength={100} />
-            </label>
-            <label>Estado
-              <input name="estado" required maxLength={60} />
-            </label>
           </div>
         </form>
       </Modal.Body>
