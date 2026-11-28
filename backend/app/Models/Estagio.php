@@ -16,6 +16,7 @@ class Estagio extends Model
         'carga_horaria_diaria', 'bolsa_auxilio', 'status', 'cargo', 'curso_id', 'carga_horaria_semanal', 'meta_horas_tce', 'encerrado_em', 'motivo_encerramento'];
 
     protected $casts = [
+        'dados_documentais' => 'array',
         'carga_horaria_semanal' => 'decimal:2',
         'meta_horas_tce' => 'decimal:2',
         'encerrado_em' => 'datetime',

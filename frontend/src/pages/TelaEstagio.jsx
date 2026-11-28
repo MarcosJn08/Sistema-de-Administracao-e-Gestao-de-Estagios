@@ -8,7 +8,7 @@ import Button from '../components/Button/Button.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
 import CardDadosEstagio from '../components/Estagio/CardDadosEstagio.jsx';
 import CardProgresso from '../components/aluno/CardProgresso.jsx';
-import CardDocumentos from '../components/aluno/CardDocumentos.jsx';
+import DocumentosEstagio from '../components/documento/DocumentosEstagio.jsx';
 import SecaoFrequenciasMensais from '../components/frequencia/SecaoFrequenciasMensais.jsx';
 import useAuth from '../hooks/useAuth.js';
 import api from '../services/api.js';
@@ -76,6 +76,7 @@ export default function TelaEstagio() {
   const estagio = respostaAtual ? estado.contrato : null;
   const documentos = (estagio?.documentos || []).map(documento => ({
     id: documento.id,
+    tipo: documento.tipo,
     nome: tiposDocumento[documento.tipo] || documento.tipo,
     descricao: documento.observacoes || 'Documento vinculado ao contrato de estágio.',
     status: estadosDocumento[documento.status] || documento.status,
@@ -130,8 +131,8 @@ export default function TelaEstagio() {
                   />}
               </Col>
               <Col xs={12} lg={8}>
-                <CardDocumentos titulo="Documentos do estágio" documentos={documentos}
-                  exibirData acoesSomenteIcones aoClicarAcao={baixarDocumento} />
+                <DocumentosEstagio key={estagio.id} estagioId={estagio.id} aoBaixarOutro={baixarDocumento}
+                  outrosDocumentos={documentos.filter((doc) => !['TCE', 'PLANO_ATIVIDADES', 'AVALIACAO_ALUNO', 'AVALIACAO_EMPRESA'].includes(doc.tipo))} />
               </Col>
             </Row>
 

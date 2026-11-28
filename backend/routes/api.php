@@ -73,6 +73,11 @@ Route::middleware(['auth:sanctum', 'ativo', 'throttle:api'])->group(function () 
 
     Route::apiResource('estagios', ContratoEstagioController::class)->only(['index', 'store', 'show', 'update']);
     Route::patch('/estagios/{estagio}/status', [EstagioController::class, 'status']);
+    Route::get('/diretor/documentos-estagio', [DocumentoController::class, 'recebidos']);
+    Route::get('/estagios/{estagio}/catalogo-documentos', [DocumentoController::class, 'catalogo']);
+    Route::match(['get', 'patch'], '/estagios/{estagio}/modelos-documentos/{tipo}', [DocumentoController::class, 'modelo']);
+    Route::post('/estagios/{estagio}/documentos/arquivo', [DocumentoController::class, 'anexar']);
+    Route::post('/estagios/{estagio}/documentos/{documento}/encaminhar', [DocumentoController::class, 'encaminhar']);
     Route::get('/estagios/{estagio}/documentos', [DocumentoController::class, 'index']);
     Route::post('/estagios/{estagio}/documentos', [DocumentoController::class, 'store']);
     Route::patch('/estagios/{estagio}/documentos/{documento}/analise', [DocumentoController::class, 'review']);

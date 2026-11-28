@@ -307,3 +307,21 @@ Nos testes ou no Tinker (`php artisan tinker`):
 A factory cria contratos em rascunho e deriva o curso do aluno e a empresa do supervisor. Ao fornecer IDs existentes ou sobrescrever atributos, mantenha os vínculos e limites coerentes: factories inserem diretamente no banco e não substituem as validações dos serviços/API.
 
 O dashboard do aluno usa `GET /api/auth/me`: `formacao` contém matrícula, curso, turma e e-mail; `progresso.horas_cumpridas` soma frequências assinadas conforme as regras do aluno, e `progresso.meta_horas` é a carga exigida pelo curso (nula se não houver vínculo). No detalhe do contrato, a referência continua sendo `meta_horas_tce`.
+
+### Referência da API
+
+Abra `/api/documentation` no backend para consultar os métodos, parâmetros,
+corpos de requisição e códigos de resposta. Para operações protegidas, use
+**Authorize** e informe o token retornado por `POST /api/auth/login`.
+
+A partir da pasta `backend`, atualize a especificação após alterar as rotas
+ou os atributos OpenAPI em `app/Http/Docs`:
+
+```bash
+php artisan l5-swagger:generate
+```
+
+No fluxo de documentos do estágio, o catálogo lista os tipos e as permissões
+do usuário. O modelo retorna os campos ou a minuta em PDF com `?pdf=1`.
+O upload em `/documentos/arquivo` salva um rascunho. Envie a versão para
+análise com `POST /documentos/{documento}/encaminhar`, no mesmo estágio.

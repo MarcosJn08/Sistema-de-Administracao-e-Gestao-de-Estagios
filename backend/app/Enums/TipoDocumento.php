@@ -5,6 +5,8 @@ namespace App\Enums;
 enum TipoDocumento: string
 {
     case TCE = 'TCE';
+    case AVALIACAO_ALUNO = 'AVALIACAO_ALUNO';
+    case AVALIACAO_EMPRESA = 'AVALIACAO_EMPRESA';
     case PLANO_ATIVIDADES = 'PLANO_ATIVIDADES';
     case FICHA_MATRICULA = 'FICHA_MATRICULA';
     case RELATORIO_PARCIAL = 'RELATORIO_PARCIAL';

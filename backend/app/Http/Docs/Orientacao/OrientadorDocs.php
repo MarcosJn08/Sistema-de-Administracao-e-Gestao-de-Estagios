@@ -25,7 +25,7 @@ trait OrientadorDocs
     abstract public function index(OrientadorService $service): JsonResponse;
 
     #[OA\Patch(
-        path: '/api/estagios/{id}/orientador',
+        path: '/api/estagios/{estagio}/orientador',
         summary: 'Vincular ou trocar o orientador de um estágio',
         security: [['bearerAuth' => []]],
         tags: ['Orientação de estágio'],
@@ -33,7 +33,7 @@ trait OrientadorDocs
             required: ['professor_orientador_id'],
             properties: [new OA\Property(property: 'professor_orientador_id', type: 'integer', minimum: 1)]
         )),
-        parameters: [new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
+        parameters: [new OA\Parameter(name: 'estagio', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
         responses: [
             new OA\Response(response: 200, description: 'Vínculo salvo.'),
             new OA\Response(response: 401, description: 'Não autenticado.'),

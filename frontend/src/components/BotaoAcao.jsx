@@ -1,4 +1,4 @@
-import { ArrowRight, Download, Eye, FilePenLine, FileSearch, Send, SquarePen } from 'lucide-react';
+import { ArrowRight, Download, Eye, FilePenLine, FileSearch, Send, SquarePen, Upload } from 'lucide-react';
 import '../App.css';
 
 const ICONES = {
@@ -8,15 +8,17 @@ const ICONES = {
   visualizar: Eye,
   'ver todas': ArrowRight,
   pdf: Download,
+  anexar: Upload,
   enviar: Send,
   preencher: SquarePen,
 };
 
-const TRECHOS_COM_ICONE = ['editar', 'visualizar', 'ver todas', 'pdf', 'enviar', 'preencher'];
+const TRECHOS_COM_ICONE = ['anexar', 'editar', 'visualizar', 'ver todas', 'pdf', 'enviar', 'preencher'];
 
 function varianteDaAcao(texto) {
   if (texto === 'analisar') return 'primario';
   if (texto === 'ver') return 'contorno';
+  if (texto.includes('anexar')) return 'azul';
   if (texto.includes('pdf')) return 'ambar';
   if (texto.includes('preencher')) return 'verde';
   if (texto.includes('enviar')) return 'roxo';

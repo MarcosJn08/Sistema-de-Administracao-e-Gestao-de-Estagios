@@ -1,16 +1,44 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CheckCircle2, Clock3 } from 'lucide-react';
 import StatusBadge from '../StatusBadge.jsx';
 import api from '../../services/api.js';
 import { assinaturaPartes, exigeHomologacaoFinal, pendenciasAssinaturas, podeAvaliarDocumentoAluno } from '../../utils/gestaoAluno.js';
 
-export default function DocumentoAluno({ documento, perfil = 'professor', aoAtualizar }) {
+export default function DocumentoAluno({ documento, perfil = 'professor', aoAtualizar, abrirPrevia = false }) {
   const [devolvendo, setDevolvendo] = useState(false);
   const [visualizando, setVisualizando] = useState(false);
   const [erro, setErro] = useState('');
   const [salvando, setSalvando] = useState(false);
   const [baixando, setBaixando] = useState(false);
-  const integrado = documento.estagioId != null;
+  const [previaAberta, setPreviaAberta] = useState(abrirPrevia);
+  const [previa, setPrevia] = useState(null);
+  const urlArquivo = documento.download || `/estagios/${documento.estagioId}/documentos/${documento.id}/download`;
+
+  useEffect(() => {
+    if (!previaAberta || !documento.temArquivo) return;
+    const controller = new AbortController();
+    let url;
+    api.get(urlArquivo, { responseType: 'blob', signal: controller.signal })
+      .then(({ data }) => {
+        if (controller.signal.aborted) return;
+        url = URL.createObjectURL(data);
+        setPrevia({ url });
+      })
+      .catch((error) => {
+        if (!controller.signal.aborted) setPrevia({ erro: error.message });
+      });
+    return () => {
+      controller.abort();
+      if (url) URL.revokeObjectURL(url);
+    };
+  }, [previaAberta, documento.temArquivo, urlArquivo]);
+
+  function alternarPrevia() {
+    setPrevia(null);
+    setPreviaAberta((aberta) => !aberta);
+  }
+
+  const integrado = documento.integrado || documento.estagioId != null;
   const homologacaoFinal = !integrado && exigeHomologacaoFinal(documento);
   const diretor = perfil === 'diretor';
   const podeAvaliar = typeof aoAtualizar === 'function'
@@ -41,7 +69,7 @@ export default function DocumentoAluno({ documento, perfil = 'professor', aoAtua
     setBaixando(true);
     setErro('');
     try {
-      const { data } = await api.get('/estagios/' + documento.estagioId + '/documentos/' + documento.id + '/download', { responseType: 'blob' });
+      const { data } = await api.get(documento.download || '/estagios/' + documento.estagioId + '/documentos/' + documento.id + '/download', { responseType: 'blob' });
       const url = URL.createObjectURL(data);
       const link = document.createElement('a');
       link.href = url;
@@ -59,8 +87,12 @@ export default function DocumentoAluno({ documento, perfil = 'professor', aoAtua
     <li className="perfil-aluno-documento">
       <div className="perfil-aluno-documento-cabecalho">
         <div>
-          <h4>{documento.nome}</h4>
-          <p className="perfil-aluno-documento-data">Envio: {documento.data || 'Não informado'}</p>
+          <h4>{integrado && documento.temArquivo
+            ? <button type="button" className="btn btn-link text-start p-0 fw-bold" onClick={alternarPrevia}
+                aria-expanded={previaAberta}>{documento.nome}</button>
+            : documento.nome}</h4>
+          {documento.empresa && <p className="perfil-aluno-documento-data">{documento.empresa} · Estágio #{documento.estagioId}</p>}
+          <p className="perfil-aluno-documento-data">Registro: {documento.data || 'Não informado'}</p>
         </div>
         <StatusBadge status={documento.status} />
       </div>
@@ -99,6 +131,11 @@ export default function DocumentoAluno({ documento, perfil = 'professor', aoAtua
         </>}
       </div>
       {diretor && !aprovado && pendencias.length > 0 && <p className="perfil-aluno-ajuda">A aprovação aguarda assinatura: {pendencias.map((parte) => assinaturaPartes[parte]).join(', ')}.</p>}
+      {previaAberta && documento.temArquivo && <div className="perfil-aluno-previa">
+        {previa?.url ? <iframe title={`PDF de ${documento.nome}`} src={previa.url} className="w-100 border-0"
+          style={{ height: '60vh', minHeight: 320 }} />
+          : previa?.erro ? <p role="alert">{previa.erro}</p> : <p role="status">Carregando PDF…</p>}
+      </div>}
       {visualizando && !documento.url && <div id={`documento-previa-${documento.id}`} className="perfil-aluno-previa">
         <strong>{documento.nome}</strong>
         <p>{documento.descricao || 'Sem descrição cadastrada.'}</p>
