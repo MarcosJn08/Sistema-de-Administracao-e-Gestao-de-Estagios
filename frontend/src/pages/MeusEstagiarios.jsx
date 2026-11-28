@@ -1,3 +1,4 @@
+import DocumentosEstagio from '../components/documento/DocumentosEstagio.jsx';
 import { useEffect, useState, useMemo } from 'react';
 import { Alert, Modal, Row, Col } from 'react-bootstrap';
 import {
@@ -337,6 +338,7 @@ function MeusEstagiarios() {
     {c.plano ? <><p>{c.plano.objetivos}</p><p style={{ whiteSpace: 'pre-wrap' }}>{c.plano.atividades_previstas}</p><p>{c.plano.cronograma}</p></> : <p>Plano ainda não cadastrado.</p>}
     {c.encerrado_em && <p>Encerrado em {new Date(c.encerrado_em).toLocaleString('pt-BR')}: {c.motivo_encerramento}</p>}
     <h3>Documentos</h3>{erroDownload && <Alert variant="danger">{erroDownload}</Alert>}
+    <DocumentosEstagio key={c.id} estagioId={c.id} />
     {c.documentos.length ? <ul>{c.documentos.map((d) => <li key={d.id}>{d.tipo} — {d.status} <button type="button" className="btn btn-link" onClick={() => baixar(d)}>Baixar PDF</button></li>)}</ul> : <p>Nenhum documento cadastrado.</p>}
 
     <div className="mt-4">

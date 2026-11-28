@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Container, Row, Col } from 'react-bootstrap';
-import { ArrowRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { ArrowRight, Check, UserRound } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import Button from '../components/Button/Button.jsx';
@@ -15,6 +15,7 @@ import api from '../services/api.js';
 import useAuth from '../hooks/useAuth.js';
 import { carregarPerfilAluno } from '../utils/candidaturaAluno.js';
 import '../App.css';
+import './DashboardAluno.css';
 import '../components/Estagio/cardEstagios/CardEstagio.css';
 import VagasSection from '../components/landing/VagasSection.jsx';
 import ModalDetalhesVaga from '../components/vagas/ModalDetalhesVaga.jsx';
@@ -30,12 +31,14 @@ function DashboardAluno() {
   const [resumo, setResumo] = useState(null);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
+  const [checklist, setChecklist] = useState(null);
 
   useEffect(() => {
     const controller = new AbortController();
     async function carregar() {
       try {
         const { data: conta } = await api.get('/auth/me', { signal: controller.signal });
+        const { data: perfilServidor } = await api.get('/aluno/perfil', { signal: controller.signal });
         const registros = [];
         let pagina = 1;
         let ultima = 1;
@@ -50,6 +53,7 @@ function DashboardAluno() {
         if (!controller.signal.aborted) {
           setContratos(registros);
           setResumo(conta.data);
+          setChecklist(perfilServidor.data.checklist);
           setErro('');
         }
       } catch (error) {
@@ -100,6 +104,25 @@ function DashboardAluno() {
             matricula={referencia?.aluno?.matricula || user?.matricula || 'Não informada'}
             aoEditarPerfil={() => navigate('/sage/aluno/perfil')}
           />
+          {checklist && !checklist.completo && <section className="cartao-sage perfil-checklist mb-4" aria-labelledby="checklist-perfil-titulo">
+            <div className="perfil-checklist-topo">
+              <div className="perfil-checklist-intro">
+                <span className="perfil-checklist-icone"><UserRound size={23} aria-hidden="true" /></span>
+                <div><h2 id="checklist-perfil-titulo" className="cartao-sage-titulo">Complete seu perfil</h2>
+                  <p>Prepare seu cadastro para as oportunidades de estágio.</p></div>
+              </div>
+              <div className="perfil-checklist-percentual"><strong>{checklist.percentual}%</strong><span>concluído</span></div>
+            </div>
+            <div className="perfil-checklist-trilha" role="progressbar" aria-label="Conclusão do perfil" aria-valuenow={checklist.percentual} aria-valuemin={0} aria-valuemax={100}>
+              <div style={{ width: `${checklist.percentual}%` }} />
+            </div>
+            <p className="perfil-checklist-resumo">{checklist.etapas.filter((etapa) => etapa.concluida).length} de {checklist.etapas.length} etapas concluídas</p>
+            <ul className="perfil-checklist-etapas">{checklist.etapas.map((etapa, indice) => {
+              const titulo = ({ 'dados-complementares': 'Dados para matrícula de estágio', endereco: 'Endereço residencial', 'dados-academicos': 'Dados acadêmicos', 'ficha-matricula': 'Ficha de matrícula' })[etapa.id];
+              const conteudo = <><span className="perfil-checklist-numero">{etapa.concluida ? <Check size={17} aria-hidden="true" /> : indice + 1}</span><span className="perfil-checklist-etapa-texto"><strong>{titulo}</strong><span>{etapa.concluida ? 'Concluído' : 'Preencher etapa'}</span></span>{!etapa.concluida && <ArrowRight size={17} aria-hidden="true" />}</>;
+              return <li key={etapa.id} className={etapa.concluida ? 'concluida' : ''}>{etapa.concluida ? <div>{conteudo}</div> : <Link to={`/sage/aluno/perfil#${['dados-pessoais', 'dados-academicos'].includes(etapa.id) ? 'dados-complementares' : etapa.id}`}>{conteudo}</Link>}</li>;
+            })}</ul>
+          </section>}
 
           {carregando && <p role="status">Carregando estágios…</p>}
           {erro && <Alert variant="danger">{erro}</Alert>}

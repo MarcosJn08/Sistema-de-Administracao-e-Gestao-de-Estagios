@@ -65,6 +65,12 @@ class UserService
                         'turma_id'   => $dados['turma_id'] ?? null,
                         'telefone'   => $dados['telefone'] ?? null,
                         'curso_nome' => $dados['curso'] ?? $dados['curso_nome'] ?? null,
+                        'dados_perfil' => array_filter([
+                            'data_nascimento' => $dados['dataNascimento'] ?? null,
+                            'serie_modulo_periodo' => isset($dados['semestre']) ? (string) $dados['semestre'] : null,
+                            'turno' => $dados['turno'] ?? null,
+                            'periodo_ano' => $dados['periodoAno'] ?? null,
+                        ], fn ($valor) => $valor !== null),
                     ]
                 );
             } elseif ($perfil === 'PROFESSOR') {

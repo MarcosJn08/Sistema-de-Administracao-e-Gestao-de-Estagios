@@ -63,6 +63,10 @@ class StoreUserRequest extends FormRequest
             'telefone'          => ['nullable', 'string', 'max:30'],
             'maximoOrientandos' => ['nullable', 'integer', 'min:1', 'max:100'],
             'curso'             => ['nullable', 'string', 'max:150'],
+            'dataNascimento'    => ['nullable', 'date', 'before:today'],
+            'semestre'          => ['nullable', 'integer', 'min:1', 'max:20'],
+            'periodoAno'        => ['nullable', 'string', 'max:30'],
+            'turno'             => ['nullable', Rule::in(['Matutino', 'Vespertino', 'Noturno', 'Integral'])],
         ];
     }
 

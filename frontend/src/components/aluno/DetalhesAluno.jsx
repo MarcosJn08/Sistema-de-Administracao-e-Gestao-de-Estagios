@@ -4,6 +4,7 @@ import { FileText, GraduationCap, UserRound } from 'lucide-react';
 import StatusBadge from '../StatusBadge.jsx';
 import Button from '../Button/Button.jsx';
 import FormAcaoDiretor from './FormAcaoDiretor.jsx';
+import useDocumentosDiretor from '../../hooks/useDocumentosDiretor.js';
 import DocumentoAluno from './DocumentoAluno.jsx';
 import { baixarPreviaCertidao, podeHomologarHoras } from '../../utils/gestaoAluno.js';
 import './DetalhesAluno.css';
@@ -20,6 +21,8 @@ function Campo({ titulo, children, destaque = false }) {
 function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', aoAtualizar, aoVincularProfessor }) {
   const [acao, setAcao] = useState(null);
   const [mensagem, setMensagem] = useState('');
+  const consultarDocumentos = perfil === 'diretor' && aberto && Boolean(aluno?.alunoId);
+  const consulta = useDocumentosDiretor({ ativo: consultarDocumentos, alunoId: aluno?.alunoId });
   if (!aluno) return null;
 
   const diretor = perfil === 'diretor' && typeof aoAtualizar === 'function';
@@ -32,7 +35,8 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', aoAtuali
     setMensagem('Alteração registrada nesta sessão.');
   };
 
-  const { documentos = [], progresso = {} } = aluno;
+  const { progresso = {} } = aluno;
+  const documentos = consultarDocumentos ? consulta.documentos : aluno.documentos || [];
   const estagio = aluno.estagio ?? aluno.estagioVinculado;
   const { horasConcluidas = 0, metaHoras = 0, horasEstagio = 0, horasProjeto = 0 } = progresso;
   const percentual = metaHoras > 0 ? Math.min(100, Math.max(0, Math.floor(horasConcluidas / metaHoras * 100))) : 0;
@@ -145,14 +149,16 @@ function DetalhesAluno({ aberto, aluno, aoFechar, perfil = 'professor', aoAtuali
           <section className="perfil-aluno-cartao perfil-aluno-documentos" aria-labelledby="perfil-aluno-documentos">
             <h3 id="perfil-aluno-documentos" className="perfil-aluno-titulo">Documentos</h3>
             <p className="perfil-aluno-subtitulo">Documentos e relatórios do aluno</p>
+            {consulta.erro && <p role="alert">{consulta.erro}</p>}
+            {consulta.carregando && <p role="status">Carregando documentos…</p>}
             {documentos.length > 0 ? (
               <ul className="perfil-aluno-documentos-lista">
                 {documentos.map((documento) => (
                   <DocumentoAluno key={documento.id} documento={documento} perfil={perfil}
-                    aoAtualizar={typeof aoAtualizar === 'function' ? salvar : undefined} />
+                    aoAtualizar={consultarDocumentos ? (alteracao) => consulta.avaliar(documento, alteracao.tipo === 'aprovar', alteracao.motivo) : typeof aoAtualizar === 'function' ? salvar : undefined} />
                 ))}
               </ul>
-            ) : (
+            ) : !consulta.carregando && !consulta.erro && (
               <div className="perfil-aluno-documentos-vazio">
                 <FileText size={30} strokeWidth={1.5} aria-hidden="true" />
                 <p>Nenhum documento ou relatório registrado.</p>

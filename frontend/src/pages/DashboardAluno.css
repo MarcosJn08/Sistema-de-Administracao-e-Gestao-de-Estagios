@@ -1,0 +1,25 @@
+.perfil-checklist { border: 1px solid #e3ebe6; }
+.perfil-checklist-topo, .perfil-checklist-intro { display: flex; align-items: center; gap: 14px; }
+.perfil-checklist-topo { justify-content: space-between; margin-bottom: 22px; }
+.perfil-checklist-icone { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: #eaf6ee; color: var(--sage-green, #00a859); flex-shrink: 0; }
+.perfil-checklist .cartao-sage-titulo { margin-bottom: 5px; }
+.perfil-checklist-intro p { margin: 0; color: var(--sage-muted, #667085); font-size: 14px; }
+.perfil-checklist-percentual { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; }
+.perfil-checklist-percentual strong { color: var(--sage-green, #00a859); font-size: 30px; font-weight: 700; }
+.perfil-checklist-percentual span, .perfil-checklist-resumo { font-size: 12px; color: var(--sage-muted, #667085); }
+.perfil-checklist-trilha { height: 10px; border-radius: 20px; overflow: hidden; background: #edf2ef; }
+.perfil-checklist-trilha > div { height: 100%; border-radius: inherit; background: var(--sage-green, #00a859); transition: width .3s ease; }
+.perfil-checklist-resumo { margin: 9px 0 20px; }
+.perfil-checklist-etapas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding: 0; margin: 0; list-style: none; }
+.perfil-checklist-etapas li > a, .perfil-checklist-etapas li > div { display: flex; align-items: center; gap: 10px; padding: 15px 12px; height: 100%; border: 1px solid #e3e8e5; border-radius: 12px; color: #34453b; text-decoration: none; }
+.perfil-checklist-etapas li > a:hover { border-color: var(--sage-green, #00a859); background: #f5faf7; }
+.perfil-checklist-etapas li > a:focus-visible { outline: 3px solid var(--sage-green, #00a859); outline-offset: 3px; }
+.perfil-checklist-numero { display: grid; place-items: center; flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: #f0f3f1; font-size: 12px; font-weight: 600; }
+.perfil-checklist-etapa-texto { display: flex; flex: 1; flex-direction: column; gap: 4px; }
+.perfil-checklist-etapa-texto strong { font-size: 12px; font-weight: 600; }
+.perfil-checklist-etapa-texto > span { font-size: 11px; color: var(--sage-muted, #667085); }
+.perfil-checklist-etapas .concluida > div { background: #f4faf6; border-color: #dceee2; }
+.perfil-checklist-etapas .concluida .perfil-checklist-numero { background: #dcefe3; color: #208348; }
+@media (max-width: 991px) { .perfil-checklist-etapas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 575px) { .perfil-checklist-etapas { grid-template-columns: 1fr; } .perfil-checklist-icone { display: none; } .perfil-checklist-intro p { font-size: 12px; } .perfil-checklist-percentual strong { font-size: 25px; } }
+@media (prefers-reduced-motion: reduce) { .perfil-checklist-trilha > div { transition: none; } }

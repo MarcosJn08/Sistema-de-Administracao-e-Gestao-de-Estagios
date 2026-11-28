@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CursoController;
+use App\Http\Controllers\Api\CandidaturaVagaController;
 use App\Http\Controllers\Api\FrequenciaCampoController;
 use App\Http\Controllers\Api\FrequenciaMensalController;
 use App\Http\Controllers\Api\GoogleAuthController;
 use App\Http\Controllers\Api\PasswordResetController;
+use App\Http\Controllers\Api\PerfilAlunoController;
 use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\CadastroController;
 use App\Http\Controllers\ComplementoEstagioController;
@@ -43,6 +45,17 @@ Route::prefix('auth')->name('auth.')->group(function (): void {
 });
 
 Route::middleware(['auth:sanctum', 'ativo', 'throttle:api'])->group(function () {
+    Route::post('/aluno/candidaturas', [CandidaturaVagaController::class, 'store']);
+    Route::get('/aluno/perfil', [PerfilAlunoController::class, 'show']);
+    Route::patch('/aluno/perfil', [PerfilAlunoController::class, 'update']);
+    Route::post('/aluno/ficha-matricula/previa', [PerfilAlunoController::class, 'pdf']);
+    Route::get('/aluno/ficha-matricula/pdf', [PerfilAlunoController::class, 'pdf']);
+    Route::post('/aluno/ficha-matricula', [PerfilAlunoController::class, 'upload']);
+    Route::post('/aluno/ficha-matricula/enviar', [PerfilAlunoController::class, 'submit']);
+    Route::get('/aluno/ficha-matricula/arquivo', [PerfilAlunoController::class, 'download']);
+    Route::get('/diretor/fichas-matricula', [PerfilAlunoController::class, 'pending']);
+    Route::patch('/diretor/fichas-matricula/{documento}', [PerfilAlunoController::class, 'review']);
+    Route::get('/diretor/fichas-matricula/{documento}/arquivo', [PerfilAlunoController::class, 'directorDownload']);
     Route::post('/cursos', [CursoController::class, 'store']);
     Route::put('/cursos/{curso}', [CursoController::class, 'update']);
     Route::delete('/cursos/{curso}', [CursoController::class, 'destroy']);
@@ -60,6 +73,11 @@ Route::middleware(['auth:sanctum', 'ativo', 'throttle:api'])->group(function () 
 
     Route::apiResource('estagios', ContratoEstagioController::class)->only(['index', 'store', 'show', 'update']);
     Route::patch('/estagios/{estagio}/status', [EstagioController::class, 'status']);
+    Route::get('/diretor/documentos-estagio', [DocumentoController::class, 'recebidos']);
+    Route::get('/estagios/{estagio}/catalogo-documentos', [DocumentoController::class, 'catalogo']);
+    Route::match(['get', 'patch'], '/estagios/{estagio}/modelos-documentos/{tipo}', [DocumentoController::class, 'modelo']);
+    Route::post('/estagios/{estagio}/documentos/arquivo', [DocumentoController::class, 'anexar']);
+    Route::post('/estagios/{estagio}/documentos/{documento}/encaminhar', [DocumentoController::class, 'encaminhar']);
     Route::get('/estagios/{estagio}/documentos', [DocumentoController::class, 'index']);
     Route::post('/estagios/{estagio}/documentos', [DocumentoController::class, 'store']);
     Route::patch('/estagios/{estagio}/documentos/{documento}/analise', [DocumentoController::class, 'review']);

@@ -178,3 +178,31 @@
     grid-template-columns: 1fr;
   }
 }
+
+.detalhes-estagio-conteudo {
+  align-items: flex-start;
+}
+
+.detalhes-estagio-conteudo > [class*='col-'] {
+  flex-direction: column;
+  min-width: 0;
+}
+
+.detalhes-estagio-conteudo .tabela-sage th,
+.detalhes-estagio-conteudo .tabela-sage td {
+  padding-block: 0.55rem;
+}
+
+@media (min-width: 992px) {
+  .detalhes-estagio-conteudo .tabela-sage-container {
+    max-height: 250px;
+    overflow: auto;
+  }
+
+  .detalhes-estagio-conteudo .tabela-sage thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #fff;
+  }
+}

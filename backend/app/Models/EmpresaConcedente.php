@@ -13,7 +13,9 @@ class EmpresaConcedente extends Model
     protected $table = 'empresas_concedentes';
 
     protected $fillable = ['cnpj', 'razao_social', 'endereco_completo',
-        'representante_legal', 'status_convenio'];
+        'representante_legal', 'status_convenio',
+        'cidade', 'uf', 'cep', 'telefone', 'fax', 'email', 'cargo_representante',
+        'numero', 'bairro', 'numero_registro', 'conselho_fiscalizacao'];
 
     protected $casts = [
         'status_convenio' => StatusConvenio::class,

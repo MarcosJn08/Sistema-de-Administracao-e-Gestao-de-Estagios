@@ -75,6 +75,45 @@ class ApiWorkflowTest extends TestCase
         }
     }
 
+    public function test_document_catalog_separates_attachment_from_submission(): void
+    {
+        $stage = $this->stage();
+        $base = '/api/estagios/'.$stage->id;
+        $this->actingAs($this->alunoUser, 'sanctum');
+        $this->getJson($base.'/catalogo-documentos')->assertOk()->assertJsonCount(4, 'data');
+        $stage->empresa->update(['telefone' => '38999999999']);
+        $campos = $this->getJson($base.'/modelos-documentos/PLANO_ATIVIDADES')->assertOk()->json('data');
+        $telefone = collect($campos)->firstWhere('rotulo', 'Telefone da concedente');
+        $this->assertSame('38999999999', $telefone['valor']);
+        $this->assertFalse($telefone['editavel']);
+        $this->patchJson($base.'/modelos-documentos/PLANO_ATIVIDADES', [
+            'campos' => ['Cidade da concedente' => 'Outro município'],
+        ])->assertUnprocessable();
+
+        $this->patchJson($base.'/modelos-documentos/AVALIACAO_ALUNO', ['campos' => ['Dedicação pessoal (%)' => '90']])->assertForbidden();
+        $this->patchJson($base.'/modelos-documentos/AVALIACAO_EMPRESA', ['campos' => ['Iniciativa' => 'Boa']])->assertForbidden();
+        $this->patchJson($base.'/modelos-documentos/PLANO_ATIVIDADES', ['campos' => ['Horários de trabalho' => '08:00–11:00']])->assertOk();
+        $this->get($base.'/modelos-documentos/PLANO_ATIVIDADES?pdf=1')->assertOk()->assertHeader('Content-Type', 'application/pdf');
+        $id = $this->postJson($base.'/documentos/arquivo', [
+            'tipo' => 'PLANO_ATIVIDADES', 'arquivo' => UploadedFile::fake()->create('plano.pdf', 10, 'application/pdf'),
+        ])->assertCreated()->assertJsonPath('data.status', 'PENDENTE')->json('data.id');
+        $this->getJson($base.'/catalogo-documentos')->assertJsonPath('data.0.documento.id', $id);
+        $this->postJson($base.'/documentos/'.$id.'/encaminhar')->assertOk()->assertJsonPath('data.status', 'EM_ANALISE');
+        $this->actingAs($this->diretor, 'sanctum')->getJson('/api/diretor/documentos-estagio')->assertOk()->assertJsonPath('data.0.id', $id);
+        $this->patchJson($base.'/documentos/'.$id.'/analise', ['status' => 'DEFERIDO'])->assertOk();
+
+        $ficha = \App\Models\Documento::create([
+            'aluno_id' => $stage->aluno_id, 'tipo' => 'FICHA_MATRICULA', 'status' => 'PENDENTE',
+        ]);
+        $this->getJson('/api/diretor/documentos-estagio?aluno_id='.$stage->aluno_id)
+            ->assertOk()->assertJsonCount(2, 'data')->assertJsonPath('data.0.id', $ficha->id)
+            ->assertJsonPath('data.0.pode_analisar', false);
+        $this->getJson('/api/diretor/documentos-estagio?aluno_id='.($stage->aluno_id + 1))
+            ->assertOk()->assertJsonCount(0, 'data');
+        $this->actingAs($this->alunoUser, 'sanctum')->getJson('/api/diretor/documentos-estagio')->assertForbidden();
+
+    }
+
     public function test_complete_workflow_preserves_fractional_hours_and_audit(): void
     {
         $stage = $this->stage();
