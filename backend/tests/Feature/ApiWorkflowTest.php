@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\StatusEstagio;
 use App\Enums\UserRole;
+use App\Events\EstagioCanceladoDesvioFuncaoEvent;
 use App\Models\Aluno;
 use App\Models\Curso;
 use App\Models\EmpresaConcedente;
@@ -16,6 +17,7 @@ use App\Models\Usuario;
 use App\Services\EstagioService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -425,18 +427,31 @@ class ApiWorkflowTest extends TestCase
             ->assertExactJson(['success' => true, 'message' => 'Operação realizada com sucesso.', 'data' => [], 'errors' => []]);
     }
 
-    public function test_cancellation_for_misconduct_removes_credit_without_erasing_signed_frequency(): void
+    public function test_cancellation_for_misconduct_preserves_credit_and_blocks_frequency_changes(): void
     {
+        Event::fake([EstagioCanceladoDesvioFuncaoEvent::class]);
         $stage = $this->stage();
         $this->prepare($stage);
         $base = '/api/estagios/'.$stage->id;
         $this->actingAs($this->diretor, 'sanctum')->patchJson($base.'/status', ['status' => 'EM_ANDAMENTO'])->assertOk();
         $id = $this->actingAs($this->alunoUser, 'sanctum')->postJson($base.'/frequencias', ['data' => now()->toDateString(), 'hora_entrada' => '08:00', 'hora_saida' => '10:30'])->assertCreated()->json('data.id');
+        $ontem = ['data' => today()->subDay()->toDateString(), 'hora_entrada' => '08:00', 'hora_saida' => '09:00'];
+        $pendente = $this->postJson($base.'/frequencias', $ontem)->assertCreated()->json('data.id');
         $this->actingAs($this->supervisorUser, 'sanctum')->postJson($base.'/frequencias/'.$id.'/assinatura')->assertOk();
         $this->postJson($base.'/frequencias/'.$id.'/assinatura')->assertUnprocessable();
         $this->assertEquals(2.5, $stage->aluno->carga_horaria_cumprida);
         $this->actingAs($this->diretor, 'sanctum')->patchJson($base.'/status', ['status' => 'CANCELADO_DESVIO_FUNCAO', 'motivo' => 'Atividade incompatível'])->assertOk();
-        $this->assertEquals(0, $stage->aluno->carga_horaria_cumprida);
+        $this->assertEquals(2.5, $stage->aluno->carga_horaria_cumprida);
         $this->assertDatabaseHas('diarios_frequencia', ['id' => $id, 'assinado_supervisor' => true]);
+        $this->actingAs($this->alunoUser, 'sanctum')->getJson('/api/auth/me')
+            ->assertOk()->assertJsonPath('data.progresso.horas_cumpridas', 2.5);
+        $this->postJson($base.'/frequencias', array_replace($ontem, ['data' => today()->subDays(2)->toDateString()]))
+            ->assertUnprocessable()->assertJsonValidationErrors('frequencia');
+        $this->putJson($base.'/frequencias/'.$pendente, $ontem)
+            ->assertUnprocessable()->assertJsonValidationErrors('frequencia');
+        $this->actingAs($this->supervisorUser, 'sanctum')->postJson($base.'/frequencias/'.$pendente.'/assinatura')
+            ->assertUnprocessable()->assertJsonValidationErrors('frequencia');
+        $this->assertDatabaseHas('diarios_frequencia', ['id' => $pendente, 'assinado_supervisor' => false]);
+        Event::assertDispatchedTimes(EstagioCanceladoDesvioFuncaoEvent::class, 1);
     }
 }

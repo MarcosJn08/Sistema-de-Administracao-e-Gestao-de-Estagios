@@ -59,7 +59,7 @@ class ContratoEstagioController extends Controller
                 $doc->forceFill(['tipo' => 'TCE', 'status' => 'EM_ANALISE', 'arquivo_path' => $path, 'arquivo_nome' => 'termo.pdf', 'arquivo_mime' => $file->getMimeType(), 'arquivo_tamanho' => $file->getSize(), 'enviado_por' => $request->user()->id])->save();
                 DB::table('historico_documentos')->insert(['documento_id' => $doc->id, 'usuario_id' => $request->user()->id, 'status' => 'EM_ANALISE', 'observacoes' => 'Termo formalizado apresentado na criação do contrato; sujeito à análise.', 'created_at' => now()]);
 
-                return $service->transicionar($estagio, StatusEstagio::EM_ANALISE, $request->user()->id, null);
+                return $service->transicionar($estagio, StatusEstagio::EM_ANALISE, $request->user(), null);
             });
         } catch (\Throwable $e) {
             Storage::disk('local')->delete($path);

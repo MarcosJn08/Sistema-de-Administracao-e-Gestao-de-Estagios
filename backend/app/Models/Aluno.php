@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\StatusEstagio;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -42,7 +41,9 @@ class Aluno extends Model
 
     public function getCargaHorariaCumpridaAttribute(): float
     {
-        return (float) DiarioFrequencia::whereHas('estagio', fn ($query) => $query->where('aluno_id', $this->id)->where('status', '!=', StatusEstagio::CANCELADO_DESVIO_FUNCAO))->where('assinado_supervisor', true)->sum('horas_diarias');
+        return (float) DiarioFrequencia::whereHas('estagio', fn ($query) => $query->where('aluno_id', $this->id))
+            ->where('assinado_supervisor', true)
+            ->sum('horas_diarias');
     }
 
     public function cargaHorariaExigida(): int

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\StatusEstagio;
 use App\Models\Estagio;
 use App\Models\ProfessorOrientador;
 use App\Models\User;
@@ -27,7 +26,6 @@ class OrientadorService
     {
         return $this->carregarEstagios(Estagio::query())
             ->whereNull('professor_orientador_id')
-            ->whereIn('status', [StatusEstagio::RASCUNHO, StatusEstagio::EM_ANALISE, StatusEstagio::EM_ANDAMENTO])
             ->get();
     }
 

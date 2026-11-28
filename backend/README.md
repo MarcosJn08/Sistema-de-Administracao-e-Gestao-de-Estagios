@@ -120,6 +120,8 @@ Contas vinculadas devem estar ativas e com o perfil correspondente. Vínculos j�
 | GET | `/api/estagios/{estagio}` | Diretor ou participante vinculado: detalhes |
 | PUT, PATCH | `/api/estagios/{estagio}` | Diretor: atualizar parâmetros contratuais |
 | PATCH | `/api/estagios/{estagio}/status` | Diretor: mudar estado com `status` e, quando exigido, `motivo` |
+| POST | `/api/estagios/{id}/cancelar-desvio-funcao` | Diretor ou orientador vinculado aplica a RN08 com `justificativa_pedagogica` |
+| POST | `/api/estagios/{id}/encerrar` | Diretor encerra administrativamente com `motivo` |
 
 Não existe DELETE de estágio. Para finalizar o vínculo, use a transição de status adequada.
 
@@ -161,11 +163,18 @@ Frequências pendentes e assinadas reservam horas para os limites diário, seman
 | Estado atual | Destinos permitidos |
 |---|---|
 | `RASCUNHO` | `EM_ANALISE`, `EM_ANDAMENTO`, `ENCERRADO` |
-| `EM_ANALISE` | `EM_ANDAMENTO`, `ENCERRADO` |
+| `EM_ANALISE` | `EM_ANDAMENTO`, `ENCERRADO`, `CANCELADO_DESVIO_FUNCAO` |
 | `EM_ANDAMENTO` | `CONCLUIDO`, `ENCERRADO`, `CANCELADO_DESVIO_FUNCAO` |
 | `CONCLUIDO`, `ENCERRADO`, `CANCELADO_DESVIO_FUNCAO` | Nenhum |
 
-Ativar exige TCE, plano de atividades e ficha de matrícula deferidos, apólice e plano estruturado cadastrados, período não terminado, vínculos válidos e capacidade disponível. Concluir exige relatório aprovado e carga horária do curso cumprida pelo aluno. Encerrar/cancelar exige `motivo`; a operação registra autor, data e histórico da transição.
+Ativar exige TCE, plano de atividades e ficha de matrícula deferidos, apólice e plano estruturado cadastrados, período não terminado, vínculos válidos e capacidade disponível. Concluir exige relatório aprovado e carga horária do curso cumprida pelo aluno.
+
+### Reprovação pedagógica e encerramento administrativo
+
+- `POST /api/estagios/{id}/cancelar-desvio-funcao` aplica a RN08 por desvio de função ou incompatibilidade com o PPC a um estágio submetido para análise pedagógica (`EM_ANALISE`) ou em `EM_ANDAMENTO`. O Diretor ou o Professor Orientador atribuído envia `justificativa_pedagogica`, com 20 a 2.000 caracteres. O novo estado é `CANCELADO_DESVIO_FUNCAO`. Após a confirmação da transação, `EstagioCanceladoDesvioFuncaoEvent` aciona uma notificação ao aluno pelo e-mail e pela fila configurados no SAGE.
+- `POST /api/estagios/{id}/encerrar` aceita `RASCUNHO`, `EM_ANALISE` e `EM_ANDAMENTO`. Somente o Diretor pode enviar o `motivo` formal obrigatório, de até 2.000 caracteres. O novo estado é `ENCERRADO`.
+
+As duas operações registram estado anterior, novo estado, autor, justificativa e data em `historico_estagios`. O resultado é `200` com o estágio atualizado em `data`. Repetir uma solicitação válida para o mesmo estado preserva o primeiro registro e envia a notificação apenas uma vez. A rota `PATCH /api/estagios/{estagio}/status` continua exclusiva do Diretor e usa as mesmas regras de transição. Para o cancelamento, o Diretor envia o parecer no campo `motivo`, com 20 a 2.000 caracteres.
 
 ### Permissões dos participantes
 
@@ -174,6 +183,8 @@ Ativar exige TCE, plano de atividades e ficha de matrícula deferidos, apólice 
 | Consultar estágio/documentos/frequências | Sim | Sim | Sim | Sim |
 | Criar contrato | Sim | Não | Não | Sim, para o próprio vínculo |
 | Atualizar contrato / mudar status | Sim | Não | Não | Não |
+| Cancelar por desvio de função (RN08) | Sim | Não | Sim | Não |
+| Encerrar administrativamente | Sim | Não | Não | Não |
 | Enviar documentos / lançar frequência / salvar complementos | Sim | Sim | Não | Não |
 | Analisar documentos / aprovar relatório | Sim | Não | Sim | Não |
 | Assinar frequência | Não | Não | Não | Sim |
@@ -206,7 +217,7 @@ Uploads entram em `EM_ANALISE`. Um documento em análise/deferido bloqueia outro
 
 Lançamentos e assinaturas exigem estágio em andamento. Um registro por dia, dentro do período contratual, sem data futura. Saída deve ser posterior à entrada no mesmo dia. Horas são calculadas no servidor; não envie `horas_diarias` ou `assinado_supervisor`. Frequências assinadas não podem ser editadas. O modelo considera um intervalo contínuo por dia.
 
-O total do aluno deriva das frequências assinadas, excluindo estágios cancelados por desvio de função. O campo legado `alunos.carga_horaria_cumprida` não é fonte do cálculo; valores antigos sem frequência precisam de reconciliação.
+O total do aluno inclui as frequências assinadas de estágios encerrados ou cancelados por desvio de função. A finalização preserva os registros e impede novos lançamentos, edições e assinaturas. Frequências pendentes continuam sem crédito. O campo legado `alunos.carga_horaria_cumprida` serve para compatibilidade. Valores antigos sem frequência precisam de reconciliação.
 
 ## Complementos, relatório e avaliações
 

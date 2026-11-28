@@ -19,18 +19,21 @@ class DiscenteOrientadoResource extends JsonResource
     public function toArray(Request $request): array
     {
         $aluno = $this->resource->first()->aluno;
+        $turma = $aluno->turma;
+        $curso = $turma?->curso;
 
         return [
             'id' => $aluno->id,
             'nome' => $aluno->usuario->nome ?? $aluno->usuario->name,
             'email' => $aluno->usuario->email,
             'matricula' => $aluno->matricula,
-            'curso' => $aluno->turma->curso->nome,
-            'semestre' => $aluno->turma->semestre,
-            'carga_horaria_exigida' => $aluno->cargaHorariaExigida(),
+            'curso' => $curso?->nome,
+            'semestre' => $turma?->semestre,
+            'carga_horaria_exigida' => $curso ? $aluno->cargaHorariaExigida() : null,
             'estagios' => $this->resource->map(fn (Estagio $estagio) => [
                 'id' => $estagio->id,
                 'status' => $estagio->status->value,
+                'motivo_encerramento' => $estagio->motivo_encerramento,
                 'empresa' => $estagio->empresa->razao_social,
                 'supervisor' => $estagio->supervisor->nome,
                 'data_inicio' => $estagio->data_inicio->toDateString(),

@@ -41,6 +41,11 @@ class EstagioPolicy
         return $usuario->temPerfil(UserRole::DIRETOR) || ($usuario->temPerfil(UserRole::PROFESSOR) && $this->view($usuario, $estagio));
     }
 
+    public function cancelarDesvioFuncao(User $usuario, Estagio $estagio): bool
+    {
+        return $this->review($usuario, $estagio);
+    }
+
     public function sign(User $usuario, Estagio $estagio): bool
     {
         return $usuario->temPerfil(UserRole::EMPRESA) && $this->view($usuario, $estagio);
